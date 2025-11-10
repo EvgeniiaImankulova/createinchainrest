@@ -1,0 +1,65 @@
+<div class="image-uploader">
+  <input
+    #fileInput
+    type="file"
+    class="file-input"
+    [accept]="accept"
+    (change)="onFileSelected($event)">
+
+  <div class="upload-container">
+    <div
+      class="upload-circle"
+      [class.dragging]="isDragging"
+      [class.has-image]="imagePreview"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)">
+
+      <div *ngIf="!imagePreview" class="placeholder-content">
+        <svg class="camera-icon" width="80" height="80" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="38" fill="#E0E0E0"/>
+          <rect x="24" y="28" width="32" height="24" rx="2" stroke="#9E9E9E" stroke-width="2" fill="none"/>
+          <circle cx="40" cy="40" r="6" stroke="#9E9E9E" stroke-width="2" fill="none"/>
+          <path d="M32 28L34 24H46L48 28" stroke="#9E9E9E" stroke-width="2" fill="none"/>
+        </svg>
+        <span class="placeholder-text">NO PHOTO</span>
+      </div>
+
+      <div *ngIf="imagePreview" class="image-preview">
+        <img [src]="imagePreview" alt="Preview">
+      </div>
+    </div>
+
+    <div *ngIf="imagePreview" class="action-buttons">
+      <button
+        type="button"
+        class="action-btn edit-btn"
+        (click)="triggerFileInput(fileInput)"
+        title="Редактировать">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M14.5 2.5L17.5 5.5L7 16H4V13L14.5 2.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button
+        type="button"
+        class="action-btn upload-btn"
+        (click)="triggerFileInput(fileInput)"
+        title="Загрузить другое">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="3" y="3" width="14" height="14" rx="1" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M6 13L8.5 10.5L10.5 12.5L13.5 9.5L15 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="8" cy="7.5" r="1" fill="currentColor"/>
+        </svg>
+      </button>
+      <button
+        type="button"
+        class="action-btn delete-btn"
+        (click)="clearImage()"
+        title="Удалить">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

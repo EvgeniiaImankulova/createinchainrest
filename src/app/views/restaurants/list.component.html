@@ -1,0 +1,612 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Список ресторанов</h1>
+    <div class="header-actions">
+      <button class="btn-icon" (click)="onSearch()" title="Поиск">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="create-menu-container">
+        <button class="btn-primary" (click)="onCreate()">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <div class="create-menu" *ngIf="showCreateMenu">
+          <button class="create-menu-item" (click)="onCreateLegalEntity()">
+            Создать юридическое лицо
+          </button>
+          <button class="create-menu-item" (click)="onCreateRestaurant()">
+            Создать ресторан
+          </button>
+        </div>
+      </div>
+      <button class="btn-icon" (click)="toggleViewMode()" [title]="showOnlyLegalEntities ? 'Показать рестораны' : 'Показать юрлица без ресторанов'">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M3 4H21V6.414C21 6.679 20.895 6.933 20.707 7.121L14.293 13.535C14.105 13.723 14 13.977 14 14.242V19L10 21V14.242C10 13.977 9.895 13.723 9.707 13.535L3.293 7.121C3.105 6.933 3 6.679 3 6.414V4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="col-number">№</th>
+            <th (click)="onSort('name')" class="sortable">
+              <div class="th-content">
+                <span>Название</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-icon">
+                  <path d="M8 4L11 7H5L8 4Z" fill="currentColor"/>
+                </svg>
+              </div>
+            </th>
+            <th (click)="onSort('legalEntity')" class="sortable">
+              <div class="th-content">
+                <span>Юридическое лицо</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-icon">
+                  <path d="M8 4L11 7H5L8 4Z" fill="currentColor"/>
+                </svg>
+              </div>
+            </th>
+            <th (click)="onSort('address')" class="sortable">
+              <div class="th-content">
+                <span>Адрес</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-icon">
+                  <path d="M8 4L11 7H5L8 4Z" fill="currentColor"/>
+                </svg>
+              </div>
+            </th>
+            <th (click)="onSort('template')" class="sortable">
+              <div class="th-content">
+                <span>Шаблон</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-icon">
+                  <path d="M8 4L11 7H5L8 4Z" fill="currentColor"/>
+                </svg>
+              </div>
+            </th>
+            <th (click)="onSort('timezone')" class="sortable">
+              <div class="th-content">
+                <span>Часовой пояс</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-icon">
+                  <path d="M8 4L11 7H5L8 4Z" fill="currentColor"/>
+                </svg>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of displayedItems; let i = index" class="data-row">
+            <td class="col-number">{{ i + 1 }}</td>
+            <td>
+              <a href="#" class="link" (click)="onEditRestaurant(item); $event.preventDefault()" *ngIf="!showOnlyLegalEntities">{{ item.name }}</a>
+              <span *ngIf="showOnlyLegalEntities">{{ item.name }}</span>
+            </td>
+            <td>
+              <a href="#" class="link" (click)="onEditLegalEntityByName(item.legalEntity); $event.preventDefault()" *ngIf="item.legalEntity">{{ item.legalEntity }}</a>
+            </td>
+            <td>{{ item.address }}</td>
+            <td>{{ item.template }}</td>
+            <td>{{ item.timezone }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sidebar-overlay" *ngIf="showSidebar || showLegalEntitySidebar" (click)="closeSidebar()"></div>
+
+  <div class="sidebar" [class.open]="showSidebar" *ngIf="sidebarMode === 'restaurant'">
+    <div class="sidebar-header">
+      <div class="sidebar-title-section">
+        <h2 class="sidebar-title">{{ restaurantForm.name }}</h2>
+        <div class="sidebar-subtitle">Редактировать / Настройки</div>
+      </div>
+      <button class="sidebar-close" (click)="closeSidebar()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="sidebar-tabs">
+      <button
+        class="sidebar-tab"
+        [class.active]="activeTab === 'general'"
+        (click)="setActiveTab('general')">
+        ОБЩИЕ
+      </button>
+      <button
+        class="sidebar-tab"
+        [class.active]="activeTab === 'hours'"
+        (click)="setActiveTab('hours')">
+        ЧАСЫ РАБОТЫ
+      </button>
+      <button
+        class="sidebar-tab"
+        [class.active]="activeTab === 'warehouse'"
+        (click)="setActiveTab('warehouse')">
+        СКЛАД
+      </button>
+      <button
+        class="sidebar-tab"
+        [class.active]="activeTab === 'terminals'"
+        (click)="setActiveTab('terminals')">
+        ТЕРМИНАЛЫ
+      </button>
+      <button
+        class="sidebar-tab"
+        [class.active]="activeTab === 'external'"
+        (click)="setActiveTab('external')">
+        ВНЕШНИЕ
+      </button>
+      <button class="sidebar-tab-arrow">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M7 5L12 10L7 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="sidebar-content" *ngIf="activeTab === 'general'">
+      <div class="form-section">
+        <div class="status-row">
+          <div class="status-label">
+            Статус подключения
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="info-icon">
+              <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 7V11M8 5V5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="status-badge">Подключен</div>
+          <div class="timezone-text">Часовой пояс: {{ restaurantForm.timezone }}</div>
+        </div>
+
+        <h3 class="section-title">Основная информация</h3>
+
+        <div class="form-group">
+          <label class="form-label">Название*</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="restaurantForm.name"
+            placeholder="Название ресторана">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Описание</label>
+          <textarea
+            class="form-textarea"
+            [(ngModel)]="restaurantForm.description"
+            placeholder="Описание ресторана"
+            rows="3"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Краткое название</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="restaurantForm.shortName"
+              placeholder="Краткое название">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Код</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="restaurantForm.code"
+              placeholder="Код">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">UID</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="restaurantForm.uid"
+              placeholder="UID">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">КПП</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="restaurantForm.kpp"
+              placeholder="КПП">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Процент роялти</label>
+            <input
+              type="number"
+              class="form-input"
+              [(ngModel)]="restaurantForm.royaltyPercent"
+              placeholder="0"
+              min="0"
+              max="100"
+              step="0.01">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Категория (1-5)</label>
+            <select class="form-select" [(ngModel)]="restaurantForm.category">
+              <option [value]="1">1</option>
+              <option [value]="2">2</option>
+              <option [value]="3">3</option>
+              <option [value]="4">4</option>
+              <option [value]="5">5</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <input
+            type="email"
+            class="form-input"
+            [(ngModel)]="restaurantForm.email"
+            placeholder="email@example.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Шаблон ресторана</label>
+          <select class="form-select" [(ngModel)]="restaurantForm.template">
+            <option value="WEB-11353-без-дневных-интеров">WEB-11353-без-дневных-интеров</option>
+            <option value="Default">Default</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Юридическое лицо*</label>
+          <select class="form-select" [(ngModel)]="restaurantForm.legalEntityId">
+            <option value="">Выберите юридическое лицо</option>
+            <option *ngFor="let entity of legalEntities" [value]="entity.id">
+              {{ entity.name }}
+            </option>
+          </select>
+        </div>
+
+        <h3 class="section-title">Настройки</h3>
+
+        <div class="form-checkbox-group">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              class="form-checkbox"
+              [(ngModel)]="restaurantForm.isFranchise">
+            <span>Франшизный ресторан</span>
+          </label>
+
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              class="form-checkbox"
+              [(ngModel)]="restaurantForm.uploadFromCO">
+            <span>Выгрузка из ЦО</span>
+          </label>
+
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              class="form-checkbox"
+              [(ngModel)]="restaurantForm.downloadToCO">
+            <span>Загрузка в ЦО</span>
+          </label>
+
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              class="form-checkbox"
+              [(ngModel)]="restaurantForm.receiveDirectoriesFromAllTP">
+            <span>Получать справочники из всех ТП</span>
+          </label>
+        </div>
+
+        <h3 class="section-title">Адрес</h3>
+
+        <div class="address-edit-link">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 13C8 13 2 8.6 2 5.2C2 2.8 4.5 1 6.7 1C7.9 1 9 1.5 9.8 2.3C10.6 1.5 11.7 1 12.9 1C15.1 1 17.6 2.8 17.6 5.2C17.6 8.6 11.6 13 11.6 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <a href="#" class="link" (click)="onEditAddress(); $event.preventDefault()">Редактировать адрес</a>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Фактический адрес*</label>
+          <div class="input-with-icon">
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="restaurantForm.address"
+              placeholder="Адрес ресторана">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="input-icon">
+              <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 7V11M8 5V5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Комментарий к адресу</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="restaurantForm.addressComment"
+            placeholder="Комментарий к адресу">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Город / населенный пункт*</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="restaurantForm.city"
+              placeholder="Город">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Область / регион*</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="restaurantForm.region"
+              placeholder="Область">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Страна*</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="restaurantForm.country"
+            placeholder="Страна">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Широта</label>
+            <input
+              type="number"
+              class="form-input"
+              [(ngModel)]="restaurantForm.latitude"
+              placeholder="Широта"
+              step="0.000001">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Долгота</label>
+            <input
+              type="number"
+              class="form-input"
+              [(ngModel)]="restaurantForm.longitude"
+              placeholder="Долгота"
+              step="0.000001">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="btn-cancel" (click)="closeSidebar()">Отмена</button>
+      <button class="btn-save" (click)="onSave()">Сохранить</button>
+    </div>
+  </div>
+
+  <div class="sidebar" [class.open]="showLegalEntitySidebar" *ngIf="sidebarMode === 'legalEntity'">
+    <div class="sidebar-header">
+      <div class="sidebar-title-section">
+        <h2 class="sidebar-title">Новое юридическое лицо</h2>
+        <div class="sidebar-subtitle">Создание</div>
+      </div>
+      <button class="sidebar-close" (click)="closeSidebar()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="sidebar-content">
+      <div class="form-section">
+        <h3 class="section-title">Основная информация</h3>
+
+        <div class="form-group">
+          <label class="form-label">Название*</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="legalEntityForm.name"
+            placeholder="Название юридического лица">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Описание</label>
+          <textarea
+            class="form-textarea"
+            [(ngModel)]="legalEntityForm.description"
+            placeholder="Описание"
+            rows="3"></textarea>
+        </div>
+
+        <h3 class="section-title">Реквизиты</h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">ИНН*</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="legalEntityForm.inn"
+              placeholder="ИНН"
+              maxlength="12">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">КПП</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="legalEntityForm.kpp"
+              placeholder="КПП"
+              maxlength="9">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">ОКПО</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="legalEntityForm.okpo"
+              placeholder="ОКПО">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Регистрационный номер</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="legalEntityForm.registrationNumber"
+              placeholder="Регистрационный номер">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Юридический адрес</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="legalEntityForm.legalAddress"
+            placeholder="Юридический адрес">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Телефон</label>
+            <input
+              type="tel"
+              class="form-input"
+              [(ngModel)]="legalEntityForm.phone"
+              placeholder="+7 (___) ___-__-__">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">E-mail</label>
+            <input
+              type="email"
+              class="form-input"
+              [(ngModel)]="legalEntityForm.email"
+              placeholder="email@example.com">
+          </div>
+        </div>
+
+        <h3 class="section-title">Банковские реквизиты</h3>
+
+        <div class="form-group">
+          <label class="form-label">Расчетный счет</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="legalEntityForm.bankAccount"
+            placeholder="Расчетный счет"
+            maxlength="20">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">БИК</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="legalEntityForm.bik"
+              placeholder="БИК"
+              maxlength="9">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Корреспондентский счет</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="legalEntityForm.correspondentAccount"
+              placeholder="Корреспондентский счет"
+              maxlength="20">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Название банка</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="legalEntityForm.bankName"
+            placeholder="Название банка">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Город банка</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="legalEntityForm.bankCity"
+            placeholder="Город банка">
+        </div>
+
+        <h3 class="section-title">Ответственные лица</h3>
+
+        <div class="form-group">
+          <label class="form-label">ФИО руководителя</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="legalEntityForm.directorName"
+            placeholder="ФИО руководителя">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">ФИО бухгалтера</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="legalEntityForm.accountantName"
+            placeholder="ФИО бухгалтера">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">ФИО главного технолога</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="legalEntityForm.chiefTechnologistName"
+            placeholder="ФИО главного технолога">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">ФИО зав. производством</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="legalEntityForm.productionManagerName"
+            placeholder="ФИО зав. производством">
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="btn-cancel" (click)="closeSidebar()">Отмена</button>
+      <button class="btn-save" (click)="onSave()">Сохранить</button>
+    </div>
+  </div>
+</div>

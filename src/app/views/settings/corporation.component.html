@@ -1,0 +1,270 @@
+<div class="page-container">
+  <div class="page-content">
+    <div class="page-header">
+      <h1 class="page-title">Настройки корпорации</h1>
+      <div class="header-actions">
+        <button class="btn btn-primary" (click)="onSave()">
+          Сохранить
+        </button>
+      </div>
+    </div>
+
+    <form class="corporation-form">
+
+      <section class="form-section">
+        <h2 class="section-title">Основная информация</h2>
+
+        <div class="form-group">
+          <label class="form-label">Название</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="corporationSettings.name"
+            name="name"
+            placeholder="Введите название корпорации">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Описание</label>
+          <textarea
+            class="form-input form-textarea"
+            [(ngModel)]="corporationSettings.description"
+            name="description"
+            rows="3"
+            placeholder="Введите описание"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">UID</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="corporationSettings.uid"
+            name="uid"
+            placeholder="Введите уникальный идентификатор">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">ФИО Руководителя</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="corporationSettings.directorName"
+            name="directorName"
+            placeholder="Введите ФИО руководителя">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Телефон</label>
+            <input
+              type="tel"
+              class="form-input"
+              [(ngModel)]="corporationSettings.phone"
+              name="phone"
+              placeholder="+7 (___) ___-__-__">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">E-mail</label>
+            <input
+              type="email"
+              class="form-input"
+              [(ngModel)]="corporationSettings.email"
+              name="email"
+              placeholder="example@domain.com">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Адрес</label>
+          <textarea
+            class="form-input form-textarea"
+            [(ngModel)]="corporationSettings.address"
+            name="address"
+            rows="2"
+            placeholder="Введите адрес"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">ИНН</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="corporationSettings.inn"
+              name="inn"
+              placeholder="Введите ИНН">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">КПП</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="corporationSettings.kpp"
+              name="kpp"
+              placeholder="Введите КПП">
+          </div>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2 class="section-title">Франшиза</h2>
+
+        <div class="form-group">
+          <label class="form-label">Франшизная сеть</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="corporationSettings.franchiseNetwork"
+            name="franchiseNetwork"
+            placeholder="Введите название франшизной сети">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Роялти по умолчанию</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="corporationSettings.defaultRoyalty"
+            name="defaultRoyalty"
+            placeholder="Введите процент роялти">
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2 class="section-title">Общие настройки</h2>
+
+        <div class="form-group">
+          <label class="form-label">Валюта</label>
+          <select
+            class="form-select"
+            [(ngModel)]="corporationSettings.currency"
+            name="currency">
+            <option *ngFor="let currency of currencies" [value]="currency.value">
+              {{ currency.label }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-container">
+            <input
+              type="checkbox"
+              class="checkbox-input"
+              [(ngModel)]="corporationSettings.roundingEnabled"
+              name="roundingEnabled">
+            <span class="checkbox-label">
+              Округление в iikoFront: округлять стоимость заказа до целого в пользу гостя
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2 class="section-title">Логотипы</h2>
+
+        <div class="form-group">
+          <label class="form-label">Логотип, используемый в документах</label>
+          <app-image-uploader
+            [accept]="'image/*'"
+            [(ngModel)]="corporationSettings.logo"
+            (fileChange)="onLogoChange($event)"
+            name="logo">
+          </app-image-uploader>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Фоновый рисунок</label>
+          <app-image-uploader
+            [accept]="'image/*'"
+            [(ngModel)]="corporationSettings.backgroundImage"
+            (fileChange)="onBackgroundChange($event)"
+            name="backgroundImage">
+          </app-image-uploader>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2 class="section-title">Общие настройки сети</h2>
+
+        <div class="two-column-grid">
+          <div class="settings-column">
+            <h3 class="column-title">Тип места приготовления блюд</h3>
+
+            <div class="items-list">
+              <div class="list-header">
+                <span class="header-text">Тип места приготовления блюд</span>
+              </div>
+
+              <div *ngFor="let place of preparationPlaces; let i = index" class="list-item">
+                <input
+                  type="text"
+                  class="item-input"
+                  [(ngModel)]="preparationPlaces[i]"
+                  [name]="'place_' + i">
+                <button
+                  type="button"
+                  class="delete-btn"
+                  (click)="removePreparationPlace(i)"
+                  title="Удалить">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+
+              <button type="button" class="add-btn" (click)="addPreparationPlace()">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M10 5V15M5 10H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-column">
+            <h3 class="column-title">Наименование курсов</h3>
+
+            <div class="items-list">
+              <div class="list-header">
+                <span class="header-text header-number">Номер</span>
+                <span class="header-text header-name">Наименование</span>
+              </div>
+
+              <div *ngFor="let course of courses; let i = index" class="list-item course-item">
+                <input
+                  type="text"
+                  class="item-input course-number"
+                  [(ngModel)]="course.number"
+                  [name]="'course_number_' + i"
+                  readonly>
+                <input
+                  type="text"
+                  class="item-input course-name"
+                  [(ngModel)]="course.name"
+                  [name]="'course_name_' + i">
+                <button
+                  type="button"
+                  class="delete-btn"
+                  (click)="removeCourse(i)"
+                  title="Удалить">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+
+              <button type="button" class="add-btn" (click)="addCourse()">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M10 5V15M5 10H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </form>
+  </div>
+</div>

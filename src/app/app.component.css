@@ -1,0 +1,34 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+}
+
+.app-container ::ng-deep .mat-toolbar {
+  position: relative;
+  z-index: 1000;
+}
+
+.sidenav-container {
+  flex: 1;
+  display: flex;
+  background-color: var(--background);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sidenav {
+  width: 280px;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+}
+
+.main-content {
+  flex: 1;
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: white;
+  min-height: 0;
+}

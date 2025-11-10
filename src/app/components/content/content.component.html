@@ -1,0 +1,78 @@
+<div class="content-wrapper">
+  <div class="content-header">
+    <h1>Основные показатели</h1>
+    <div class="header-actions">
+      <button mat-icon-button class="action-button">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-icon-button class="action-button">
+        <mat-icon>settings</mat-icon>
+      </button>
+      <button mat-raised-button color="primary" class="reports-button">
+        <mat-icon>assessment</mat-icon>
+        ВСЕ ОТЧЕТЫ
+      </button>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <mat-card *ngFor="let metric of metrics" class="metric-card">
+      <mat-card-content>
+        <div class="metric-title">{{ metric.title }}</div>
+        <div class="metric-value">{{ metric.value }}</div>
+        <div class="metric-change">{{ metric.change }}</div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="chart-card">
+    <mat-card-header>
+      <mat-card-title>Динамика продаж</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="chart-tabs">
+        <button mat-button class="chart-tab active">ВЫРУЧКА</button>
+        <button mat-button class="chart-tab">КОЛ-ВО ЧЕКОВ</button>
+        <button mat-button class="chart-tab">СРЕДНИЙ ЧЕК</button>
+      </div>
+      <div class="chart-placeholder">
+        <div class="chart-bar" style="height: 60%;"></div>
+        <div class="chart-bar" style="height: 50%;"></div>
+        <div class="chart-bar" style="height: 40%;"></div>
+        <div class="chart-bar" style="height: 80%;"></div>
+        <div class="chart-bar" style="height: 90%;"></div>
+        <div class="chart-bar" style="height: 85%;"></div>
+        <div class="chart-bar" style="height: 70%;"></div>
+        <div class="chart-bar" style="height: 75%;"></div>
+        <div class="chart-bar" style="height: 65%;"></div>
+        <div class="chart-bar" style="height: 55%;"></div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="bottom-cards">
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-card-title>Выручка по типам оплаты</mat-card-title>
+        <button mat-icon-button class="card-action">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="donut-chart-placeholder"></div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-card-title>Выручка по категориям</mat-card-title>
+        <button mat-icon-button class="card-action">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="donut-chart-placeholder"></div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
