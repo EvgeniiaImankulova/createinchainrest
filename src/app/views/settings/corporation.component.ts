@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ImageUploaderComponent } from '../../components/image-uploader/image-uploader.component';
 
 @Component({
   selector: 'app-corporation',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    ImageUploaderComponent
+    FormsModule
   ],
   templateUrl: './corporation.component.html',
   styleUrl: './corporation.component.css'
@@ -18,19 +16,16 @@ export class CorporationComponent {
   corporationSettings = {
     name: '',
     description: '',
-    uid: '',
+    uid: '123-123-123',
     directorName: '',
     phone: '',
     email: '',
     address: '',
     inn: '',
     kpp: '',
-    franchiseNetwork: '',
-    defaultRoyalty: '',
-    currency: 'RUB',
-    roundingEnabled: false,
-    logo: null as File | null,
-    backgroundImage: null as File | null
+    isFranchiseNetwork: false,
+    defaultRoyalty: 0,
+    currency: 'RUB'
   };
 
   preparationPlaces: string[] = [
@@ -55,20 +50,6 @@ export class CorporationComponent {
 
   onSave(): void {
     console.log('Сохранение настроек корпорации:', this.corporationSettings);
-  }
-
-  onLogoChange(file: File | null): void {
-    this.corporationSettings.logo = file;
-    if (file) {
-      console.log('Выбран логотип:', file.name);
-    }
-  }
-
-  onBackgroundChange(file: File | null): void {
-    this.corporationSettings.backgroundImage = file;
-    if (file) {
-      console.log('Выбран фоновый рисунок:', file.name);
-    }
   }
 
   addPreparationPlace(): void {

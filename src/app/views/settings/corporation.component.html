@@ -41,7 +41,8 @@
             class="form-input"
             [(ngModel)]="corporationSettings.uid"
             name="uid"
-            placeholder="Введите уникальный идентификатор">
+            placeholder="123-123-123"
+            readonly>
         </div>
 
         <div class="form-group">
@@ -113,23 +114,29 @@
         <h2 class="section-title">Франшиза</h2>
 
         <div class="form-group">
-          <label class="form-label">Франшизная сеть</label>
-          <input
-            type="text"
-            class="form-input"
-            [(ngModel)]="corporationSettings.franchiseNetwork"
-            name="franchiseNetwork"
-            placeholder="Введите название франшизной сети">
+          <label class="checkbox-container">
+            <input
+              type="checkbox"
+              class="checkbox-input"
+              [(ngModel)]="corporationSettings.isFranchiseNetwork"
+              name="isFranchiseNetwork">
+            <span class="checkbox-label">
+              Франшизная сеть
+            </span>
+          </label>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Роялти по умолчанию</label>
+        <div class="form-group" *ngIf="corporationSettings.isFranchiseNetwork">
+          <label class="form-label">Роялти по умолчанию, %</label>
           <input
-            type="text"
+            type="number"
             class="form-input"
             [(ngModel)]="corporationSettings.defaultRoyalty"
             name="defaultRoyalty"
-            placeholder="Введите процент роялти">
+            placeholder="0"
+            min="0"
+            max="100"
+            step="0.01">
         </div>
       </section>
 
@@ -147,44 +154,8 @@
             </option>
           </select>
         </div>
-
-        <div class="form-group">
-          <label class="checkbox-container">
-            <input
-              type="checkbox"
-              class="checkbox-input"
-              [(ngModel)]="corporationSettings.roundingEnabled"
-              name="roundingEnabled">
-            <span class="checkbox-label">
-              Округление в iikoFront: округлять стоимость заказа до целого в пользу гостя
-            </span>
-          </label>
-        </div>
       </section>
 
-      <section class="form-section">
-        <h2 class="section-title">Логотипы</h2>
-
-        <div class="form-group">
-          <label class="form-label">Логотип, используемый в документах</label>
-          <app-image-uploader
-            [accept]="'image/*'"
-            [(ngModel)]="corporationSettings.logo"
-            (fileChange)="onLogoChange($event)"
-            name="logo">
-          </app-image-uploader>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Фоновый рисунок</label>
-          <app-image-uploader
-            [accept]="'image/*'"
-            [(ngModel)]="corporationSettings.backgroundImage"
-            (fileChange)="onBackgroundChange($event)"
-            name="backgroundImage">
-          </app-image-uploader>
-        </div>
-      </section>
 
       <section class="form-section">
         <h2 class="section-title">Общие настройки сети</h2>

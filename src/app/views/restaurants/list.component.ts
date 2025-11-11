@@ -155,28 +155,43 @@ export class RestaurantsListComponent {
   activeTab: string = 'general';
   sidebarMode: 'restaurant' | 'legalEntity' = 'restaurant';
 
-  showOnlyLegalEntities: boolean = false;
+  expandedLegalEntities: Set<string> = new Set();
 
   get legalEntities() {
     return this.legalEntitiesData.map(le => ({ id: le.id, name: le.name }));
   }
 
-  get displayedItems() {
-    if (this.showOnlyLegalEntities) {
-      const restaurantLegalEntityIds = new Set(this.restaurants.map(r => r.legalEntityId));
-      return this.legalEntitiesData
-        .filter(le => !restaurantLegalEntityIds.has(le.id))
-        .map(le => ({
-          id: le.id,
-          name: le.name,
-          legalEntityId: '',
-          legalEntity: '',
-          address: le.legalAddress,
-          template: '',
-          timezone: ''
-        }));
-    }
-    return this.restaurants;
+  get hierarchyItems() {
+    const items: any[] = [];
+
+    this.legalEntitiesData.forEach(legalEntity => {
+      items.push({
+        id: legalEntity.id,
+        type: 'legalEntity',
+        name: legalEntity.name,
+        isExpanded: this.expandedLegalEntities.has(legalEntity.id),
+        level: 0,
+        data: legalEntity
+      });
+
+      if (this.expandedLegalEntities.has(legalEntity.id)) {
+        const childRestaurants = this.restaurants.filter(r => r.legalEntityId === legalEntity.id);
+        childRestaurants.forEach(restaurant => {
+          items.push({
+            id: restaurant.id,
+            type: 'restaurant',
+            name: restaurant.name,
+            address: restaurant.address,
+            template: restaurant.template,
+            timezone: restaurant.timezone,
+            level: 1,
+            data: restaurant
+          });
+        });
+      }
+    });
+
+    return items;
   }
 
   restaurantForm = {
@@ -188,19 +203,24 @@ export class RestaurantsListComponent {
     template: 'WEB-11353-без-дневных-интеров',
     timezone: '(UTC+3:00) Европа/Москва',
     royaltyPercent: 0,
-    uid: '',
+    uid: '123-123-123',
     isFranchise: false,
-    category: 1,
+    category1: '',
+    category2: '',
+    category3: '',
+    category4: '',
+    category5: '',
     legalEntityId: '',
     uploadFromCO: false,
     downloadToCO: false,
     receiveDirectoriesFromAllTP: false,
     email: '',
-    address: '20/2, улица Советская',
-    addressComment: '',
+    legalAddress: '',
     city: 'Кострома',
     region: 'Костромская область',
     country: 'Россия',
+    address: '20/2, улица Советская',
+    addressComment: '',
     latitude: 57.7665,
     longitude: 40.9265,
     kpp: ''
@@ -323,7 +343,17 @@ export class RestaurantsListComponent {
     }
   }
 
-  toggleViewMode(): void {
-    this.showOnlyLegalEntities = !this.showOnlyLegalEntities;
+  toggleLegalEntity(legalEntityId: string): void {
+    if (this.expandedLegalEntities.has(legalEntityId)) {
+      this.expandedLegalEntities.delete(legalEntityId);
+    } else {
+      this.expandedLegalEntities.add(legalEntityId);
+    }
+  }
+
+  onEditLegalEntity(legalEntity: LegalEntity): void {
+    this.legalEntityForm = { ...legalEntity };
+    this.sidebarMode = 'legalEntity';
+    this.showLegalEntitySidebar = true;
   }
 }

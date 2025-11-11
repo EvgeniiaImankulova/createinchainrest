@@ -117,6 +117,77 @@
   font-size: 13px;
 }
 
+.hierarchy-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.expand-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: transform 0.2s ease;
+}
+
+.expand-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.expand-btn svg.expanded {
+  transform: rotate(90deg);
+}
+
+.expand-btn:hover {
+  color: var(--primary-color);
+}
+
+.item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.legal-entity-row {
+  background-color: #FAFAFA;
+  font-weight: 500;
+}
+
+.legal-entity-row:hover {
+  background-color: #F0F0F0 !important;
+}
+
+.restaurant-row .item-icon {
+  color: var(--primary-color);
+}
+
+.type-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.type-badge.type-legal {
+  background-color: #E3F2FD;
+  color: #1976D2;
+}
+
+.type-badge.type-restaurant {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+}
+
 .data-table th.sortable {
   cursor: pointer;
   user-select: none;
@@ -251,11 +322,11 @@
 
 .sidebar-title {
   font-family: 'Roboto', sans-serif;
-  font-size: 24px;
-  font-weight: 400;
+  font-size: 32px;
+  font-weight: 700;
   line-height: 1.2;
   color: var(--text-primary);
-  margin: 0 0 4px 0;
+  margin: 0 0 8px 0;
 }
 
 .sidebar-subtitle {

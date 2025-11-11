@@ -22,75 +22,67 @@
           </button>
         </div>
       </div>
-      <button class="btn-icon" (click)="toggleViewMode()" [title]="showOnlyLegalEntities ? 'Показать рестораны' : 'Показать юрлица без ресторанов'">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M3 4H21V6.414C21 6.679 20.895 6.933 20.707 7.121L14.293 13.535C14.105 13.723 14 13.977 14 14.242V19L10 21V14.242C10 13.977 9.895 13.723 9.707 13.535L3.293 7.121C3.105 6.933 3 6.679 3 6.414V4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
     </div>
   </div>
 
   <div class="page-content">
     <div class="table-container">
-      <table class="data-table">
+      <table class="data-table hierarchy-table">
         <thead>
           <tr>
             <th class="col-number">№</th>
-            <th (click)="onSort('name')" class="sortable">
+            <th>
               <div class="th-content">
                 <span>Название</span>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-icon">
-                  <path d="M8 4L11 7H5L8 4Z" fill="currentColor"/>
-                </svg>
               </div>
             </th>
-            <th (click)="onSort('legalEntity')" class="sortable">
+            <th>
               <div class="th-content">
-                <span>Юридическое лицо</span>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-icon">
-                  <path d="M8 4L11 7H5L8 4Z" fill="currentColor"/>
-                </svg>
-              </div>
-            </th>
-            <th (click)="onSort('address')" class="sortable">
-              <div class="th-content">
-                <span>Адрес</span>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-icon">
-                  <path d="M8 4L11 7H5L8 4Z" fill="currentColor"/>
-                </svg>
-              </div>
-            </th>
-            <th (click)="onSort('template')" class="sortable">
-              <div class="th-content">
-                <span>Шаблон</span>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-icon">
-                  <path d="M8 4L11 7H5L8 4Z" fill="currentColor"/>
-                </svg>
-              </div>
-            </th>
-            <th (click)="onSort('timezone')" class="sortable">
-              <div class="th-content">
-                <span>Часовой пояс</span>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="sort-icon">
-                  <path d="M8 4L11 7H5L8 4Z" fill="currentColor"/>
-                </svg>
+                <span>Тип</span>
               </div>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of displayedItems; let i = index" class="data-row">
+          <tr *ngFor="let item of hierarchyItems; let i = index"
+              class="data-row"
+              [class.hierarchy-level-0]="item.level === 0"
+              [class.hierarchy-level-1]="item.level === 1"
+              [class.legal-entity-row]="item.type === 'legalEntity'"
+              [class.restaurant-row]="item.type === 'restaurant'">
             <td class="col-number">{{ i + 1 }}</td>
             <td>
-              <a href="#" class="link" (click)="onEditRestaurant(item); $event.preventDefault()" *ngIf="!showOnlyLegalEntities">{{ item.name }}</a>
-              <span *ngIf="showOnlyLegalEntities">{{ item.name }}</span>
+              <div class="hierarchy-cell" [style.padding-left.px]="item.level * 24">
+                <button
+                  *ngIf="item.type === 'legalEntity'"
+                  class="expand-btn"
+                  (click)="toggleLegalEntity(item.id)">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" [class.expanded]="item.isExpanded">
+                    <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <span class="item-icon" *ngIf="item.type === 'legalEntity'">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M3 18V8L10 3L17 8V18H12V13H8V18H3Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                  </svg>
+                </span>
+                <span class="item-icon" *ngIf="item.type === 'restaurant'">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M3 8H17M6 4V8M10 4V8M14 4V8M4 8H16C16.5523 8 17 8.44772 17 9V17C17 17.5523 16.5523 18 16 18H4C3.44772 18 3 17.5523 3 17V9C3 8.44772 3.44772 8 4 8Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                  </svg>
+                </span>
+                <a
+                  href="#"
+                  class="link"
+                  (click)="item.type === 'legalEntity' ? onEditLegalEntity(item.data) : onEditRestaurant(item.data); $event.preventDefault()">
+                  {{ item.name }}
+                </a>
+              </div>
             </td>
             <td>
-              <a href="#" class="link" (click)="onEditLegalEntityByName(item.legalEntity); $event.preventDefault()" *ngIf="item.legalEntity">{{ item.legalEntity }}</a>
+              <span *ngIf="item.type === 'legalEntity'" class="type-badge type-legal">Юридическое лицо</span>
+              <span *ngIf="item.type === 'restaurant'" class="type-badge type-restaurant">Ресторан</span>
             </td>
-            <td>{{ item.address }}</td>
-            <td>{{ item.template }}</td>
-            <td>{{ item.timezone }}</td>
           </tr>
         </tbody>
       </table>
@@ -211,7 +203,8 @@
               type="text"
               class="form-input"
               [(ngModel)]="restaurantForm.uid"
-              placeholder="UID">
+              placeholder="123-123-123"
+              readonly>
           </div>
 
           <div class="form-group">
@@ -237,16 +230,51 @@
               step="0.01">
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Категория (1-5)</label>
-            <select class="form-select" [(ngModel)]="restaurantForm.category">
-              <option [value]="1">1</option>
-              <option [value]="2">2</option>
-              <option [value]="3">3</option>
-              <option [value]="4">4</option>
-              <option [value]="5">5</option>
-            </select>
-          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Категория 1</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="restaurantForm.category1"
+            placeholder="Категория 1">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Категория 2</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="restaurantForm.category2"
+            placeholder="Категория 2">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Категория 3</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="restaurantForm.category3"
+            placeholder="Категория 3">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Категория 4</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="restaurantForm.category4"
+            placeholder="Категория 4">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Категория 5</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="restaurantForm.category5"
+            placeholder="Категория 5">
         </div>
 
         <div class="form-group">
@@ -312,57 +340,35 @@
           </label>
         </div>
 
-        <h3 class="section-title">Адрес</h3>
-
-        <div class="address-edit-link">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M8 13C8 13 2 8.6 2 5.2C2 2.8 4.5 1 6.7 1C7.9 1 9 1.5 9.8 2.3C10.6 1.5 11.7 1 12.9 1C15.1 1 17.6 2.8 17.6 5.2C17.6 8.6 11.6 13 11.6 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <a href="#" class="link" (click)="onEditAddress(); $event.preventDefault()">Редактировать адрес</a>
-        </div>
+        <h3 class="section-title">Юридический адрес</h3>
 
         <div class="form-group">
-          <label class="form-label">Фактический адрес*</label>
-          <div class="input-with-icon">
-            <input
-              type="text"
-              class="form-input"
-              [(ngModel)]="restaurantForm.address"
-              placeholder="Адрес ресторана">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="input-icon">
-              <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M8 7V11M8 5V5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </div>
+          <label class="form-label">Юридический адрес</label>
+          <textarea
+            class="form-textarea"
+            [(ngModel)]="restaurantForm.legalAddress"
+            placeholder="Юридический адрес"
+            rows="2"></textarea>
         </div>
 
+        <h3 class="section-title">Фактический адрес</h3>
+
         <div class="form-group">
-          <label class="form-label">Комментарий к адресу</label>
+          <label class="form-label">Город / населенный пункт*</label>
           <input
             type="text"
             class="form-input"
-            [(ngModel)]="restaurantForm.addressComment"
-            placeholder="Комментарий к адресу">
+            [(ngModel)]="restaurantForm.city"
+            placeholder="Город">
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Город / населенный пункт*</label>
-            <input
-              type="text"
-              class="form-input"
-              [(ngModel)]="restaurantForm.city"
-              placeholder="Город">
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Область / регион*</label>
-            <input
-              type="text"
-              class="form-input"
-              [(ngModel)]="restaurantForm.region"
-              placeholder="Область">
-          </div>
+        <div class="form-group">
+          <label class="form-label">Область / регион*</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="restaurantForm.region"
+            placeholder="Область">
         </div>
 
         <div class="form-group">
@@ -374,9 +380,27 @@
             placeholder="Страна">
         </div>
 
+        <div class="form-group">
+          <label class="form-label">Адрес ресторана - общий вид*</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="restaurantForm.address"
+            placeholder="Адрес ресторана">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Комментарии к адресу</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="restaurantForm.addressComment"
+            placeholder="Комментарии к адресу">
+        </div>
+
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Широта</label>
+            <label class="form-label">Координаты: Широта</label>
             <input
               type="number"
               class="form-input"
@@ -386,7 +410,7 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Долгота</label>
+            <label class="form-label">Координаты: Долгота</label>
             <input
               type="number"
               class="form-input"
@@ -407,8 +431,8 @@
   <div class="sidebar" [class.open]="showLegalEntitySidebar" *ngIf="sidebarMode === 'legalEntity'">
     <div class="sidebar-header">
       <div class="sidebar-title-section">
-        <h2 class="sidebar-title">Новое юридическое лицо</h2>
-        <div class="sidebar-subtitle">Создание</div>
+        <h2 class="sidebar-title">{{ legalEntityForm.name || 'Новое юридическое лицо' }}</h2>
+        <div class="sidebar-subtitle">Редактировать / Настройки</div>
       </div>
       <button class="sidebar-close" (click)="closeSidebar()">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
