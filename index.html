@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iiko Restaurant Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="custom-toolbar">
+      <button class="icon-button menu-button">
+        <span class="material-icons">menu</span>
+      </button>
+
+      <div class="logo">
+        <svg width="60" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M46.929 9.04c-5.373 0-8.76 2.814-8.76 7.488S41.557 24 46.93 24c5.372 0 8.745-2.817 8.745-7.472s-3.386-7.489-8.745-7.489zm0 10.864c-1.46 0-1.49-1.912-1.49-3.376s.03-3.39 1.49-3.39 1.478 1.912 1.478 3.39c0 1.478-.022 3.376-1.478 3.376zM6.234 9.369H.563a.567.567 0 00-.563.57v13.167c0 .315.252.57.563.57h5.67c.312 0 .564-.255.564-.57V9.94a.567.567 0 00-.563-.57zM6.234 3.09H.563A.567.567 0 000 3.66v3.639c0 .314.252.57.563.57h5.67c.312 0 .564-.255.564-.57v-3.64a.567.567 0 00-.563-.57zM15.725 9.369h-5.67a.567.567 0 00-.564.57v13.167c0 .315.252.57.563.57h5.67c.312 0 .564-.255.564-.57V9.94a.567.567 0 00-.563-.57zM15.725 3.09h-5.67a.567.567 0 00-.564.57v3.639c0 .314.252.57.563.57h5.67c.312 0 .564-.255.564-.57v-3.64a.567.567 0 00-.563-.57zM32.88 15.363l3.839-5.075a.574.574 0 00-.15-.834.558.558 0 00-.298-.085h-6.237a.563.563 0 00-.467.246l-3.679 5.435h-.117V3.662a.577.577 0 00-.165-.404.562.562 0 00-.398-.169h-5.66a.562.562 0 00-.398.17.577.577 0 00-.165.403v19.441c0 .152.06.297.165.404a.562.562 0 00.398.17h5.66c.15-.002.293-.062.398-.17a.576.576 0 00.165-.404v-6.365h.117l3.635 6.642a.566.566 0 00.492.296h6.559a.56.56 0 00.494-.296.579.579 0 00-.016-.581l-4.208-6.786a.575.575 0 01.035-.65zM56.39 6.244h-1.093v2.912h-.525V6.244h-1.069v-.487h2.676v.487h.01zm3.596 2.912h-.502v-2.55c-.148.424-.274.85-.43 1.274-.155.423-.273.86-.42 1.276h-.451l-.85-2.55v2.55h-.49V5.757h.725l.85 2.635c.145-.437.273-.883.429-1.318.155-.434.273-.882.429-1.317H60l-.014 3.399z" fill="#FF5252"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M44.967 8.439l.363.343a.586.586 0 00.82-.014 7.14 7.14 0 00.626-.697 2.54 2.54 0 00.41-.83 1.68 1.68 0 00-.159-1.273 4.14 4.14 0 00-.842-1.03c-.44-.415-.89-.742-1.131-1.337a1.57 1.57 0 01-.126-.575 1.35 1.35 0 01.115-.615c.165-.397.422-.75.749-1.026a.598.598 0 00.14-.678.598.598 0 00-.14-.2l-.345-.343a.589.589 0 00-.79-.016 4.097 4.097 0 00-.415.406c-.429.48-.765 1.168-.65 1.838.072.428.245.832.503 1.179.31.358.652.689 1.02.988.395.382.819.891.786 1.478-.029.26-.123.509-.273.722-.199.3-.429.579-.686.83a.595.595 0 00-.111.66.595.595 0 00.136.19z" fill="#FF5252"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M46.617 8.439l.37.343a.586.586 0 00.819-.017c.224-.218.434-.45.629-.694.18-.252.318-.532.407-.83.055-.226.07-.46.044-.69a1.701 1.701 0 00-.2-.583 4.419 4.419 0 00-.839-1.033c-.451-.415-.894-.741-1.145-1.336a2.19 2.19 0 01-.126-.576c-.008-.211.03-.421.115-.614a2.85 2.85 0 01.754-1.024.596.596 0 00.141-.679.596.596 0 00-.14-.199L47.1.164a.581.581 0 00-.784-.022 3.735 3.735 0 00-.427.412 2.313 2.313 0 00-.65 1.838c.077.427.249.83.503 1.179.313.356.652.686 1.016.988.4.382.82.891.787 1.478-.02.259-.107.507-.251.722a5.242 5.242 0 01-.692.816.593.593 0 00-.125.67c.033.073.08.14.14.194z" fill="#FF5252"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M48.27 8.439l.375.34a.586.586 0 00.82-.016c.221-.218.43-.45.623-.692a2.54 2.54 0 00.41-.83 1.68 1.68 0 00.04-.69 1.593 1.593 0 00-.199-.583 4.137 4.137 0 00-.839-1.033c-.44-.415-.89-.741-1.131-1.336a1.57 1.57 0 01-.126-.576c-.01-.211.03-.422.115-.614.163-.396.415-.747.738-1.024a.598.598 0 00.14-.678.598.598 0 00-.14-.2l-.344-.343a.589.589 0 00-.79-.016 4.095 4.095 0 00-.41.406c-.43.48-.765 1.168-.65 1.838.072.428.244.832.502 1.179a8.25 8.25 0 001.02.988c.399.382.82.891.787 1.478-.03.26-.123.509-.274.722-.198.3-.428.579-.686.83a.596.596 0 00-.115.658.594.594 0 00.135.192z" fill="#FF5252"/>
+        </svg>
+      </div>
+
+      <button class="nav-button">
+        <span class="material-icons">store</span>
+        <span>Мой ресторан</span>
+      </button>
+
+      <div class="date-selector">
+        <button class="date-tab">Д</button>
+        <button class="date-tab">Н</button>
+        <button class="date-tab">М</button>
+        <button class="date-tab active">Г</button>
+        <button class="date-tab">П</button>
+
+        <button class="icon-button date-nav">
+          <span class="material-icons">chevron_left</span>
+        </button>
+
+        <span class="date-display">01.01.25 - 31.12.25</span>
+
+        <button class="icon-button date-nav">
+          <span class="material-icons">chevron_right</span>
+        </button>
+
+        <button class="icon-button">
+          <span class="material-icons">calendar_today</span>
+        </button>
+      </div>
+
+      <span class="toolbar-spacer"></span>
+
+      <button class="icon-button">
+        <span class="material-icons">notifications_none</span>
+      </button>
+
+      <button class="user-button">
+        <span class="material-icons">account_circle</span>
+        <span>vyartsev</span>
+        <span class="material-icons">expand_more</span>
+      </button>
+    </header>
+
+    <div class="main-layout">
+      <aside class="side-menu">
+        <nav class="menu-list">
+          <div class="menu-item single" data-route="/settings/general">
+            <span class="material-icons">settings</span>
+            <span>Общие настройки</span>
+          </div>
+
+          <div class="menu-item single" data-route="/settings/forecasting">
+            <span class="material-icons">timeline</span>
+            <span>Прогнозирование</span>
+          </div>
+
+          <div class="menu-item single" data-route="/settings/corporation">
+            <span class="material-icons">business</span>
+            <span>Настройки корпорации</span>
+          </div>
+
+          <div class="menu-item with-submenu" data-parent="restaurants">
+            <span class="material-icons">restaurant</span>
+            <span>Рестораны</span>
+            <span class="material-icons expand-icon">chevron_right</span>
+          </div>
+          <div class="submenu" data-parent="restaurants">
+            <div class="submenu-item" data-route="/restaurants/templates">
+              <span class="submenu-indicator"></span>
+              <span>Шаблоны</span>
+            </div>
+            <div class="submenu-item" data-route="/restaurants/receipt-templates">
+              <span class="submenu-indicator"></span>
+              <span>Шаблоны чеков</span>
+            </div>
+            <div class="submenu-item" data-route="/restaurants/list">
+              <span class="submenu-indicator"></span>
+              <span>Рестораны</span>
+            </div>
+            <div class="submenu-item" data-route="/restaurants/commissions">
+              <span class="submenu-indicator"></span>
+              <span>Комиссии агрегаторов</span>
+            </div>
+            <div class="submenu-item" data-route="/restaurants/panels">
+              <span class="submenu-indicator"></span>
+              <span>Панели</span>
+            </div>
+            <div class="submenu-item" data-route="/restaurants/auto-add-dishes">
+              <span class="submenu-indicator"></span>
+              <span>Автодобавление блюд</span>
+            </div>
+            <div class="submenu-item" data-route="/restaurants/iikocard-networks">
+              <span class="submenu-indicator"></span>
+              <span>Управление сетями iikoCard</span>
+            </div>
+          </div>
+
+          <div class="menu-item single" data-route="/warehouse">
+            <span class="material-icons">warehouse</span>
+            <span>Склад</span>
+          </div>
+
+          <div class="menu-item single" data-route="/analytics">
+            <span class="material-icons">analytics</span>
+            <span>Аналитика</span>
+          </div>
+
+          <div class="menu-item single" data-route="/notifications">
+            <span class="material-icons">notifications</span>
+            <span>Оповещения</span>
+          </div>
+
+          <div class="menu-item single" data-route="/staff">
+            <span class="material-icons">people</span>
+            <span>Персонал</span>
+          </div>
+
+          <div class="menu-item single" data-route="/beer-marking">
+            <span class="material-icons">local_bar</span>
+            <span>Маркировка разливного пива</span>
+          </div>
+
+          <div class="menu-item single" data-route="/events">
+            <span class="material-icons">event</span>
+            <span>События</span>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <div id="content-area">
+          <p>Выберите пункт меню</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
