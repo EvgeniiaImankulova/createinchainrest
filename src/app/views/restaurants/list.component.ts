@@ -222,7 +222,6 @@ export class RestaurantsListComponent {
     category5: '',
     legalEntityId: '',
     email: '',
-    legalAddress: '',
     city: 'Кострома',
     region: 'Костромская область',
     country: 'Россия',
