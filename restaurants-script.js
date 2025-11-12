@@ -289,8 +289,12 @@ function clearLegalEntityForm() {
   document.getElementById('legalEntityDescription').value = '';
   document.getElementById('legalEntityInn').value = '';
   document.getElementById('legalEntityKpp').value = '';
+  document.getElementById('legalEntityOgrn').value = '';
   document.getElementById('legalEntityOkpo').value = '';
-  document.getElementById('legalEntityRegNumber').value = '';
+  document.getElementById('legalEntityOkved').value = '';
+  document.getElementById('legalEntityIfnsCode').value = '';
+  document.getElementById('legalEntityRegDate').value = '';
+  document.getElementById('legalEntityStatus').value = '';
   document.getElementById('legalEntityAddress').value = '';
   document.getElementById('legalEntityPhone').value = '';
   document.getElementById('legalEntityEmail').value = '';
@@ -299,6 +303,7 @@ function clearLegalEntityForm() {
   document.getElementById('legalEntityCorrAccount').value = '';
   document.getElementById('legalEntityBankName').value = '';
   document.getElementById('legalEntityBankCity').value = '';
+  document.getElementById('legalEntityDirectorPost').value = '';
   document.getElementById('legalEntityDirector').value = '';
   document.getElementById('legalEntityAccountant').value = '';
   document.getElementById('legalEntityChiefTech').value = '';
@@ -352,11 +357,15 @@ function editLegalEntity(legalEntityId) {
 
   document.getElementById('legalEntityTitle').textContent = legalEntity.name;
   document.getElementById('legalEntityName').value = legalEntity.name;
-  document.getElementById('legalEntityDescription').value = legalEntity.description;
+  document.getElementById('legalEntityDescription').value = legalEntity.description || '';
   document.getElementById('legalEntityInn').value = legalEntity.inn;
   document.getElementById('legalEntityKpp').value = legalEntity.kpp;
-  document.getElementById('legalEntityOkpo').value = legalEntity.okpo;
-  document.getElementById('legalEntityRegNumber').value = legalEntity.regNumber;
+  document.getElementById('legalEntityOgrn').value = legalEntity.ogrn || '';
+  document.getElementById('legalEntityOkpo').value = legalEntity.okpo || '';
+  document.getElementById('legalEntityOkved').value = legalEntity.okved || '';
+  document.getElementById('legalEntityIfnsCode').value = legalEntity.ifnsCode || '';
+  document.getElementById('legalEntityRegDate').value = legalEntity.regDate || '';
+  document.getElementById('legalEntityStatus').value = legalEntity.status || '';
   document.getElementById('legalEntityAddress').value = legalEntity.address;
   document.getElementById('legalEntityPhone').value = legalEntity.phone;
   document.getElementById('legalEntityEmail').value = legalEntity.email;
@@ -365,10 +374,11 @@ function editLegalEntity(legalEntityId) {
   document.getElementById('legalEntityCorrAccount').value = legalEntity.corrAccount;
   document.getElementById('legalEntityBankName').value = legalEntity.bankName;
   document.getElementById('legalEntityBankCity').value = legalEntity.bankCity;
+  document.getElementById('legalEntityDirectorPost').value = legalEntity.directorPost || '';
   document.getElementById('legalEntityDirector').value = legalEntity.director;
-  document.getElementById('legalEntityAccountant').value = legalEntity.accountant;
-  document.getElementById('legalEntityChiefTech').value = legalEntity.chiefTech;
-  document.getElementById('legalEntityProdManager').value = legalEntity.prodManager;
+  document.getElementById('legalEntityAccountant').value = legalEntity.accountant || '';
+  document.getElementById('legalEntityChiefTech').value = legalEntity.chiefTech || '';
+  document.getElementById('legalEntityProdManager').value = legalEntity.prodManager || '';
 
   openSidebar('legalEntity');
 }
@@ -461,8 +471,12 @@ function saveLegalEntity() {
     description: document.getElementById('legalEntityDescription').value,
     inn: document.getElementById('legalEntityInn').value,
     kpp: document.getElementById('legalEntityKpp').value,
+    ogrn: document.getElementById('legalEntityOgrn').value,
     okpo: document.getElementById('legalEntityOkpo').value,
-    regNumber: document.getElementById('legalEntityRegNumber').value,
+    okved: document.getElementById('legalEntityOkved').value,
+    ifnsCode: document.getElementById('legalEntityIfnsCode').value,
+    regDate: document.getElementById('legalEntityRegDate').value,
+    status: document.getElementById('legalEntityStatus').value,
     address: document.getElementById('legalEntityAddress').value,
     phone: document.getElementById('legalEntityPhone').value,
     email: document.getElementById('legalEntityEmail').value,
@@ -471,6 +485,7 @@ function saveLegalEntity() {
     corrAccount: document.getElementById('legalEntityCorrAccount').value,
     bankName: document.getElementById('legalEntityBankName').value,
     bankCity: document.getElementById('legalEntityBankCity').value,
+    directorPost: document.getElementById('legalEntityDirectorPost').value,
     director: document.getElementById('legalEntityDirector').value,
     accountant: document.getElementById('legalEntityAccountant').value,
     chiefTech: document.getElementById('legalEntityChiefTech').value,
@@ -496,3 +511,93 @@ document.addEventListener('click', function(e) {
     createMenu.classList.remove('show');
   }
 });
+
+async function fetchCompanyDataByInn() {
+  const innInput = document.getElementById('legalEntityInn');
+  const inn = innInput.value.trim();
+
+  if (!inn || inn.length < 10) {
+    return;
+  }
+
+  try {
+    const response = await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Token 8b7f0ef05a236baa3a5ec7088447dcf3ad71ce24'
+      },
+      body: JSON.stringify({ query: inn })
+    });
+
+    if (!response.ok) {
+      console.error('Ошибка при запросе к API');
+      return;
+    }
+
+    const data = await response.json();
+
+    if (data.suggestions && data.suggestions.length > 0) {
+      const company = data.suggestions[0].data;
+
+      if (company.name && company.name.full_with_opf) {
+        document.getElementById('legalEntityName').value = company.name.full_with_opf;
+      }
+
+      if (company.kpp) {
+        document.getElementById('legalEntityKpp').value = company.kpp;
+      }
+
+      if (company.ogrn) {
+        document.getElementById('legalEntityOgrn').value = company.ogrn;
+      }
+
+      if (company.okpo) {
+        document.getElementById('legalEntityOkpo').value = company.okpo;
+      }
+
+      if (company.okved) {
+        document.getElementById('legalEntityOkved').value = company.okved;
+      }
+
+      if (company.management && company.management.name) {
+        document.getElementById('legalEntityDirector').value = company.management.name;
+      }
+
+      if (company.management && company.management.post) {
+        document.getElementById('legalEntityDirectorPost').value = company.management.post;
+      }
+
+      if (company.address && company.address.unrestricted_value) {
+        document.getElementById('legalEntityAddress').value = company.address.unrestricted_value;
+      }
+
+      if (company.state && company.state.registration_date) {
+        const regDate = new Date(company.state.registration_date);
+        document.getElementById('legalEntityRegDate').value = regDate.toISOString().split('T')[0];
+      }
+
+      if (company.state && company.state.status) {
+        const statusMap = {
+          'ACTIVE': 'Действующее',
+          'LIQUIDATING': 'Ликвидируется',
+          'LIQUIDATED': 'Ликвидировано',
+          'REORGANIZING': 'В процессе реорганизации'
+        };
+        document.getElementById('legalEntityStatus').value = statusMap[company.state.status] || company.state.status;
+      }
+
+      if (company.finance && company.finance.tax_system) {
+        document.getElementById('legalEntityIfnsCode').value = company.finance.tax_system;
+      }
+
+      alert('Данные успешно загружены из ЕГРЮЛ');
+    } else {
+      alert('Организация с таким ИНН не найдена');
+    }
+  } catch (error) {
+    console.error('Ошибка при получении данных:', error);
+    alert('Не удалось получить данные организации. Проверьте подключение к интернету.');
+  }
+}

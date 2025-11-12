@@ -314,7 +314,7 @@
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">ИНН*</label>
-            <input type="text" class="form-input" id="legalEntityInn" placeholder="ИНН" maxlength="12">
+            <input type="text" class="form-input" id="legalEntityInn" placeholder="ИНН" maxlength="12" onblur="fetchCompanyDataByInn()">
           </div>
 
           <div class="form-group">
@@ -325,13 +325,37 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">ОКПО</label>
-            <input type="text" class="form-input" id="legalEntityOkpo" placeholder="ОКПО">
+            <label class="form-label">ОГРН</label>
+            <input type="text" class="form-input" id="legalEntityOgrn" placeholder="ОГРН" maxlength="15">
           </div>
 
           <div class="form-group">
-            <label class="form-label">Регистрационный номер</label>
-            <input type="text" class="form-input" id="legalEntityRegNumber" placeholder="Регистрационный номер">
+            <label class="form-label">ОКПО</label>
+            <input type="text" class="form-input" id="legalEntityOkpo" placeholder="ОКПО">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">ОКВЭД</label>
+            <input type="text" class="form-input" id="legalEntityOkved" placeholder="ОКВЭД">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Код ИФНС</label>
+            <input type="text" class="form-input" id="legalEntityIfnsCode" placeholder="Код ИФНС">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Дата регистрации</label>
+            <input type="date" class="form-input" id="legalEntityRegDate">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Статус</label>
+            <input type="text" class="form-input" id="legalEntityStatus" placeholder="Статус" readonly>
           </div>
         </div>
 
@@ -382,6 +406,11 @@
         </div>
 
         <h3 class="section-title">Ответственные лица</h3>
+
+        <div class="form-group">
+          <label class="form-label">Должность руководителя</label>
+          <input type="text" class="form-input" id="legalEntityDirectorPost" placeholder="Должность руководителя">
+        </div>
 
         <div class="form-group">
           <label class="form-label">ФИО руководителя</label>
