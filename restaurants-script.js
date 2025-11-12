@@ -270,9 +270,6 @@ function clearRestaurantForm() {
   document.getElementById('restaurantTemplate').value = 'Default';
   document.getElementById('restaurantLegalEntity').value = '';
   document.getElementById('restaurantIsFranchise').checked = false;
-  document.getElementById('restaurantUploadFromCO').checked = false;
-  document.getElementById('restaurantDownloadToCO').checked = false;
-  document.getElementById('restaurantReceiveDirectories').checked = false;
   document.getElementById('restaurantLegalAddress').value = '';
   document.getElementById('restaurantCity').value = '';
   document.getElementById('restaurantRegion').value = '';
@@ -333,9 +330,6 @@ function editRestaurant(restaurantId) {
   document.getElementById('restaurantTemplate').value = restaurant.template;
   document.getElementById('restaurantLegalEntity').value = restaurant.legalEntityId;
   document.getElementById('restaurantIsFranchise').checked = restaurant.isFranchise;
-  document.getElementById('restaurantUploadFromCO').checked = restaurant.uploadFromCO;
-  document.getElementById('restaurantDownloadToCO').checked = restaurant.downloadToCO;
-  document.getElementById('restaurantReceiveDirectories').checked = restaurant.receiveDirectories;
   document.getElementById('restaurantLegalAddress').value = restaurant.legalAddress;
   document.getElementById('restaurantCity').value = restaurant.city;
   document.getElementById('restaurantRegion').value = restaurant.region;
@@ -439,9 +433,6 @@ function saveRestaurant() {
     template: document.getElementById('restaurantTemplate').value,
     legalEntityId: document.getElementById('restaurantLegalEntity').value,
     isFranchise: document.getElementById('restaurantIsFranchise').checked,
-    uploadFromCO: document.getElementById('restaurantUploadFromCO').checked,
-    downloadToCO: document.getElementById('restaurantDownloadToCO').checked,
-    receiveDirectories: document.getElementById('restaurantReceiveDirectories').checked,
     legalAddress: document.getElementById('restaurantLegalAddress').value,
     city: document.getElementById('restaurantCity').value,
     region: document.getElementById('restaurantRegion').value,
