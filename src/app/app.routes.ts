@@ -12,11 +12,26 @@ import { OverviewComponent } from './views/reports/overview.component';
 import { LoyaltyComponent } from './views/reports/loyalty.component';
 import { CorporationComponent } from './views/settings/corporation.component';
 import { RestaurantsListComponent } from './views/restaurants/list.component';
+import { PlaceholderComponent } from './views/placeholder/placeholder.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/settings/corporation', pathMatch: 'full' },
+  { path: 'settings/general', component: PlaceholderComponent },
+  { path: 'settings/forecasting', component: PlaceholderComponent },
   { path: 'settings/corporation', component: CorporationComponent },
+  { path: 'restaurants/templates', component: PlaceholderComponent },
+  { path: 'restaurants/receipt-templates', component: PlaceholderComponent },
   { path: 'restaurants/list', component: RestaurantsListComponent },
+  { path: 'restaurants/commissions', component: PlaceholderComponent },
+  { path: 'restaurants/panels', component: PlaceholderComponent },
+  { path: 'restaurants/auto-add-dishes', component: PlaceholderComponent },
+  { path: 'restaurants/iikocard-networks', component: PlaceholderComponent },
+  { path: 'warehouse', component: PlaceholderComponent },
+  { path: 'analytics', component: PlaceholderComponent },
+  { path: 'notifications', component: PlaceholderComponent },
+  { path: 'staff', component: PlaceholderComponent },
+  { path: 'beer-marking', component: PlaceholderComponent },
+  { path: 'events', component: PlaceholderComponent },
   { path: 'forecast/sales', component: SalesComponent },
   { path: 'forecast/products', component: ProductsComponent },
   { path: 'forecast/ingredients', component: IngredientsComponent },

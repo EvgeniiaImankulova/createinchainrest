@@ -3,7 +3,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
-import { MenuService, MenuItem } from '../../services/menu.service';
+import { NavigationService } from '../../services/navigation.service';
+import { MenuItem } from '../../models/menu-item.model';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -15,56 +16,60 @@ import { filter } from 'rxjs/operators';
 })
 export class SideMenuComponent implements OnInit {
   menuItems: MenuItem[] = [];
-  expandedItems: Set<string> = new Set();
-  activeParentLabel: string = '';
+  expandedMenus: Set<string> = new Set();
+  activeRoute: string = '';
 
   constructor(
-    private menuService: MenuService,
+    private navigationService: NavigationService,
     private router: Router
   ) {
-    this.menuItems = this.menuService.getMenuItems();
+    this.menuItems = this.navigationService.getMenuItems();
   }
 
   ngOnInit(): void {
-    this.updateActiveParent(this.router.url);
+    this.activeRoute = this.router.url;
+    this.navigationService.expandMenuForRoute(this.activeRoute);
+
+    this.navigationService.expandedMenus$.subscribe(expanded => {
+      this.expandedMenus = expanded;
+    });
 
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: any) => {
-        this.updateActiveParent(event.url);
+      .subscribe((event: NavigationEnd) => {
+        this.activeRoute = event.url;
       });
   }
 
-  private updateActiveParent(url: string): void {
-    for (const item of this.menuItems) {
-      if (item.children) {
-        const hasActiveChild = item.children.some(child => child.route === url);
-        if (hasActiveChild) {
-          this.activeParentLabel = item.label;
-          this.expandedItems.add(item.label);
-          return;
-        }
-      }
+  toggleMenu(menuId: string): void {
+    this.navigationService.toggleMenu(menuId);
+  }
+
+  isMenuExpanded(menuId: string): boolean {
+    return this.expandedMenus.has(menuId);
+  }
+
+  isActiveRoute(route: string): boolean {
+    return this.activeRoute === route;
+  }
+
+  isActiveParent(item: MenuItem): boolean {
+    return item.submenu?.some(sub => sub.route === this.activeRoute) || false;
+  }
+
+  hasSubmenu(item: MenuItem): boolean {
+    return !!item.submenu && item.submenu.length > 0;
+  }
+
+  onMenuItemClick(item: MenuItem): void {
+    if (this.hasSubmenu(item)) {
+      this.toggleMenu(item.id);
+    } else if (item.route) {
+      this.router.navigate([item.route]);
     }
   }
 
-  toggleExpanded(label: string): void {
-    if (this.expandedItems.has(label)) {
-      this.expandedItems.delete(label);
-    } else {
-      this.expandedItems.add(label);
-    }
-  }
-
-  isExpanded(label: string): boolean {
-    return this.expandedItems.has(label);
-  }
-
-  isActiveParent(label: string): boolean {
-    return this.activeParentLabel === label;
-  }
-
-  isDivider(item: MenuItem): boolean {
-    return item.label === 'divider';
+  onSubmenuItemClick(route: string): void {
+    this.router.navigate([route]);
   }
 }

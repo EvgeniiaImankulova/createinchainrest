@@ -1,13 +1,11 @@
 <div class="app-container">
   <app-toolbar></app-toolbar>
 
-  <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav mode="side" opened class="sidenav">
-      <app-side-menu></app-side-menu>
-    </mat-sidenav>
+  <div class="main-layout">
+    <app-side-menu></app-side-menu>
 
-    <mat-sidenav-content class="main-content">
+    <main class="main-content">
       <router-outlet></router-outlet>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+    </main>
+  </div>
 </div>

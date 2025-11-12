@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 
@@ -10,8 +8,6 @@ import { SideMenuComponent } from './components/side-menu/side-menu.component';
   standalone: true,
   imports: [
     RouterOutlet,
-    MatToolbarModule,
-    MatSidenavModule,
     ToolbarComponent,
     SideMenuComponent
   ],
@@ -19,5 +15,5 @@ import { SideMenuComponent } from './components/side-menu/side-menu.component';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Angular App';
+  title = 'iiko Restaurant Management';
 }

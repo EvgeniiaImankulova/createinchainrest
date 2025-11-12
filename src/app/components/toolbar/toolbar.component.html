@@ -26,23 +26,26 @@
   </button>
 
   <div class="date-selector">
-    <button mat-button class="date-tab">Д</button>
-    <button mat-button class="date-tab">Н</button>
-    <button mat-button class="date-tab">М</button>
-    <button mat-button class="date-tab active">Г</button>
-    <button mat-button class="date-tab">П</button>
+    <button
+      *ngFor="let dateLabel of dateLabels"
+      mat-button
+      class="date-tab"
+      [class.active]="datePeriod.type === dateLabel.type"
+      (click)="onPeriodChange(dateLabel.type)">
+      {{ dateLabel.label }}
+    </button>
 
-    <button mat-icon-button class="date-nav">
+    <button mat-icon-button class="date-nav" (click)="navigatePeriod('prev')">
       <mat-icon>chevron_left</mat-icon>
     </button>
 
-    <span class="date-display">01.01.25 - 31.12.25</span>
+    <span class="date-display">{{ getFormattedDateRange() }}</span>
 
-    <button mat-icon-button class="date-nav">
+    <button mat-icon-button class="date-nav" (click)="navigatePeriod('next')">
       <mat-icon>chevron_right</mat-icon>
     </button>
 
-    <button mat-icon-button>
+    <button mat-icon-button (click)="openCalendar()">
       <mat-icon>calendar_today</mat-icon>
     </button>
   </div>
@@ -55,7 +58,7 @@
 
   <button mat-button class="user-button">
     <mat-icon>account_circle</mat-icon>
-    <span>vyartsev</span>
+    <span>{{ user.username }}</span>
     <mat-icon>expand_more</mat-icon>
   </button>
 </mat-toolbar>
