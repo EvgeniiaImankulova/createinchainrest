@@ -77,10 +77,8 @@
                   (click)="item.type === 'legalEntity' ? onEditLegalEntity(item.data) : onEditRestaurant(item.data); $event.preventDefault()">
                   {{ item.name }}
                 </a>
-                <span *ngIf="item.type === 'restaurant' && item.data.isFranchise" class="franchise-badge" title="Франшизный ресторан">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M8 1L10.5 6H15L11.5 9.5L13 15L8 11.5L3 15L4.5 9.5L1 6H5.5L8 1Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                  </svg>
+                <span *ngIf="item.type === 'restaurant' && item.data.isFranchise" class="franchise-tag">
+                  Франчайзи
                 </span>
               </div>
             </td>
