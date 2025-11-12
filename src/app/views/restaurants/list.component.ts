@@ -155,7 +155,9 @@ export class RestaurantsListComponent {
   activeTab: string = 'general';
   sidebarMode: 'restaurant' | 'legalEntity' = 'restaurant';
 
-  expandedLegalEntities: Set<string> = new Set();
+  expandedLegalEntities: Set<string> = new Set(
+    ['1', '2', '3']
+  );
 
   get legalEntities() {
     return this.legalEntitiesData.map(le => ({ id: le.id, name: le.name }));
