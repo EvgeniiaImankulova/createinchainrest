@@ -10,6 +10,7 @@ interface Restaurant {
   address: string;
   template: string;
   timezone: string;
+  isFranchise?: boolean;
 }
 
 interface LegalEntity {
@@ -124,7 +125,8 @@ export class RestaurantsListComponent {
       legalEntity: 'ООО "Вкусная еда"',
       address: '20/2, улица Советская, Кострома, Костромская область, Россия',
       template: 'WEB-11353-без-дневных-интеров',
-      timezone: '(UTC+3:00) Европа/Москва'
+      timezone: '(UTC+3:00) Европа/Москва',
+      isFranchise: true
     },
     {
       id: 'r2',
@@ -133,7 +135,8 @@ export class RestaurantsListComponent {
       legalEntity: 'ООО "Вкусная еда"',
       address: 'переулок Джамбула, 21, Санкт-Петербург, Санкт-Петербург, Russia',
       template: 'Default',
-      timezone: '(UTC+3:00) Европа/Москва'
+      timezone: '(UTC+3:00) Европа/Москва',
+      isFranchise: false
     },
     {
       id: 'r3',
@@ -142,7 +145,8 @@ export class RestaurantsListComponent {
       legalEntity: 'ООО "Гастроном"',
       address: 'оренбургская область, Клишева, деревня Клёшнева',
       template: 'Default',
-      timezone: '(UTC+11:00) Азия/Среднеколымск'
+      timezone: '(UTC+11:00) Азия/Среднеколымск',
+      isFranchise: false
     },
     {
       id: 'r4',
@@ -151,7 +155,8 @@ export class RestaurantsListComponent {
       legalEntity: 'ООО "Вкусная еда"',
       address: 'Москва, Москва, Варшавское шоссе, 118к1',
       template: 'WEB-11353-без-дневных-интеров',
-      timezone: '(UTC+3:00) Европа/Москва'
+      timezone: '(UTC+3:00) Европа/Москва',
+      isFranchise: true
     }
   ];
 
