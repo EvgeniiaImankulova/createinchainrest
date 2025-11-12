@@ -19,6 +19,7 @@ interface LegalEntity {
   inn: string;
   kpp: string;
   okpo: string;
+  ogrn: string;
   legalAddress: string;
   phone: string;
   bankAccount: string;
@@ -50,6 +51,7 @@ export class RestaurantsListComponent {
       inn: '7743012345',
       kpp: '774301001',
       okpo: '12345678',
+      ogrn: '1027743012345',
       legalAddress: 'г. Москва, ул. Тверская, д. 10',
       phone: '+7 (495) 123-45-67',
       bankAccount: '40702810100000012345',
@@ -71,6 +73,7 @@ export class RestaurantsListComponent {
       inn: '7701234567',
       kpp: '770101001',
       okpo: '87654321',
+      ogrn: '1027701234567',
       legalAddress: 'г. Москва, пр-т Мира, д. 150',
       phone: '+7 (495) 987-65-43',
       bankAccount: '40702810200000098765',
@@ -92,6 +95,7 @@ export class RestaurantsListComponent {
       inn: '773456789012',
       kpp: '',
       okpo: '45678901',
+      ogrn: '304773456789012',
       legalAddress: 'г. Санкт-Петербург, Невский пр-т, д. 25',
       phone: '+7 (812) 555-12-34',
       bankAccount: '40802810500000054321',
@@ -231,6 +235,7 @@ export class RestaurantsListComponent {
     inn: '',
     kpp: '',
     okpo: '',
+    ogrn: '',
     legalAddress: '',
     phone: '',
     bankAccount: '',

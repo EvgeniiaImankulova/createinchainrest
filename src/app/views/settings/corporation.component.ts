@@ -23,6 +23,7 @@ export class CorporationComponent {
     address: '',
     inn: '',
     kpp: '',
+    ogrn: '',
     isFranchiseNetwork: false,
     defaultRoyalty: 0,
     currency: 'RUB'
