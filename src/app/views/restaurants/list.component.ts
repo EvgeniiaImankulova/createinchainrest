@@ -29,6 +29,7 @@ interface LegalEntity {
   correspondentAccount: string;
   registrationNumber: string;
   directorName: string;
+  directorPosition: string;
   email: string;
   accountantName: string;
   chiefTechnologistName: string;
@@ -61,6 +62,7 @@ export class RestaurantsListComponent {
       correspondentAccount: '30101810400000000225',
       registrationNumber: '1234567890123',
       directorName: 'Иванов Иван Иванович',
+      directorPosition: 'Генеральный директор',
       email: 'info@vkusnaya-eda.ru',
       accountantName: 'Петрова Мария Сергеевна',
       chiefTechnologistName: 'Сидоров Петр Алексеевич',
@@ -83,6 +85,7 @@ export class RestaurantsListComponent {
       correspondentAccount: '30101810400000000225',
       registrationNumber: '9876543210987',
       directorName: 'Смирнов Алексей Петрович',
+      directorPosition: 'Генеральный директор',
       email: 'contact@gastronomgroup.ru',
       accountantName: 'Волкова Елена Ивановна',
       chiefTechnologistName: 'Морозов Дмитрий Николаевич',
@@ -105,6 +108,7 @@ export class RestaurantsListComponent {
       correspondentAccount: '30101810200000000653',
       registrationNumber: '321654987321',
       directorName: 'Федоров Андрей Сергеевич',
+      directorPosition: 'Индивидуальный предприниматель',
       email: 'fedorov@restaurant.spb.ru',
       accountantName: 'Новикова Татьяна Викторовна',
       chiefTechnologistName: 'Павлов Игорь Юрьевич',
@@ -245,6 +249,7 @@ export class RestaurantsListComponent {
     correspondentAccount: '',
     registrationNumber: '',
     directorName: '',
+    directorPosition: '',
     email: '',
     accountantName: '',
     chiefTechnologistName: '',

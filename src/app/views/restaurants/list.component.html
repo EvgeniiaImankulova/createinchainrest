@@ -492,6 +492,26 @@
             placeholder="ОГРН">
         </div>
 
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">ФИО руководителя</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="legalEntityForm.directorName"
+              placeholder="ФИО руководителя">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Должность руководителя</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="legalEntityForm.directorPosition"
+              placeholder="Должность руководителя">
+          </div>
+        </div>
+
         <div class="form-group">
           <label class="form-label">Юридический адрес</label>
           <input
