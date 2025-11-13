@@ -165,8 +165,10 @@ export class RestaurantsListComponent {
   showCreateMenu: boolean = false;
   showSidebar: boolean = false;
   showLegalEntitySidebar: boolean = false;
+  showSuccessModal: boolean = false;
   activeTab: string = 'general';
   sidebarMode: 'restaurant' | 'legalEntity' = 'restaurant';
+  emailError: string = '';
 
   expandedLegalEntities: Set<string> = new Set(
     ['1', '2', '3']
@@ -302,8 +304,26 @@ export class RestaurantsListComponent {
     console.log('Edit address');
   }
 
+  validateEmail(): void {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!this.restaurantForm.email) {
+      this.emailError = 'Email обязателен для заполнения';
+    } else if (!emailRegex.test(this.restaurantForm.email)) {
+      this.emailError = 'Введите корректный email адрес';
+    } else {
+      this.emailError = '';
+    }
+  }
+
   onSave(): void {
     if (this.sidebarMode === 'restaurant') {
+      this.validateEmail();
+
+      if (this.emailError) {
+        return;
+      }
+
       console.log('Save restaurant', this.restaurantForm);
       const restaurant = this.restaurants.find(r => r.name === this.restaurantForm.name);
       if (restaurant) {
@@ -320,6 +340,9 @@ export class RestaurantsListComponent {
           restaurant.legalEntity = legalEntity.name;
         }
       }
+
+      this.closeSidebar();
+      this.showSuccessModal = true;
     } else {
       console.log('Save legal entity', this.legalEntityForm);
       const legalEntity = this.legalEntitiesData.find(le => le.name === this.legalEntityForm.name);
@@ -331,8 +354,12 @@ export class RestaurantsListComponent {
           }
         });
       }
+      this.closeSidebar();
     }
-    this.closeSidebar();
+  }
+
+  closeSuccessModal(): void {
+    this.showSuccessModal = false;
   }
 
   onFilter(): void {

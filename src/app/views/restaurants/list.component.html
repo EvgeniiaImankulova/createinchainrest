@@ -281,12 +281,30 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">E-mail</label>
+          <label class="form-label">
+            E-mail*
+            <span class="email-info-icon" title="На указанный email будут отправлены данные для входа в личный кабинет iiko web">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M8 7V11M8 5V5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </label>
           <input
             type="email"
             class="form-input"
+            [class.error]="emailError"
             [(ngModel)]="restaurantForm.email"
-            placeholder="email@example.com">
+            (blur)="validateEmail()"
+            placeholder="email@example.com"
+            required>
+          <div class="field-hint" *ngIf="!emailError && restaurantForm.email">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="hint-icon">
+              <path d="M2 3L8 8L14 3M2 3V13H14V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            На этот адрес будут отправлены логин и пароль для входа в личный кабинет iiko web
+          </div>
+          <div class="field-error" *ngIf="emailError">{{ emailError }}</div>
         </div>
 
         <div class="form-group">
@@ -629,5 +647,22 @@
       <button class="btn-cancel" (click)="closeSidebar()">Отмена</button>
       <button class="btn-save" (click)="onSave()">Сохранить</button>
     </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showSuccessModal" (click)="closeSuccessModal()"></div>
+  <div class="success-modal" *ngIf="showSuccessModal">
+    <div class="modal-icon success">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="28" stroke="#00C853" stroke-width="4"/>
+        <path d="M20 32L28 40L44 24" stroke="#00C853" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h3 class="modal-title">Ресторан успешно создан!</h3>
+    <div class="modal-message">
+      <p>Учетные данные для входа в личный кабинет iiko web были отправлены на адрес:</p>
+      <p class="modal-email">{{ restaurantForm.email }}</p>
+      <p class="modal-note">Письмо содержит логин и пароль для доступа к системе управления рестораном.</p>
+    </div>
+    <button class="btn-modal-close" (click)="closeSuccessModal()">Понятно</button>
   </div>
 </div>
