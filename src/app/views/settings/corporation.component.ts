@@ -26,7 +26,8 @@ export class CorporationComponent {
     ogrn: '',
     isFranchiseNetwork: false,
     defaultRoyalty: 0,
-    currency: 'RUB'
+    currency: 'RUB',
+    useNetworkSettings: false
   };
 
   preparationPlaces: string[] = [

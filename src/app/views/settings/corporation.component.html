@@ -170,6 +170,19 @@
       <section class="form-section">
         <h2 class="section-title">Общие настройки сети</h2>
 
+        <div class="form-group">
+          <label class="checkbox-container">
+            <input
+              type="checkbox"
+              class="checkbox-input"
+              [(ngModel)]="corporationSettings.useNetworkSettings"
+              name="useNetworkSettings">
+            <span class="checkbox-label">
+              Использовать общие настройки на всю сеть
+            </span>
+          </label>
+        </div>
+
         <div class="two-column-grid">
           <div class="settings-column">
             <h3 class="column-title">Тип места приготовления блюд</h3>
@@ -184,11 +197,13 @@
                   type="text"
                   class="item-input"
                   [(ngModel)]="preparationPlaces[i]"
-                  [name]="'place_' + i">
+                  [name]="'place_' + i"
+                  [disabled]="!corporationSettings.useNetworkSettings">
                 <button
                   type="button"
                   class="delete-btn"
                   (click)="removePreparationPlace(i)"
+                  [disabled]="!corporationSettings.useNetworkSettings"
                   title="Удалить">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -196,7 +211,7 @@
                 </button>
               </div>
 
-              <button type="button" class="add-btn" (click)="addPreparationPlace()">
+              <button type="button" class="add-btn" (click)="addPreparationPlace()" [disabled]="!corporationSettings.useNetworkSettings">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path d="M10 5V15M5 10H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
@@ -224,11 +239,13 @@
                   type="text"
                   class="item-input course-name"
                   [(ngModel)]="course.name"
-                  [name]="'course_name_' + i">
+                  [name]="'course_name_' + i"
+                  [disabled]="!corporationSettings.useNetworkSettings">
                 <button
                   type="button"
                   class="delete-btn"
                   (click)="removeCourse(i)"
+                  [disabled]="!corporationSettings.useNetworkSettings"
                   title="Удалить">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -236,7 +253,7 @@
                 </button>
               </div>
 
-              <button type="button" class="add-btn" (click)="addCourse()">
+              <button type="button" class="add-btn" (click)="addCourse()" [disabled]="!corporationSettings.useNetworkSettings">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path d="M10 5V15M5 10H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>

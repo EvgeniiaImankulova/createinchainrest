@@ -328,6 +328,17 @@
   box-shadow: 0 0 0 1px var(--border-focus);
 }
 
+.item-input:disabled {
+  background-color: #F5F5F5;
+  color: var(--text-disabled);
+  cursor: not-allowed;
+  border-color: var(--border-color);
+}
+
+.item-input:disabled:hover {
+  border-color: var(--border-color);
+}
+
 .course-number {
   width: 100px;
   background-color: #F5F5F5;
@@ -362,6 +373,20 @@
   transform: translateY(1px);
 }
 
+.delete-btn:disabled {
+  background-color: #F5F5F5;
+  color: var(--text-disabled);
+  border-color: var(--border-color);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.delete-btn:disabled:hover {
+  background-color: #F5F5F5;
+  border-color: var(--border-color);
+  transform: none;
+}
+
 .add-btn {
   width: 36px;
   height: 36px;
@@ -385,6 +410,20 @@
 
 .add-btn:active {
   transform: translateY(1px);
+}
+
+.add-btn:disabled {
+  background-color: #F5F5F5;
+  color: var(--text-disabled);
+  border-color: var(--border-color);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.add-btn:disabled:hover {
+  background-color: #F5F5F5;
+  border-color: var(--border-color);
+  transform: none;
 }
 
 .logo-section {
