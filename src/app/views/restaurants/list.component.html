@@ -1,6 +1,10 @@
 <div class="page-container">
   <div class="page-header">
-    <h1 class="page-title">Список ресторанов</h1>
+    <h1 class="page-title">
+      <span *ngIf="currentRoute.includes('legal-entity')">Юридические лица</span>
+      <span *ngIf="currentRoute.includes('restaurant') && !currentRoute.includes('legal-entity')">Рестораны</span>
+      <span *ngIf="!currentRoute.includes('legal-entity') && !currentRoute.includes('restaurant')">Список ресторанов</span>
+    </h1>
     <div class="header-actions">
       <button class="btn-icon" (click)="onSearch()" title="Поиск">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -12,8 +16,10 @@
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
             <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
+          <span *ngIf="currentRoute.includes('legal-entity')">Создать юридическое лицо</span>
+          <span *ngIf="currentRoute.includes('restaurant') && !currentRoute.includes('legal-entity')">Создать ресторан</span>
         </button>
-        <div class="create-menu" *ngIf="showCreateMenu">
+        <div class="create-menu" *ngIf="showCreateMenu && !currentRoute.includes('legal-entity') && !currentRoute.includes('restaurant')">
           <button class="create-menu-item" (click)="onCreateLegalEntity()">
             Создать юридическое лицо
           </button>

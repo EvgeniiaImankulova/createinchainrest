@@ -18,11 +18,20 @@ export class MenuService {
       children: [
         {
           label: 'Настройки корпорации',
-          route: '/settings/corporation'
+          route: '/network-settings/corporation'
         },
         {
           label: 'Рестораны сети',
-          route: '/restaurants/list'
+          children: [
+            {
+              label: 'Юридическое лицо',
+              route: '/network-settings/restaurants/legal-entity'
+            },
+            {
+              label: 'Ресторан',
+              route: '/network-settings/restaurants/restaurant'
+            }
+          ]
         }
       ]
     }

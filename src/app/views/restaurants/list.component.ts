@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 
 interface Restaurant {
   id: string;
@@ -44,7 +45,17 @@ interface LegalEntity {
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
-export class RestaurantsListComponent {
+export class RestaurantsListComponent implements OnInit {
+  currentRoute: string = '';
+
+  constructor(private router: Router, private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.router.events.subscribe(() => {
+      this.currentRoute = this.router.url;
+    });
+    this.currentRoute = this.router.url;
+  }
   legalEntitiesData: LegalEntity[] = [
     {
       id: '1',
@@ -181,32 +192,58 @@ export class RestaurantsListComponent {
   get hierarchyItems() {
     const items: any[] = [];
 
-    this.legalEntitiesData.forEach(legalEntity => {
-      items.push({
-        id: legalEntity.id,
-        type: 'legalEntity',
-        name: legalEntity.name,
-        isExpanded: this.expandedLegalEntities.has(legalEntity.id),
-        level: 0,
-        data: legalEntity
-      });
-
-      if (this.expandedLegalEntities.has(legalEntity.id)) {
-        const childRestaurants = this.restaurants.filter(r => r.legalEntityId === legalEntity.id);
-        childRestaurants.forEach(restaurant => {
-          items.push({
-            id: restaurant.id,
-            type: 'restaurant',
-            name: restaurant.name,
-            address: restaurant.address,
-            template: restaurant.template,
-            timezone: restaurant.timezone,
-            level: 1,
-            data: restaurant
-          });
+    if (this.currentRoute.includes('legal-entity')) {
+      this.legalEntitiesData.forEach(legalEntity => {
+        items.push({
+          id: legalEntity.id,
+          type: 'legalEntity',
+          name: legalEntity.name,
+          isExpanded: false,
+          level: 0,
+          data: legalEntity
         });
-      }
-    });
+      });
+    } else if (this.currentRoute.includes('restaurant') && !this.currentRoute.includes('legal-entity')) {
+      this.restaurants.forEach(restaurant => {
+        items.push({
+          id: restaurant.id,
+          type: 'restaurant',
+          name: restaurant.name,
+          address: restaurant.address,
+          template: restaurant.template,
+          timezone: restaurant.timezone,
+          level: 0,
+          data: restaurant
+        });
+      });
+    } else {
+      this.legalEntitiesData.forEach(legalEntity => {
+        items.push({
+          id: legalEntity.id,
+          type: 'legalEntity',
+          name: legalEntity.name,
+          isExpanded: this.expandedLegalEntities.has(legalEntity.id),
+          level: 0,
+          data: legalEntity
+        });
+
+        if (this.expandedLegalEntities.has(legalEntity.id)) {
+          const childRestaurants = this.restaurants.filter(r => r.legalEntityId === legalEntity.id);
+          childRestaurants.forEach(restaurant => {
+            items.push({
+              id: restaurant.id,
+              type: 'restaurant',
+              name: restaurant.name,
+              address: restaurant.address,
+              template: restaurant.template,
+              timezone: restaurant.timezone,
+              level: 1,
+              data: restaurant
+            });
+          });
+        }
+      });
+    }
 
     return items;
   }
@@ -276,7 +313,13 @@ export class RestaurantsListComponent {
   }
 
   onCreate(): void {
-    this.showCreateMenu = !this.showCreateMenu;
+    if (this.currentRoute.includes('legal-entity')) {
+      this.onCreateLegalEntity();
+    } else if (this.currentRoute.includes('restaurant')) {
+      this.onCreateRestaurant();
+    } else {
+      this.showCreateMenu = !this.showCreateMenu;
+    }
   }
 
   onCreateLegalEntity(): void {
