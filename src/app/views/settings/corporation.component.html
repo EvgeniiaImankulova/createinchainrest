@@ -9,11 +9,25 @@
       </div>
     </div>
 
+    <div class="tabs-container">
+      <div class="tabs">
+        <button
+          class="tab"
+          [class.active]="activeTab === 'basic'"
+          (click)="switchTab('basic')">
+          Основная информация
+        </button>
+        <button
+          class="tab"
+          [class.active]="activeTab === 'network'"
+          (click)="switchTab('network')">
+          Общие настройки сети
+        </button>
+      </div>
+    </div>
+
     <form class="corporation-form">
-
-      <section class="form-section">
-        <h2 class="section-title">Основная информация</h2>
-
+      <section class="form-section" *ngIf="activeTab === 'basic'">
         <div class="form-group">
           <label class="form-label">Название</label>
           <input
@@ -43,38 +57,6 @@
             name="uid"
             placeholder="123-123-123"
             readonly>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">ФИО Руководителя</label>
-          <input
-            type="text"
-            class="form-input"
-            [(ngModel)]="corporationSettings.directorName"
-            name="directorName"
-            placeholder="Введите ФИО руководителя">
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Телефон</label>
-            <input
-              type="tel"
-              class="form-input"
-              [(ngModel)]="corporationSettings.phone"
-              name="phone"
-              placeholder="+7 (___) ___-__-__">
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">E-mail</label>
-            <input
-              type="email"
-              class="form-input"
-              [(ngModel)]="corporationSettings.email"
-              name="email"
-              placeholder="example@domain.com">
-          </div>
         </div>
 
         <div class="form-group">
@@ -118,41 +100,41 @@
             name="ogrn"
             placeholder="Введите ОГРН">
         </div>
-      </section>
-
-      <section class="form-section">
-        <h2 class="section-title">Франшиза</h2>
 
         <div class="form-group">
-          <label class="checkbox-container">
-            <input
-              type="checkbox"
-              class="checkbox-input"
-              [(ngModel)]="corporationSettings.isFranchiseNetwork"
-              name="isFranchiseNetwork">
-            <span class="checkbox-label">
-              Франшизная сеть
-            </span>
-          </label>
+          <label class="form-label">ФИО Руководителя</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="corporationSettings.directorName"
+            name="directorName"
+            placeholder="Введите ФИО руководителя">
         </div>
 
-        <div class="form-group" *ngIf="corporationSettings.isFranchiseNetwork">
-          <label class="form-label">Роялти по умолчанию, %</label>
-          <input
-            type="number"
-            class="form-input"
-            [(ngModel)]="corporationSettings.defaultRoyalty"
-            name="defaultRoyalty"
-            placeholder="0"
-            min="0"
-            max="100"
-            step="0.01">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Телефон</label>
+            <input
+              type="tel"
+              class="form-input"
+              [(ngModel)]="corporationSettings.phone"
+              name="phone"
+              placeholder="+7 (___) ___-__-__">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">E-mail</label>
+            <input
+              type="email"
+              class="form-input"
+              [(ngModel)]="corporationSettings.email"
+              name="email"
+              placeholder="example@domain.com">
+          </div>
         </div>
       </section>
 
-      <section class="form-section">
-        <h2 class="section-title">Общие настройки</h2>
-
+      <section class="form-section" *ngIf="activeTab === 'network'">
         <div class="form-group">
           <label class="form-label">Валюта</label>
           <select
@@ -164,105 +146,33 @@
             </option>
           </select>
         </div>
-      </section>
-
-
-      <section class="form-section">
-        <h2 class="section-title">Общие настройки сети</h2>
 
         <div class="form-group">
           <label class="checkbox-container">
             <input
               type="checkbox"
               class="checkbox-input"
-              [(ngModel)]="corporationSettings.useNetworkSettings"
-              name="useNetworkSettings">
+              [(ngModel)]="corporationSettings.isFranchiseNetwork"
+              name="isFranchiseNetwork">
             <span class="checkbox-label">
-              Использовать общие настройки на всю сеть
+              Сеть франшизная?
             </span>
           </label>
         </div>
 
-        <div class="two-column-grid">
-          <div class="settings-column">
-            <h3 class="column-title">Тип места приготовления блюд</h3>
-
-            <div class="items-list">
-              <div class="list-header">
-                <span class="header-text">Тип места приготовления блюд</span>
-              </div>
-
-              <div *ngFor="let place of preparationPlaces; let i = index" class="list-item">
-                <input
-                  type="text"
-                  class="item-input"
-                  [(ngModel)]="preparationPlaces[i]"
-                  [name]="'place_' + i"
-                  [disabled]="!corporationSettings.useNetworkSettings">
-                <button
-                  type="button"
-                  class="delete-btn"
-                  (click)="removePreparationPlace(i)"
-                  [disabled]="!corporationSettings.useNetworkSettings"
-                  title="Удалить">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
-                </button>
-              </div>
-
-              <button type="button" class="add-btn" (click)="addPreparationPlace()" [disabled]="!corporationSettings.useNetworkSettings">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M10 5V15M5 10H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="settings-column">
-            <h3 class="column-title">Наименование курсов</h3>
-
-            <div class="items-list">
-              <div class="list-header">
-                <span class="header-text header-number">Номер</span>
-                <span class="header-text header-name">Наименование</span>
-              </div>
-
-              <div *ngFor="let course of courses; let i = index" class="list-item course-item">
-                <input
-                  type="text"
-                  class="item-input course-number"
-                  [(ngModel)]="course.number"
-                  [name]="'course_number_' + i"
-                  readonly>
-                <input
-                  type="text"
-                  class="item-input course-name"
-                  [(ngModel)]="course.name"
-                  [name]="'course_name_' + i"
-                  [disabled]="!corporationSettings.useNetworkSettings">
-                <button
-                  type="button"
-                  class="delete-btn"
-                  (click)="removeCourse(i)"
-                  [disabled]="!corporationSettings.useNetworkSettings"
-                  title="Удалить">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                  </svg>
-                </button>
-              </div>
-
-              <button type="button" class="add-btn" (click)="addCourse()" [disabled]="!corporationSettings.useNetworkSettings">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M10 5V15M5 10H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-              </button>
-            </div>
-          </div>
+        <div class="form-group" *ngIf="corporationSettings.isFranchiseNetwork">
+          <label class="form-label">Настройки роялти по умолчанию, %</label>
+          <input
+            type="number"
+            class="form-input"
+            [(ngModel)]="corporationSettings.defaultRoyalty"
+            name="defaultRoyalty"
+            placeholder="0"
+            min="0"
+            max="100"
+            step="0.01">
         </div>
       </section>
-
     </form>
   </div>
 </div>
