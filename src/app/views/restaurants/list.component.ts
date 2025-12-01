@@ -192,58 +192,33 @@ export class RestaurantsListComponent implements OnInit {
   get hierarchyItems() {
     const items: any[] = [];
 
-    if (this.currentRoute.includes('legal-entity')) {
-      this.legalEntitiesData.forEach(legalEntity => {
-        items.push({
-          id: legalEntity.id,
-          type: 'legalEntity',
-          name: legalEntity.name,
-          isExpanded: false,
-          level: 0,
-          data: legalEntity
-        });
+    this.legalEntitiesData.forEach(legalEntity => {
+      items.push({
+        id: legalEntity.id,
+        type: 'legalEntity',
+        name: legalEntity.name,
+        isExpanded: this.expandedLegalEntities.has(legalEntity.id),
+        level: 0,
+        data: legalEntity
       });
-    } else if (this.currentRoute.includes('restaurant') && !this.currentRoute.includes('legal-entity')) {
-      this.restaurants.forEach(restaurant => {
-        items.push({
-          id: restaurant.id,
-          type: 'restaurant',
-          name: restaurant.name,
-          address: restaurant.address,
-          template: restaurant.template,
-          timezone: restaurant.timezone,
-          level: 0,
-          data: restaurant
-        });
-      });
-    } else {
-      this.legalEntitiesData.forEach(legalEntity => {
-        items.push({
-          id: legalEntity.id,
-          type: 'legalEntity',
-          name: legalEntity.name,
-          isExpanded: this.expandedLegalEntities.has(legalEntity.id),
-          level: 0,
-          data: legalEntity
-        });
 
-        if (this.expandedLegalEntities.has(legalEntity.id)) {
-          const childRestaurants = this.restaurants.filter(r => r.legalEntityId === legalEntity.id);
-          childRestaurants.forEach(restaurant => {
-            items.push({
-              id: restaurant.id,
-              type: 'restaurant',
-              name: restaurant.name,
-              address: restaurant.address,
-              template: restaurant.template,
-              timezone: restaurant.timezone,
-              level: 1,
-              data: restaurant
-            });
+      if (this.expandedLegalEntities.has(legalEntity.id)) {
+        const childRestaurants = this.restaurants.filter(r => r.legalEntityId === legalEntity.id);
+        childRestaurants.forEach(restaurant => {
+          items.push({
+            id: restaurant.id,
+            type: 'restaurant',
+            name: restaurant.name,
+            address: restaurant.address,
+            template: restaurant.template,
+            timezone: restaurant.timezone,
+            isFranchise: restaurant.isFranchise,
+            level: 1,
+            data: restaurant
           });
-        }
-      });
-    }
+        });
+      }
+    });
 
     return items;
   }
@@ -313,13 +288,7 @@ export class RestaurantsListComponent implements OnInit {
   }
 
   onCreate(): void {
-    if (this.currentRoute.includes('legal-entity')) {
-      this.onCreateLegalEntity();
-    } else if (this.currentRoute.includes('restaurant')) {
-      this.onCreateRestaurant();
-    } else {
-      this.showCreateMenu = !this.showCreateMenu;
-    }
+    this.showCreateMenu = !this.showCreateMenu;
   }
 
   onCreateLegalEntity(): void {

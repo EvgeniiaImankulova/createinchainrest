@@ -1,10 +1,6 @@
 <div class="page-container">
   <div class="page-header">
-    <h1 class="page-title">
-      <span *ngIf="currentRoute.includes('legal-entity')">Юридические лица</span>
-      <span *ngIf="currentRoute.includes('restaurant') && !currentRoute.includes('legal-entity')">Рестораны</span>
-      <span *ngIf="!currentRoute.includes('legal-entity') && !currentRoute.includes('restaurant')">Список ресторанов</span>
-    </h1>
+    <h1 class="page-title">Список ресторанов</h1>
     <div class="header-actions">
       <button class="btn-icon" (click)="onSearch()" title="Поиск">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -16,10 +12,8 @@
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
             <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
-          <span *ngIf="currentRoute.includes('legal-entity')">Создать юридическое лицо</span>
-          <span *ngIf="currentRoute.includes('restaurant') && !currentRoute.includes('legal-entity')">Создать ресторан</span>
         </button>
-        <div class="create-menu" *ngIf="showCreateMenu && !currentRoute.includes('legal-entity') && !currentRoute.includes('restaurant')">
+        <div class="create-menu" *ngIf="showCreateMenu">
           <button class="create-menu-item" (click)="onCreateLegalEntity()">
             Создать юридическое лицо
           </button>
@@ -83,9 +77,18 @@
                   (click)="item.type === 'legalEntity' ? onEditLegalEntity(item.data) : onEditRestaurant(item.data); $event.preventDefault()">
                   {{ item.name }}
                 </a>
-                <span *ngIf="item.type === 'restaurant' && item.data.isFranchise" class="franchise-tag">
-                  Франчайзи
+                <span *ngIf="item.type === 'restaurant' && item.isFranchise" class="franchise-tag">
+                  ФРАНЧАЙЗЫ
                 </span>
+                <button
+                  *ngIf="item.type === 'legalEntity'"
+                  class="add-restaurant-btn"
+                  (click)="onCreateRestaurant(); $event.stopPropagation()"
+                  title="Добавить ресторан">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </button>
               </div>
             </td>
             <td>

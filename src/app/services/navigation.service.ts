@@ -17,14 +17,7 @@ export class NavigationService {
       icon: 'assessment',
       submenu: [
         { id: 'corporation', label: 'Настройки корпорации', route: '/network-settings/corporation' },
-        {
-          id: 'restaurants-network',
-          label: 'Рестораны сети',
-          submenu: [
-            { id: 'legal-entity', label: 'Юридическое лицо', route: '/network-settings/restaurants/legal-entity' },
-            { id: 'restaurant', label: 'Ресторан', route: '/network-settings/restaurants/restaurant' }
-          ]
-        }
+        { id: 'restaurants-network', label: 'Рестораны сети', route: '/network-settings/restaurants' }
       ]
     }
   ];

@@ -17,8 +17,7 @@ import { PlaceholderComponent } from './views/placeholder/placeholder.component'
 export const routes: Routes = [
   { path: '', redirectTo: '/network-settings/corporation', pathMatch: 'full' },
   { path: 'network-settings/corporation', component: CorporationComponent },
-  { path: 'network-settings/restaurants/legal-entity', component: RestaurantsListComponent },
-  { path: 'network-settings/restaurants/restaurant', component: RestaurantsListComponent },
+  { path: 'network-settings/restaurants', component: RestaurantsListComponent },
   { path: 'forecast/sales', component: SalesComponent },
   { path: 'forecast/products', component: ProductsComponent },
   { path: 'forecast/ingredients', component: IngredientsComponent },
