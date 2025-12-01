@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { SupabaseService } from '../../services/supabase.service';
 
 interface Restaurant {
   id: string;
@@ -48,13 +49,68 @@ interface LegalEntity {
 export class RestaurantsListComponent implements OnInit {
   currentRoute: string = '';
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private supabaseService: SupabaseService
+  ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.router.events.subscribe(() => {
       this.currentRoute = this.router.url;
     });
     this.currentRoute = this.router.url;
+    await this.loadData();
+  }
+
+  async loadData() {
+    try {
+      const [legalEntities, restaurants] = await Promise.all([
+        this.supabaseService.getLegalEntities(),
+        this.supabaseService.getRestaurants()
+      ]);
+
+      if (legalEntities && legalEntities.length > 0) {
+        this.legalEntitiesData = legalEntities.map((le: any) => ({
+          id: le.id,
+          name: le.name,
+          description: le.legal_name || '',
+          inn: le.inn || '',
+          kpp: le.kpp || '',
+          okpo: '',
+          ogrn: le.ogrn || '',
+          legalAddress: le.legal_address || '',
+          phone: le.phone || '',
+          bankAccount: le.payment_account || '',
+          bik: le.bik || '',
+          bankName: le.bank_name || '',
+          bankCity: '',
+          correspondentAccount: le.correspondent_account || '',
+          registrationNumber: '',
+          directorName: le.director || '',
+          directorPosition: '',
+          email: le.email || '',
+          accountantName: le.accountant || '',
+          chiefTechnologistName: '',
+          productionManagerName: ''
+        }));
+      }
+
+      if (restaurants && restaurants.length > 0) {
+        this.restaurants = restaurants.map((r: any) => ({
+          id: r.id,
+          name: r.name,
+          legalEntityId: r.legal_entity_id || '',
+          legalEntity: '',
+          address: r.address || '',
+          template: r.template || '',
+          timezone: r.timezone || '',
+          isFranchise: r.is_franchise || false
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading data:', error);
+    }
   }
   legalEntitiesData: LegalEntity[] = [
     {
@@ -293,14 +349,12 @@ export class RestaurantsListComponent implements OnInit {
 
   onCreateLegalEntity(): void {
     this.showCreateMenu = false;
-    this.sidebarMode = 'legalEntity';
-    this.showLegalEntitySidebar = true;
+    this.router.navigate(['/network-settings/restaurants/legal-entity/new']);
   }
 
   onCreateRestaurant(): void {
     this.showCreateMenu = false;
-    this.sidebarMode = 'restaurant';
-    this.showSidebar = true;
+    this.router.navigate(['/network-settings/restaurants/restaurant/new']);
   }
 
   closeSidebar(): void {
@@ -379,11 +433,7 @@ export class RestaurantsListComponent implements OnInit {
   }
 
   onEditRestaurant(restaurant: Restaurant): void {
-    this.restaurantForm.name = restaurant.name;
-    this.restaurantForm.legalEntityId = restaurant.legalEntityId;
-    this.restaurantForm.address = restaurant.address;
-    this.sidebarMode = 'restaurant';
-    this.showSidebar = true;
+    this.router.navigate(['/network-settings/restaurants/restaurant', restaurant.id]);
   }
 
   onEditLegalEntityByName(legalEntityName: string): void {
@@ -404,8 +454,6 @@ export class RestaurantsListComponent implements OnInit {
   }
 
   onEditLegalEntity(legalEntity: LegalEntity): void {
-    this.legalEntityForm = { ...legalEntity };
-    this.sidebarMode = 'legalEntity';
-    this.showLegalEntitySidebar = true;
+    this.router.navigate(['/network-settings/restaurants/legal-entity', legalEntity.id]);
   }
 }

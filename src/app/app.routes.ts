@@ -12,12 +12,18 @@ import { OverviewComponent } from './views/reports/overview.component';
 import { LoyaltyComponent } from './views/reports/loyalty.component';
 import { CorporationComponent } from './views/settings/corporation.component';
 import { RestaurantsListComponent } from './views/restaurants/list.component';
+import { LegalEntityFormComponent } from './views/restaurants/legal-entity-form.component';
+import { RestaurantFormComponent } from './views/restaurants/restaurant-form.component';
 import { PlaceholderComponent } from './views/placeholder/placeholder.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/network-settings/corporation', pathMatch: 'full' },
   { path: 'network-settings/corporation', component: CorporationComponent },
   { path: 'network-settings/restaurants', component: RestaurantsListComponent },
+  { path: 'network-settings/restaurants/legal-entity/new', component: LegalEntityFormComponent },
+  { path: 'network-settings/restaurants/legal-entity/:id', component: LegalEntityFormComponent },
+  { path: 'network-settings/restaurants/restaurant/new', component: RestaurantFormComponent },
+  { path: 'network-settings/restaurants/restaurant/:id', component: RestaurantFormComponent },
   { path: 'forecast/sales', component: SalesComponent },
   { path: 'forecast/products', component: ProductsComponent },
   { path: 'forecast/ingredients', component: IngredientsComponent },

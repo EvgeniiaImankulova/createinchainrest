@@ -1,0 +1,186 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-left">
+      <button class="btn-back" (click)="cancel()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <h1 class="page-title">
+        {{ isEditMode ? 'Редактировать юридическое лицо' : 'Создать юридическое лицо' }}
+      </h1>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="saveDraft()" [disabled]="isSaving">
+        Сохранить как черновик
+      </button>
+      <button class="btn-primary" (click)="saveEntity()" [disabled]="isSaving">
+        {{ isEditMode ? 'Сохранить' : 'Создать' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div class="form-card">
+      <h2 class="section-title">Основная информация</h2>
+
+      <div class="form-group">
+        <label class="form-label required">Название</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.name"
+          placeholder="Введите название"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Юридическое название</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.legal_name"
+          placeholder="Введите юридическое название">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">ИНН</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.inn"
+            placeholder="Введите ИНН"
+            maxlength="12">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">КПП</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.kpp"
+            placeholder="Введите КПП"
+            maxlength="9">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">ОГРН</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.ogrn"
+            placeholder="Введите ОГРН"
+            maxlength="13">
+        </div>
+      </div>
+
+      <h2 class="section-title">Адреса</h2>
+
+      <div class="form-group">
+        <label class="form-label">Юридический адрес</label>
+        <textarea
+          class="form-textarea"
+          [(ngModel)]="form.legal_address"
+          placeholder="Введите юридический адрес"
+          rows="2"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Фактический адрес</label>
+        <textarea
+          class="form-textarea"
+          [(ngModel)]="form.actual_address"
+          placeholder="Введите фактический адрес"
+          rows="2"></textarea>
+      </div>
+
+      <h2 class="section-title">Контактная информация</h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Телефон</label>
+          <input
+            type="tel"
+            class="form-input"
+            [(ngModel)]="form.phone"
+            placeholder="+7 (___) ___-__-__">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input
+            type="email"
+            class="form-input"
+            [(ngModel)]="form.email"
+            placeholder="example@company.ru">
+        </div>
+      </div>
+
+      <h2 class="section-title">Должностные лица</h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Директор</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.director"
+            placeholder="ФИО директора">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Главный бухгалтер</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.accountant"
+            placeholder="ФИО бухгалтера">
+        </div>
+      </div>
+
+      <h2 class="section-title">Банковские реквизиты</h2>
+
+      <div class="form-group">
+        <label class="form-label">Название банка</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.bank_name"
+          placeholder="Введите название банка">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">БИК</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.bik"
+            placeholder="Введите БИК"
+            maxlength="9">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Корреспондентский счет</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.correspondent_account"
+            placeholder="Введите корр. счет"
+            maxlength="20">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Расчетный счет</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.payment_account"
+          placeholder="Введите расчетный счет"
+          maxlength="20">
+      </div>
+    </div>
+  </div>
+</div>

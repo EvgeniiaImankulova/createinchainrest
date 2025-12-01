@@ -1,0 +1,219 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-left">
+      <button class="btn-back" (click)="cancel()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <h1 class="page-title">
+        {{ isEditMode ? 'Редактировать ресторан' : 'Создать ресторан' }}
+      </h1>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="saveDraft()" [disabled]="isSaving">
+        Сохранить как черновик
+      </button>
+      <button class="btn-primary" (click)="saveRestaurant()" [disabled]="isSaving">
+        {{ isEditMode ? 'Сохранить' : 'Создать' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="tabs-container">
+    <button
+      class="tab"
+      [class.active]="activeTab === 'general'"
+      (click)="setActiveTab('general')">
+      ОБЩИЕ
+    </button>
+    <button
+      class="tab"
+      [class.active]="activeTab === 'hours'"
+      (click)="setActiveTab('hours')">
+      ЧАСЫ РАБОТЫ
+    </button>
+    <button
+      class="tab"
+      [class.active]="activeTab === 'warehouse'"
+      (click)="setActiveTab('warehouse')">
+      СКЛАД
+    </button>
+    <button
+      class="tab"
+      [class.active]="activeTab === 'terminals'"
+      (click)="setActiveTab('terminals')">
+      ТЕРМИНАЛЫ
+    </button>
+    <button
+      class="tab"
+      [class.active]="activeTab === 'external'"
+      (click)="setActiveTab('external')">
+      ВНЕШНИЕ
+    </button>
+  </div>
+
+  <div class="page-content" *ngIf="activeTab === 'general'">
+    <div class="form-card">
+      <div class="status-row">
+        <div class="status-label">
+          Статус подключения
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="info-icon">
+            <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M8 7V11M8 5V5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="status-badge">{{ form.connection_status === 'connected' ? 'Подключен' : 'Не подключен' }}</div>
+        <div class="timezone-text">Часовой пояс: {{ form.timezone }}</div>
+      </div>
+
+      <h2 class="section-title">Основная информация</h2>
+
+      <div class="form-group">
+        <label class="form-label required">Название</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.name"
+          placeholder="Название ресторана"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Описание</label>
+        <textarea
+          class="form-textarea"
+          [(ngModel)]="form.description"
+          placeholder="Описание ресторана"
+          rows="3"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Краткое название</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.short_name"
+            placeholder="Краткое название">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Код</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.code"
+            placeholder="Код ресторана">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Юридическое лицо</label>
+        <select class="form-select" [(ngModel)]="form.legal_entity_id">
+          <option value="">Выберите юридическое лицо</option>
+          <option *ngFor="let entity of legalEntities" [value]="entity.id">
+            {{ entity.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Шаблон</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.template"
+          placeholder="Выберите шаблон">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Часовой пояс</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.timezone"
+          placeholder="Часовой пояс">
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="form.is_franchise">
+          <span>Франчайзи</span>
+        </label>
+      </div>
+
+      <h2 class="section-title">Адрес</h2>
+
+      <div class="form-group">
+        <label class="form-label">Адрес</label>
+        <textarea
+          class="form-textarea"
+          [(ngModel)]="form.address"
+          placeholder="Введите адрес"
+          rows="2"></textarea>
+      </div>
+
+      <h2 class="section-title">Контактная информация</h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Телефон</label>
+          <input
+            type="tel"
+            class="form-input"
+            [(ngModel)]="form.phone"
+            placeholder="+7 (___) ___-__-__">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input
+            type="email"
+            class="form-input"
+            [(ngModel)]="form.email"
+            placeholder="example@restaurant.ru">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Веб-сайт</label>
+        <input
+          type="url"
+          class="form-input"
+          [(ngModel)]="form.website"
+          placeholder="https://example.com">
+      </div>
+    </div>
+  </div>
+
+  <div class="page-content" *ngIf="activeTab === 'hours'">
+    <div class="form-card">
+      <h2 class="section-title">Часы работы</h2>
+      <p class="placeholder-text">Настройки часов работы будут добавлены позже</p>
+    </div>
+  </div>
+
+  <div class="page-content" *ngIf="activeTab === 'warehouse'">
+    <div class="form-card">
+      <h2 class="section-title">Настройки склада</h2>
+      <p class="placeholder-text">Настройки склада будут добавлены позже</p>
+    </div>
+  </div>
+
+  <div class="page-content" *ngIf="activeTab === 'terminals'">
+    <div class="form-card">
+      <h2 class="section-title">Настройки терминалов</h2>
+      <p class="placeholder-text">Настройки терминалов будут добавлены позже</p>
+    </div>
+  </div>
+
+  <div class="page-content" *ngIf="activeTab === 'external'">
+    <div class="form-card">
+      <h2 class="section-title">Внешние настройки</h2>
+      <p class="placeholder-text">Внешние настройки будут добавлены позже</p>
+    </div>
+  </div>
+</div>
