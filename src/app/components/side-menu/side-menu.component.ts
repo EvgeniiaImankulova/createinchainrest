@@ -69,7 +69,19 @@ export class SideMenuComponent implements OnInit {
     }
   }
 
-  onSubmenuItemClick(route: string): void {
-    this.router.navigate([route]);
+  onSubmenuItemClick(item: MenuItem, event: Event): void {
+    event.stopPropagation();
+    if (this.hasSubmenu(item)) {
+      this.toggleMenu(item.id);
+    } else if (item.route) {
+      this.router.navigate([item.route]);
+    }
+  }
+
+  onNestedSubmenuItemClick(route: string | undefined, event: Event): void {
+    event.stopPropagation();
+    if (route) {
+      this.router.navigate([route]);
+    }
   }
 }

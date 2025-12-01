@@ -12,72 +12,20 @@ export class NavigationService {
 
   private menuItems: MenuItem[] = [
     {
-      id: 'general-settings',
-      label: 'Общие настройки',
-      icon: 'settings',
-      route: '/settings/general'
-    },
-    {
-      id: 'forecasting',
-      label: 'Прогнозирование',
-      icon: 'timeline',
-      route: '/settings/forecasting'
-    },
-    {
-      id: 'corporation',
-      label: 'Настройки корпорации',
-      icon: 'business',
-      route: '/settings/corporation'
-    },
-    {
-      id: 'restaurants',
-      label: 'Рестораны',
-      icon: 'restaurant',
+      id: 'network-settings',
+      label: 'Настройки сети',
+      icon: 'assessment',
       submenu: [
-        { id: 'templates', label: 'Шаблоны', route: '/restaurants/templates' },
-        { id: 'receipt-templates', label: 'Шаблоны чеков', route: '/restaurants/receipt-templates' },
-        { id: 'list', label: 'Рестораны', route: '/restaurants/list' },
-        { id: 'commissions', label: 'Комиссии агрегаторов', route: '/restaurants/commissions' },
-        { id: 'panels', label: 'Панели', route: '/restaurants/panels' },
-        { id: 'auto-add-dishes', label: 'Автодобавление блюд', route: '/restaurants/auto-add-dishes' },
-        { id: 'iikocard-networks', label: 'Управление сетями iikoCard', route: '/restaurants/iikocard-networks' }
+        { id: 'corporation', label: 'Настройки корпорации', route: '/network-settings/corporation' },
+        {
+          id: 'restaurants-network',
+          label: 'Рестораны сети',
+          submenu: [
+            { id: 'legal-entity', label: 'Юридическое лицо', route: '/network-settings/restaurants/legal-entity' },
+            { id: 'restaurant', label: 'Ресторан', route: '/network-settings/restaurants/restaurant' }
+          ]
+        }
       ]
-    },
-    {
-      id: 'warehouse',
-      label: 'Склад',
-      icon: 'warehouse',
-      route: '/warehouse'
-    },
-    {
-      id: 'analytics',
-      label: 'Аналитика',
-      icon: 'analytics',
-      route: '/analytics'
-    },
-    {
-      id: 'notifications',
-      label: 'Оповещения',
-      icon: 'notifications',
-      route: '/notifications'
-    },
-    {
-      id: 'staff',
-      label: 'Персонал',
-      icon: 'people',
-      route: '/staff'
-    },
-    {
-      id: 'beer-marking',
-      label: 'Маркировка разливного пива',
-      icon: 'local_bar',
-      route: '/beer-marking'
-    },
-    {
-      id: 'events',
-      label: 'События',
-      icon: 'event',
-      route: '/events'
     }
   ];
 
@@ -103,14 +51,29 @@ export class NavigationService {
   }
 
   expandMenuForRoute(route: string): void {
-    const menuItem = this.menuItems.find(item =>
-      item.submenu?.some(sub => sub.route === route)
-    );
+    const expanded = new Set<string>();
 
-    if (menuItem) {
-      const expanded = new Set<string>();
-      expanded.add(menuItem.id);
-      this.expandedMenus.next(expanded);
+    for (const menuItem of this.menuItems) {
+      if (menuItem.submenu) {
+        for (const subItem of menuItem.submenu) {
+          if (subItem.route === route) {
+            expanded.add(menuItem.id);
+            this.expandedMenus.next(expanded);
+            return;
+          }
+
+          if (subItem.submenu) {
+            for (const nestedItem of subItem.submenu) {
+              if (nestedItem.route === route) {
+                expanded.add(menuItem.id);
+                expanded.add(subItem.id);
+                this.expandedMenus.next(expanded);
+                return;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
