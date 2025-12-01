@@ -184,48 +184,7 @@ export class RestaurantsListComponent implements OnInit {
     }
   ];
 
-  restaurants: Restaurant[] = [
-    {
-      id: 'r1',
-      name: 'Ресторан "Марина Даймонд"',
-      legalEntityId: '1',
-      legalEntity: 'ООО "Вкусная еда"',
-      address: '20/2, улица Советская, Кострома, Костромская область, Россия',
-      template: 'WEB-11353-без-дневных-интеров',
-      timezone: '(UTC+3:00) Европа/Москва',
-      isFranchise: true
-    },
-    {
-      id: 'r2',
-      name: 'Кафе "Мамзар Центр"',
-      legalEntityId: '1',
-      legalEntity: 'ООО "Вкусная еда"',
-      address: 'переулок Джамбула, 21, Санкт-Петербург, Санкт-Петербург, Russia',
-      template: 'Default',
-      timezone: '(UTC+3:00) Европа/Москва',
-      isFranchise: false
-    },
-    {
-      id: 'r3',
-      name: 'Ресторан "Вафи Молл"',
-      legalEntityId: '2',
-      legalEntity: 'ООО "Гастроном"',
-      address: 'оренбургская область, Клишева, деревня Клёшнева',
-      template: 'Default',
-      timezone: '(UTC+11:00) Азия/Среднеколымск',
-      isFranchise: false
-    },
-    {
-      id: 'r4',
-      name: 'Столовая "На Варшавке"',
-      legalEntityId: '1',
-      legalEntity: 'ООО "Вкусная еда"',
-      address: 'Москва, Москва, Варшавское шоссе, 118к1',
-      template: 'WEB-11353-без-дневных-интеров',
-      timezone: '(UTC+3:00) Европа/Москва',
-      isFranchise: true
-    }
-  ];
+  restaurants: Restaurant[] = [];
 
   sortColumn: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
@@ -237,9 +196,7 @@ export class RestaurantsListComponent implements OnInit {
   sidebarMode: 'restaurant' | 'legalEntity' = 'restaurant';
   emailError: string = '';
 
-  expandedLegalEntities: Set<string> = new Set(
-    ['1', '2', '3']
-  );
+  expandedLegalEntities: Set<string> = new Set(['550e8400-e29b-41d4-a716-446655440001', '550e8400-e29b-41d4-a716-446655440002', '550e8400-e29b-41d4-a716-446655440003']);
 
   get legalEntities() {
     return this.legalEntitiesData.map(le => ({ id: le.id, name: le.name }));
