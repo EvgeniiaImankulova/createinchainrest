@@ -34,6 +34,16 @@ export class MenuService {
           ]
         }
       ]
+    },
+    {
+      label: 'Примеры',
+      icon: 'code',
+      children: [
+        {
+          label: 'Searchable Select',
+          route: '/examples/searchable-select'
+        }
+      ]
     }
   ];
 

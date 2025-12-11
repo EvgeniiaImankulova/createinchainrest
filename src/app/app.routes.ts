@@ -15,9 +15,11 @@ import { RestaurantsListComponent } from './views/restaurants/list.component';
 import { LegalEntityFormComponent } from './views/restaurants/legal-entity-form.component';
 import { RestaurantFormComponent } from './views/restaurants/restaurant-form.component';
 import { PlaceholderComponent } from './views/placeholder/placeholder.component';
+import { SearchableSelectExampleComponent } from './views/examples/searchable-select-example.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/network-settings/corporation', pathMatch: 'full' },
+  { path: 'examples/searchable-select', component: SearchableSelectExampleComponent },
   { path: 'network-settings/corporation', component: CorporationComponent },
   { path: 'network-settings/restaurants', component: RestaurantsListComponent },
   { path: 'network-settings/restaurants/legal-entity/new', component: LegalEntityFormComponent },

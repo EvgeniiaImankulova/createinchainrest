@@ -1,0 +1,43 @@
+<mat-form-field appearance="outline" class="searchable-select">
+  <mat-label>{{ label }}</mat-label>
+  <mat-select
+    [(value)]="selectedValue"
+    (selectionChange)="onSelectionChange($event.value)"
+    (openedChange)="onPanelOpened()"
+    [panelClass]="'searchable-select-panel'">
+
+    <mat-select-trigger>
+      <div class="trigger-content">
+        <span>{{ getDisplayLabel() }}</span>
+        <button
+          *ngIf="selectedValue !== null && selectedValue !== undefined"
+          mat-icon-button
+          class="clear-button"
+          (click)="onClear($event)"
+          type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </mat-select-trigger>
+
+    <div class="search-box">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input
+        type="text"
+        class="search-input"
+        [placeholder]="placeholder"
+        [(ngModel)]="searchText"
+        (input)="onSearchChange($event)"
+        (click)="$event.stopPropagation()"
+      />
+    </div>
+
+    <mat-option *ngFor="let option of filteredOptions" [value]="option.value">
+      {{ option.label }}
+    </mat-option>
+
+    <mat-option *ngIf="filteredOptions.length === 0" disabled>
+      No results found
+    </mat-option>
+  </mat-select>
+</mat-form-field>
