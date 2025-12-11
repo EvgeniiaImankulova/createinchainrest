@@ -274,31 +274,33 @@
       <h3 class="subsection-title">Должностные лица</h3>
 
       <div class="form-group">
-        <label class="form-label">Директор</label>
-        <select
-          class="form-select"
-          [value]="form.director_id || ''"
-          (change)="onEmployeeSelect('director', $any($event.target).value)">
-          <option value="">Выберите директора</option>
-          <option *ngFor="let employee of employees" [value]="employee.id">
-            {{ getEmployeeFullName(employee) }}
-          </option>
-          <option value="add_new">+ Добавить нового сотрудника</option>
-        </select>
+        <resto-custom-autocomplete
+          [label]="'Директор'"
+          [formControl]="directorControl"
+          [options]="employeeOptions"
+          [trackFieldDisplayName]="trackFieldDisplayName"
+          [trackFieldName]="trackFieldName"
+        >
+          <resto-custom-autocomplete-footer (click)="openAddEmployeeSidebar('director')" [closeOnClick]="true">
+            <mat-icon>add</mat-icon>
+            <ng-container>Добавить нового сотрудника</ng-container>
+          </resto-custom-autocomplete-footer>
+        </resto-custom-autocomplete>
       </div>
 
       <div class="form-group">
-        <label class="form-label">Главный бухгалтер</label>
-        <select
-          class="form-select"
-          [value]="form.accountant_id || ''"
-          (change)="onEmployeeSelect('accountant', $any($event.target).value)">
-          <option value="">Выберите бухгалтера</option>
-          <option *ngFor="let employee of employees" [value]="employee.id">
-            {{ getEmployeeFullName(employee) }}
-          </option>
-          <option value="add_new">+ Добавить нового сотрудника</option>
-        </select>
+        <resto-custom-autocomplete
+          [label]="'Главный бухгалтер'"
+          [formControl]="accountantControl"
+          [options]="employeeOptions"
+          [trackFieldDisplayName]="trackFieldDisplayName"
+          [trackFieldName]="trackFieldName"
+        >
+          <resto-custom-autocomplete-footer (click)="openAddEmployeeSidebar('accountant')" [closeOnClick]="true">
+            <mat-icon>add</mat-icon>
+            <ng-container>Добавить нового сотрудника</ng-container>
+          </resto-custom-autocomplete-footer>
+        </resto-custom-autocomplete>
       </div>
 
       <div class="form-row">
