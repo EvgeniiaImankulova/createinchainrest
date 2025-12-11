@@ -512,12 +512,13 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">ФИО руководителя</label>
-            <input
-              type="text"
-              class="form-input"
+            <app-searchable-select
+              [label]="'ФИО руководителя'"
+              [options]="employeeOptions"
+              [placeholder]="'Поиск...'"
               [(ngModel)]="legalEntityForm.directorName"
-              placeholder="ФИО руководителя">
+              name="directorName">
+            </app-searchable-select>
           </div>
 
           <div class="form-group">
@@ -614,39 +615,43 @@
         <h3 class="section-title">Ответственные лица</h3>
 
         <div class="form-group">
-          <label class="form-label">ФИО руководителя</label>
-          <input
-            type="text"
-            class="form-input"
+          <app-searchable-select
+            [label]="'ФИО руководителя'"
+            [options]="employeeOptions"
+            [placeholder]="'Поиск...'"
             [(ngModel)]="legalEntityForm.directorName"
-            placeholder="ФИО руководителя">
+            name="directorNameModal">
+          </app-searchable-select>
         </div>
 
         <div class="form-group">
-          <label class="form-label">ФИО бухгалтера</label>
-          <input
-            type="text"
-            class="form-input"
+          <app-searchable-select
+            [label]="'ФИО бухгалтера'"
+            [options]="employeeOptions"
+            [placeholder]="'Поиск...'"
             [(ngModel)]="legalEntityForm.accountantName"
-            placeholder="ФИО бухгалтера">
+            name="accountantName">
+          </app-searchable-select>
         </div>
 
         <div class="form-group">
-          <label class="form-label">ФИО главного технолога</label>
-          <input
-            type="text"
-            class="form-input"
+          <app-searchable-select
+            [label]="'ФИО главного технолога'"
+            [options]="employeeOptions"
+            [placeholder]="'Поиск...'"
             [(ngModel)]="legalEntityForm.chiefTechnologistName"
-            placeholder="ФИО главного технолога">
+            name="chiefTechnologistName">
+          </app-searchable-select>
         </div>
 
         <div class="form-group">
-          <label class="form-label">ФИО зав. производством</label>
-          <input
-            type="text"
-            class="form-input"
+          <app-searchable-select
+            [label]="'ФИО зав. производством'"
+            [options]="employeeOptions"
+            [placeholder]="'Поиск...'"
             [(ngModel)]="legalEntityForm.productionManagerName"
-            placeholder="ФИО зав. производством">
+            name="productionManagerName">
+          </app-searchable-select>
         </div>
       </div>
     </div>
