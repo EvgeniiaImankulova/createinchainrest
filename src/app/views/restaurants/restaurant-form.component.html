@@ -148,12 +148,87 @@
       <h2 class="section-title">Адрес</h2>
 
       <div class="form-group">
-        <label class="form-label">Адрес</label>
+        <label class="form-label required">Название улицы и дом</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.address_street"
+          placeholder="Например: ул. Ленина, д. 10, кв. 5"
+          required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label required">Город/населенный пункт</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.address_city"
+            placeholder="Введите город"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label required">Область/регион</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.address_region"
+            placeholder="Введите регион"
+            required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label required">Страна</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.address_country"
+            placeholder="Введите страну"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Почтовый код</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.address_postal_code"
+            placeholder="Введите почтовый код">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Комментарии к адресу</label>
         <textarea
           class="form-textarea"
-          [(ngModel)]="form.address"
-          placeholder="Введите адрес"
-          rows="2"></textarea>
+          [(ngModel)]="form.address_comment"
+          rows="2"
+          placeholder="Дополнительная информация об адресе"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Широта</label>
+          <input
+            type="number"
+            class="form-input"
+            [(ngModel)]="form.address_latitude"
+            placeholder="55.751244"
+            step="0.000001">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Долгота</label>
+          <input
+            type="number"
+            class="form-input"
+            [(ngModel)]="form.address_longitude"
+            placeholder="37.618423"
+            step="0.000001">
+        </div>
       </div>
 
       <h2 class="section-title">Контактная информация</h2>
