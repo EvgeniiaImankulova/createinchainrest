@@ -1,26 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
 import { SupabaseService, LegalEntity } from '../../services/supabase.service';
 import { Employee, getEmployeeFullName } from '../../models/employee.model';
 import { EmployeeSidebarComponent } from '../../components/employee-sidebar/employee-sidebar.component';
-import { RestoCustomAutocompleteComponent } from '../../components/resto-custom-autocomplete/resto-custom-autocomplete.component';
-import { RestoCustomAutocompleteFooterComponent } from '../../components/resto-custom-autocomplete-footer/resto-custom-autocomplete-footer.component';
 
 @Component({
   selector: 'app-legal-entity-form',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatIconModule,
-    EmployeeSidebarComponent,
-    RestoCustomAutocompleteComponent,
-    RestoCustomAutocompleteFooterComponent
-  ],
+  imports: [CommonModule, FormsModule, EmployeeSidebarComponent],
   templateUrl: './legal-entity-form.component.html',
   styleUrls: ['./legal-entity-form.component.css']
 })
@@ -31,11 +20,6 @@ export class LegalEntityFormComponent implements OnInit {
   employees: Employee[] = [];
   isEmployeeSidebarOpen = false;
   currentEmployeeField: 'director' | 'accountant' | null = null;
-
-  directorControl = new FormControl('');
-  accountantControl = new FormControl('');
-  trackFieldName = 'id';
-  trackFieldDisplayName = 'displayName';
 
   form: LegalEntity = {
     name: '',
@@ -86,25 +70,6 @@ export class LegalEntityFormComponent implements OnInit {
       this.isEditMode = true;
       await this.loadEntity();
     }
-
-    this.directorControl.valueChanges.subscribe(value => {
-      if (value && value !== 'add_new') {
-        this.onEmployeeSelect('director', value);
-      }
-    });
-
-    this.accountantControl.valueChanges.subscribe(value => {
-      if (value && value !== 'add_new') {
-        this.onEmployeeSelect('accountant', value);
-      }
-    });
-  }
-
-  get employeeOptions() {
-    return this.employees.map(emp => ({
-      id: emp.id,
-      displayName: this.getEmployeeFullName(emp)
-    }));
   }
 
   async loadEmployees() {
@@ -120,12 +85,6 @@ export class LegalEntityFormComponent implements OnInit {
       const entity = await this.supabaseService.getLegalEntity(this.entityId!);
       if (entity) {
         this.form = entity;
-        if (entity.director_id) {
-          this.directorControl.setValue(entity.director_id, { emitEvent: false });
-        }
-        if (entity.accountant_id) {
-          this.accountantControl.setValue(entity.accountant_id, { emitEvent: false });
-        }
       }
     } catch (error) {
       console.error('Error loading legal entity:', error);
@@ -176,36 +135,34 @@ export class LegalEntityFormComponent implements OnInit {
   }
 
   onEmployeeSelect(field: 'director' | 'accountant', value: string) {
-    const employee = this.employees.find(e => e.id === value);
-    if (employee) {
-      if (field === 'director') {
-        this.form.director_id = employee.id;
-        this.form.director = `${employee.first_name} ${employee.last_name}`;
-      } else {
-        this.form.accountant_id = employee.id;
-        this.form.accountant = `${employee.first_name} ${employee.last_name}`;
+    if (value === 'add_new') {
+      this.currentEmployeeField = field;
+      this.isEmployeeSidebarOpen = true;
+    } else if (value) {
+      const employee = this.employees.find(e => e.id === value);
+      if (employee) {
+        if (field === 'director') {
+          this.form.director_id = employee.id;
+          this.form.director = `${employee.first_name} ${employee.last_name}`;
+        } else {
+          this.form.accountant_id = employee.id;
+          this.form.accountant = `${employee.first_name} ${employee.last_name}`;
+        }
+        this.form.phone = employee.phone || '';
+        this.form.email = employee.email || '';
       }
-      this.form.phone = employee.phone || '';
-      this.form.email = employee.email || '';
     }
-  }
-
-  openAddEmployeeSidebar(field: 'director' | 'accountant') {
-    this.currentEmployeeField = field;
-    this.isEmployeeSidebarOpen = true;
   }
 
   async onEmployeeCreated(employee: Employee) {
     await this.loadEmployees();
 
-    if (this.currentEmployeeField === 'director' && employee.id) {
+    if (this.currentEmployeeField === 'director') {
       this.form.director_id = employee.id;
       this.form.director = `${employee.first_name} ${employee.last_name}`;
-      this.directorControl.setValue(employee.id, { emitEvent: false });
-    } else if (this.currentEmployeeField === 'accountant' && employee.id) {
+    } else if (this.currentEmployeeField === 'accountant') {
       this.form.accountant_id = employee.id;
       this.form.accountant = `${employee.first_name} ${employee.last_name}`;
-      this.accountantControl.setValue(employee.id, { emitEvent: false });
     }
 
     this.form.phone = employee.phone || '';
