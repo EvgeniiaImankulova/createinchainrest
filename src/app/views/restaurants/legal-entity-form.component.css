@@ -209,3 +209,28 @@
   resize: vertical;
   min-height: 60px;
 }
+
+.map-link-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: var(--spacing-md);
+}
+
+.map-icon {
+  color: rgba(0, 0, 0, 0.54);
+  flex-shrink: 0;
+}
+
+.map-link {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  color: #1976d2;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.map-link:hover {
+  color: #1565c0;
+  text-decoration: underline;
+}
