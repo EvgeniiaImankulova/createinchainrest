@@ -129,6 +129,24 @@
   border-bottom: 1px solid var(--border-color);
 }
 
+.subsection-title {
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin: var(--spacing-xl) 0 var(--spacing-md) 0;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.subsection-title:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
 .form-group {
   margin-bottom: var(--spacing-md);
 }

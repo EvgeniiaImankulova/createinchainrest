@@ -28,6 +28,8 @@
 
     <form class="corporation-form">
       <section class="form-section" *ngIf="activeTab === 'basic'">
+        <h3 class="subsection-title">Общие сведения</h3>
+
         <div class="form-group">
           <label class="form-label">Название</label>
           <input
@@ -58,6 +60,8 @@
             placeholder="123-123-123"
             readonly>
         </div>
+
+        <h3 class="subsection-title">Адрес</h3>
 
         <div class="form-group">
           <label class="form-label required">Название улицы и дом</label>
@@ -151,6 +155,8 @@
           </div>
         </div>
 
+        <h3 class="subsection-title">Реквизиты</h3>
+
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">ИНН</label>
@@ -182,6 +188,8 @@
             name="ogrn"
             placeholder="Введите ОГРН">
         </div>
+
+        <h3 class="subsection-title">Контактная информация</h3>
 
         <div class="form-group">
           <label class="form-label">ФИО Руководителя</label>
