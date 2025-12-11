@@ -27,7 +27,7 @@
       <h3 class="subsection-title">Общие сведения</h3>
 
       <div class="form-group">
-        <label class="form-label required">Название</label>
+        <label class="form-label">Название*</label>
         <input
           type="text"
           class="form-input"
@@ -82,7 +82,7 @@
       <h3 class="subsection-title">Юридический адрес</h3>
 
       <div class="form-group">
-        <label class="form-label required">Название улицы и дом</label>
+        <label class="form-label">Название улицы и дом*</label>
         <input
           type="text"
           class="form-input"
@@ -93,7 +93,7 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label required">Город/населенный пункт</label>
+          <label class="form-label">Город/населенный пункт*</label>
           <input
             type="text"
             class="form-input"
@@ -103,7 +103,7 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label required">Область/регион</label>
+          <label class="form-label">Область/регион*</label>
           <input
             type="text"
             class="form-input"
@@ -115,7 +115,7 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label required">Страна</label>
+          <label class="form-label">Страна*</label>
           <input
             type="text"
             class="form-input"
@@ -168,7 +168,7 @@
       <h3 class="subsection-title">Фактический адрес</h3>
 
       <div class="form-group">
-        <label class="form-label required">Название улицы и дом</label>
+        <label class="form-label">Название улицы и дом*</label>
         <input
           type="text"
           class="form-input"
@@ -179,7 +179,7 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label required">Город/населенный пункт</label>
+          <label class="form-label">Город/населенный пункт*</label>
           <input
             type="text"
             class="form-input"
@@ -189,7 +189,7 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label required">Область/регион</label>
+          <label class="form-label">Область/регион*</label>
           <input
             type="text"
             class="form-input"
@@ -201,7 +201,7 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label required">Страна</label>
+          <label class="form-label">Страна*</label>
           <input
             type="text"
             class="form-input"
@@ -293,54 +293,6 @@
           (ngModelChange)="onAccountantSelect($event)"
           name="accountant">
         </app-searchable-select>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Имя</label>
-          <input
-            type="text"
-            class="form-input"
-            [(ngModel)]="form.director"
-            placeholder="Введите имя">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Фамилия</label>
-          <input
-            type="text"
-            class="form-input"
-            [(ngModel)]="form.accountant"
-            placeholder="Введите фамилию">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Имя в системе</label>
-        <input
-          type="text"
-          class="form-input"
-          placeholder="Заполняется автоматически">
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Телефон</label>
-          <input
-            type="tel"
-            class="form-input"
-            [(ngModel)]="form.phone"
-            placeholder="+7 (___) ___-__-__">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Электронная почта</label>
-          <input
-            type="email"
-            class="form-input"
-            [(ngModel)]="form.email"
-            placeholder="example@company.ru">
-        </div>
       </div>
 
       <h3 class="subsection-title">Банковские реквизиты</h3>

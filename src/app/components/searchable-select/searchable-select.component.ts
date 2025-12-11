@@ -1,10 +1,6 @@
-import { Component, Input, Output, EventEmitter, forwardRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, forwardRef, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
 
 export interface SelectOption {
   value: any;
@@ -16,11 +12,7 @@ export interface SelectOption {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    MatIconModule
+    FormsModule
   ],
   templateUrl: './searchable-select.component.html',
   styleUrls: ['./searchable-select.component.css'],
@@ -40,12 +32,34 @@ export class SearchableSelectComponent implements ControlValueAccessor {
   selectedValue: any = null;
   searchText: string = '';
   filteredOptions: SelectOption[] = [];
+  isOpen: boolean = false;
 
   private onChange: (value: any) => void = () => {};
   private onTouched: () => void = () => {};
 
+  constructor(private elementRef: ElementRef) {}
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.isOpen = false;
+    }
+  }
+
   ngOnInit() {
     this.filteredOptions = [...this.options];
+  }
+
+  toggleDropdown() {
+    this.isOpen = !this.isOpen;
+    if (this.isOpen) {
+      this.onPanelOpened();
+    }
+  }
+
+  selectOption(value: any) {
+    this.onSelectionChange(value);
+    this.isOpen = false;
   }
 
   onSearchChange(event: Event) {
@@ -69,6 +83,7 @@ export class SearchableSelectComponent implements ControlValueAccessor {
 
   onClear(event: Event) {
     event.stopPropagation();
+    event.preventDefault();
     this.selectedValue = null;
     this.onChange(null);
     this.onTouched();
