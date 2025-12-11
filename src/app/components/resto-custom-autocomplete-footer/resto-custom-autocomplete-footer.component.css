@@ -1,0 +1,23 @@
+.autocomplete-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--primary-color);
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.autocomplete-footer:hover {
+  background-color: rgba(68, 138, 255, 0.08);
+}
+
+.autocomplete-footer mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}

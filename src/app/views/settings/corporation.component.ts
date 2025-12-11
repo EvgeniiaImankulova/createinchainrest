@@ -1,18 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { RestoCustomAutocompleteComponent } from '../../components/resto-custom-autocomplete/resto-custom-autocomplete.component';
 
 @Component({
   selector: 'app-corporation',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    RestoCustomAutocompleteComponent
   ],
   templateUrl: './corporation.component.html',
   styleUrl: './corporation.component.css'
 })
-export class CorporationComponent {
+export class CorporationComponent implements OnInit {
   activeTab: 'basic' | 'network' = 'basic';
 
   corporationSettings = {
@@ -38,12 +41,25 @@ export class CorporationComponent {
     currency: 'RUB'
   };
 
-
   currencies = [
     { value: 'RUB', label: '₽ Российский рубль' },
     { value: 'USD', label: '$ Доллар США' },
     { value: 'EUR', label: '€ Евро' }
   ];
+
+  currencyControl = new FormControl('RUB');
+  trackFieldName = 'value';
+  trackFieldDisplayName = 'label';
+
+  ngOnInit(): void {
+    this.currencyControl.valueChanges.subscribe(value => {
+      if (value) {
+        this.corporationSettings.currency = value;
+      }
+    });
+
+    this.currencyControl.setValue(this.corporationSettings.currency);
+  }
 
   switchTab(tab: 'basic' | 'network'): void {
     this.activeTab = tab;
