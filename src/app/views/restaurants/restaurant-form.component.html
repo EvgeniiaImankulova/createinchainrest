@@ -233,6 +233,20 @@
 
       <h2 class="section-title">Контактная информация</h2>
 
+      <div class="form-group">
+        <label class="form-label">Владелец ресторана</label>
+        <select
+          class="form-select"
+          [value]="form.owner_id || ''"
+          (change)="onOwnerSelect($any($event.target).value)">
+          <option value="">Выберите владельца</option>
+          <option *ngFor="let employee of employees" [value]="employee.id">
+            {{ getEmployeeFullName(employee) }}
+          </option>
+          <option value="add_new">+ Добавить нового сотрудника</option>
+        </select>
+      </div>
+
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Телефон</label>
@@ -292,3 +306,8 @@
     </div>
   </div>
 </div>
+
+<app-employee-sidebar
+  [(isOpen)]="isEmployeeSidebarOpen"
+  (employeeCreated)="onEmployeeCreated($event)">
+</app-employee-sidebar>

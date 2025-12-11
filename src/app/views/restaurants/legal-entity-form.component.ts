@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SupabaseService, LegalEntity } from '../../services/supabase.service';
+import { Employee, getEmployeeFullName } from '../../models/employee.model';
+import { EmployeeSidebarComponent } from '../../components/employee-sidebar/employee-sidebar.component';
 
 @Component({
   selector: 'app-legal-entity-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, EmployeeSidebarComponent],
   templateUrl: './legal-entity-form.component.html',
   styleUrls: ['./legal-entity-form.component.css']
 })
@@ -15,6 +17,9 @@ export class LegalEntityFormComponent implements OnInit {
   isEditMode = false;
   entityId: string | null = null;
   isSaving = false;
+  employees: Employee[] = [];
+  isEmployeeSidebarOpen = false;
+  currentEmployeeField: 'director' | 'accountant' | null = null;
 
   form: LegalEntity = {
     name: '',
@@ -59,10 +64,19 @@ export class LegalEntityFormComponent implements OnInit {
 
   async ngOnInit() {
     this.entityId = this.route.snapshot.paramMap.get('id');
+    await this.loadEmployees();
 
     if (this.entityId) {
       this.isEditMode = true;
       await this.loadEntity();
+    }
+  }
+
+  async loadEmployees() {
+    try {
+      this.employees = await this.supabaseService.getEmployees();
+    } catch (error) {
+      console.error('Error loading employees:', error);
     }
   }
 
@@ -114,5 +128,45 @@ export class LegalEntityFormComponent implements OnInit {
 
   cancel() {
     this.router.navigate(['/network-settings/restaurants']);
+  }
+
+  getEmployeeFullName(employee: Employee): string {
+    return getEmployeeFullName(employee);
+  }
+
+  onEmployeeSelect(field: 'director' | 'accountant', value: string) {
+    if (value === 'add_new') {
+      this.currentEmployeeField = field;
+      this.isEmployeeSidebarOpen = true;
+    } else if (value) {
+      const employee = this.employees.find(e => e.id === value);
+      if (employee) {
+        if (field === 'director') {
+          this.form.director_id = employee.id;
+          this.form.director = `${employee.first_name} ${employee.last_name}`;
+        } else {
+          this.form.accountant_id = employee.id;
+          this.form.accountant = `${employee.first_name} ${employee.last_name}`;
+        }
+        this.form.phone = employee.phone || '';
+        this.form.email = employee.email || '';
+      }
+    }
+  }
+
+  async onEmployeeCreated(employee: Employee) {
+    await this.loadEmployees();
+
+    if (this.currentEmployeeField === 'director') {
+      this.form.director_id = employee.id;
+      this.form.director = `${employee.first_name} ${employee.last_name}`;
+    } else if (this.currentEmployeeField === 'accountant') {
+      this.form.accountant_id = employee.id;
+      this.form.accountant = `${employee.first_name} ${employee.last_name}`;
+    }
+
+    this.form.phone = employee.phone || '';
+    this.form.email = employee.email || '';
+    this.currentEmployeeField = null;
   }
 }

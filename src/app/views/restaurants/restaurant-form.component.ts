@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SupabaseService, Restaurant, LegalEntity } from '../../services/supabase.service';
+import { Employee, getEmployeeFullName } from '../../models/employee.model';
+import { EmployeeSidebarComponent } from '../../components/employee-sidebar/employee-sidebar.component';
 
 @Component({
   selector: 'app-restaurant-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, EmployeeSidebarComponent],
   templateUrl: './restaurant-form.component.html',
   styleUrls: ['./restaurant-form.component.css']
 })
@@ -16,6 +18,8 @@ export class RestaurantFormComponent implements OnInit {
   restaurantId: string | null = null;
   isSaving = false;
   legalEntities: LegalEntity[] = [];
+  employees: Employee[] = [];
+  isEmployeeSidebarOpen = false;
   activeTab = 'general';
 
   form: Restaurant = {
@@ -56,6 +60,7 @@ export class RestaurantFormComponent implements OnInit {
   async ngOnInit() {
     this.restaurantId = this.route.snapshot.paramMap.get('id');
     await this.loadLegalEntities();
+    await this.loadEmployees();
 
     if (this.restaurantId) {
       this.isEditMode = true;
@@ -68,6 +73,14 @@ export class RestaurantFormComponent implements OnInit {
       this.legalEntities = await this.supabaseService.getLegalEntities();
     } catch (error) {
       console.error('Error loading legal entities:', error);
+    }
+  }
+
+  async loadEmployees() {
+    try {
+      this.employees = await this.supabaseService.getEmployees();
+    } catch (error) {
+      console.error('Error loading employees:', error);
     }
   }
 
@@ -123,5 +136,29 @@ export class RestaurantFormComponent implements OnInit {
 
   cancel() {
     this.router.navigate(['/network-settings/restaurants']);
+  }
+
+  getEmployeeFullName(employee: Employee): string {
+    return getEmployeeFullName(employee);
+  }
+
+  onOwnerSelect(value: string) {
+    if (value === 'add_new') {
+      this.isEmployeeSidebarOpen = true;
+    } else if (value) {
+      const employee = this.employees.find(e => e.id === value);
+      if (employee) {
+        this.form.owner_id = employee.id;
+        this.form.phone = employee.phone || '';
+        this.form.email = employee.email || '';
+      }
+    }
+  }
+
+  async onEmployeeCreated(employee: Employee) {
+    await this.loadEmployees();
+    this.form.owner_id = employee.id;
+    this.form.phone = employee.phone || '';
+    this.form.email = employee.email || '';
   }
 }

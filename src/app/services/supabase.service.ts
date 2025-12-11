@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../environment';
+import { Employee } from '../models/employee.model';
 
 export interface LegalEntity {
   id?: string;
@@ -30,7 +31,9 @@ export interface LegalEntity {
   phone?: string;
   email?: string;
   director?: string;
+  director_id?: string;
   accountant?: string;
+  accountant_id?: string;
   bank_name?: string;
   bik?: string;
   correspondent_account?: string;
@@ -64,6 +67,7 @@ export interface Restaurant {
   is_franchise?: boolean;
   is_draft?: boolean;
   connection_status?: string;
+  owner_id?: string;
   opening_hours?: any;
   warehouse_settings?: any;
   terminal_settings?: any;
@@ -185,6 +189,59 @@ export class SupabaseService {
   async deleteRestaurant(id: string) {
     const { error } = await this.supabase
       .from('restaurants')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  }
+
+  async getEmployees() {
+    const { data, error } = await this.supabase
+      .from('employees')
+      .select('*')
+      .order('last_name', { ascending: true });
+
+    if (error) throw error;
+    return data as Employee[];
+  }
+
+  async getEmployee(id: string) {
+    const { data, error } = await this.supabase
+      .from('employees')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data as Employee | null;
+  }
+
+  async createEmployee(employee: Employee) {
+    const { data, error } = await this.supabase
+      .from('employees')
+      .insert([employee])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as Employee;
+  }
+
+  async updateEmployee(id: string, employee: Partial<Employee>) {
+    const { data, error } = await this.supabase
+      .from('employees')
+      .update(employee)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as Employee;
+  }
+
+  async deleteEmployee(id: string) {
+    const { error } = await this.supabase
+      .from('employees')
       .delete()
       .eq('id', id);
 

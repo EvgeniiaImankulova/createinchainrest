@@ -251,6 +251,82 @@
 
       <div class="form-row">
         <div class="form-group">
+          <label class="form-label">Телефон организации</label>
+          <input
+            type="tel"
+            class="form-input"
+            placeholder="+7 (___) ___-__-__">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email организации</label>
+          <input
+            type="email"
+            class="form-input"
+            placeholder="example@company.ru">
+        </div>
+      </div>
+
+      <h2 class="section-title">Должностные лица</h2>
+
+      <div class="form-group">
+        <label class="form-label">Директор</label>
+        <select
+          class="form-select"
+          [value]="form.director_id || ''"
+          (change)="onEmployeeSelect('director', $any($event.target).value)">
+          <option value="">Выберите директора</option>
+          <option *ngFor="let employee of employees" [value]="employee.id">
+            {{ getEmployeeFullName(employee) }}
+          </option>
+          <option value="add_new">+ Добавить нового сотрудника</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Главный бухгалтер</label>
+        <select
+          class="form-select"
+          [value]="form.accountant_id || ''"
+          (change)="onEmployeeSelect('accountant', $any($event.target).value)">
+          <option value="">Выберите бухгалтера</option>
+          <option *ngFor="let employee of employees" [value]="employee.id">
+            {{ getEmployeeFullName(employee) }}
+          </option>
+          <option value="add_new">+ Добавить нового сотрудника</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Имя</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.director"
+            placeholder="Введите имя">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Фамилия</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.accountant"
+            placeholder="Введите фамилию">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Имя в системе</label>
+        <input
+          type="text"
+          class="form-input"
+          placeholder="Заполняется автоматически">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
           <label class="form-label">Телефон</label>
           <input
             type="tel"
@@ -260,34 +336,12 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Email</label>
+          <label class="form-label">Электронная почта</label>
           <input
             type="email"
             class="form-input"
             [(ngModel)]="form.email"
             placeholder="example@company.ru">
-        </div>
-      </div>
-
-      <h2 class="section-title">Должностные лица</h2>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Директор</label>
-          <input
-            type="text"
-            class="form-input"
-            [(ngModel)]="form.director"
-            placeholder="ФИО директора">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Главный бухгалтер</label>
-          <input
-            type="text"
-            class="form-input"
-            [(ngModel)]="form.accountant"
-            placeholder="ФИО бухгалтера">
         </div>
       </div>
 
@@ -336,3 +390,8 @@
     </div>
   </div>
 </div>
+
+<app-employee-sidebar
+  [(isOpen)]="isEmployeeSidebarOpen"
+  (employeeCreated)="onEmployeeCreated($event)">
+</app-employee-sidebar>

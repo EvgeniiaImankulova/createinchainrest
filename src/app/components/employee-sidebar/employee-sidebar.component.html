@@ -1,0 +1,78 @@
+<div class="sidebar-overlay" *ngIf="isOpen" (click)="close()"></div>
+
+<div class="sidebar" [class.open]="isOpen">
+  <div class="sidebar-header">
+    <h2 class="sidebar-title">Добавить сотрудника</h2>
+    <button class="close-btn" (click)="close()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="sidebar-content">
+    <form class="employee-form">
+      <div class="form-group">
+        <label class="form-label required">Имя</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.first_name"
+          name="first_name"
+          placeholder="Введите имя"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label required">Фамилия</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.last_name"
+          name="last_name"
+          placeholder="Введите фамилию"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Имя в системе</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.system_name"
+          name="system_name"
+          placeholder="Введите имя для системы">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Телефон</label>
+        <input
+          type="tel"
+          class="form-input"
+          [(ngModel)]="form.phone"
+          name="phone"
+          placeholder="+7 (___) ___-__-__"
+          (input)="formatPhone($event)">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Электронная почта</label>
+        <input
+          type="email"
+          class="form-input"
+          [(ngModel)]="form.email"
+          name="email"
+          placeholder="example@domain.com">
+      </div>
+    </form>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="btn-secondary" (click)="close()" [disabled]="isSaving">
+      Отмена
+    </button>
+    <button class="btn-primary" (click)="save()" [disabled]="isSaving">
+      Сохранить
+    </button>
+  </div>
+</div>
