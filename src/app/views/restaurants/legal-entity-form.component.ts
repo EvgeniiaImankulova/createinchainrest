@@ -5,11 +5,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { SupabaseService, LegalEntity } from '../../services/supabase.service';
 import { Employee, getEmployeeFullName } from '../../models/employee.model';
 import { EmployeeSidebarComponent } from '../../components/employee-sidebar/employee-sidebar.component';
+import { SearchableSelectComponent, SelectOption } from '../../components/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-legal-entity-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, EmployeeSidebarComponent],
+  imports: [CommonModule, FormsModule, EmployeeSidebarComponent, SearchableSelectComponent],
   templateUrl: './legal-entity-form.component.html',
   styleUrls: ['./legal-entity-form.component.css']
 })
@@ -80,6 +81,15 @@ export class LegalEntityFormComponent implements OnInit {
     }
   }
 
+  get employeeOptions(): SelectOption[] {
+    const options: SelectOption[] = this.employees.map(emp => ({
+      value: emp.id!,
+      label: getEmployeeFullName(emp)
+    }));
+    options.push({ value: 'add_new', label: '+ Добавить нового сотрудника' });
+    return options;
+  }
+
   async loadEntity() {
     try {
       const entity = await this.supabaseService.getLegalEntity(this.entityId!);
@@ -132,6 +142,14 @@ export class LegalEntityFormComponent implements OnInit {
 
   getEmployeeFullName(employee: Employee): string {
     return getEmployeeFullName(employee);
+  }
+
+  onDirectorSelect(value: string) {
+    this.onEmployeeSelect('director', value);
+  }
+
+  onAccountantSelect(value: string) {
+    this.onEmployeeSelect('accountant', value);
   }
 
   onEmployeeSelect(field: 'director' | 'accountant', value: string) {

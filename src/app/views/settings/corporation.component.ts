@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { SearchableSelectComponent, SelectOption } from '../../components/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-corporation',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    SearchableSelectComponent
   ],
   templateUrl: './corporation.component.html',
   styleUrl: './corporation.component.css'
@@ -39,7 +41,7 @@ export class CorporationComponent {
   };
 
 
-  currencies = [
+  currencies: SelectOption[] = [
     { value: 'RUB', label: '₽ Российский рубль' },
     { value: 'USD', label: '$ Доллар США' },
     { value: 'EUR', label: '€ Евро' }

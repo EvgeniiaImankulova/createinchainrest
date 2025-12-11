@@ -113,13 +113,13 @@
       <h3 class="subsection-title">Юридическая информация</h3>
 
       <div class="form-group">
-        <label class="form-label">Юридическое лицо</label>
-        <select class="form-select" [(ngModel)]="form.legal_entity_id">
-          <option value="">Выберите юридическое лицо</option>
-          <option *ngFor="let entity of legalEntities" [value]="entity.id">
-            {{ entity.name }}
-          </option>
-        </select>
+        <app-searchable-select
+          [label]="'Юридическое лицо'"
+          [options]="legalEntityOptions"
+          [placeholder]="'Поиск...'"
+          [(ngModel)]="form.legal_entity_id"
+          name="legalEntity">
+        </app-searchable-select>
       </div>
 
       <h3 class="subsection-title">Настройки</h3>
@@ -240,17 +240,14 @@
       <h3 class="subsection-title">Контактная информация</h3>
 
       <div class="form-group">
-        <label class="form-label">Владелец ресторана</label>
-        <select
-          class="form-select"
-          [value]="form.owner_id || ''"
-          (change)="onOwnerSelect($any($event.target).value)">
-          <option value="">Выберите владельца</option>
-          <option *ngFor="let employee of employees" [value]="employee.id">
-            {{ getEmployeeFullName(employee) }}
-          </option>
-          <option value="add_new">+ Добавить нового сотрудника</option>
-        </select>
+        <app-searchable-select
+          [label]="'Владелец ресторана'"
+          [options]="ownerOptions"
+          [placeholder]="'Поиск...'"
+          [(ngModel)]="form.owner_id"
+          (ngModelChange)="onOwnerSelect($event)"
+          name="owner">
+        </app-searchable-select>
       </div>
 
       <div class="form-row">

@@ -5,11 +5,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { SupabaseService, Restaurant, LegalEntity } from '../../services/supabase.service';
 import { Employee, getEmployeeFullName } from '../../models/employee.model';
 import { EmployeeSidebarComponent } from '../../components/employee-sidebar/employee-sidebar.component';
+import { SearchableSelectComponent, SelectOption } from '../../components/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-restaurant-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, EmployeeSidebarComponent],
+  imports: [CommonModule, FormsModule, EmployeeSidebarComponent, SearchableSelectComponent],
   templateUrl: './restaurant-form.component.html',
   styleUrls: ['./restaurant-form.component.css']
 })
@@ -140,6 +141,22 @@ export class RestaurantFormComponent implements OnInit {
 
   getEmployeeFullName(employee: Employee): string {
     return getEmployeeFullName(employee);
+  }
+
+  get legalEntityOptions(): SelectOption[] {
+    return this.legalEntities.map(le => ({
+      value: le.id!,
+      label: le.name
+    }));
+  }
+
+  get ownerOptions(): SelectOption[] {
+    const options: SelectOption[] = this.employees.map(emp => ({
+      value: emp.id!,
+      label: getEmployeeFullName(emp)
+    }));
+    options.push({ value: 'add_new', label: '+ Добавить нового сотрудника' });
+    return options;
   }
 
   onOwnerSelect(value: string) {

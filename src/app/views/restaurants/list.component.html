@@ -302,21 +302,23 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Шаблон ресторана</label>
-          <select class="form-select" [(ngModel)]="restaurantForm.template">
-            <option value="WEB-11353-без-дневных-интеров">WEB-11353-без-дневных-интеров</option>
-            <option value="Default">Default</option>
-          </select>
+          <app-searchable-select
+            [label]="'Шаблон ресторана'"
+            [options]="templateOptions"
+            [placeholder]="'Поиск...'"
+            [(ngModel)]="restaurantForm.template"
+            name="template">
+          </app-searchable-select>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Юридическое лицо*</label>
-          <select class="form-select" [(ngModel)]="restaurantForm.legalEntityId">
-            <option value="">Выберите юридическое лицо</option>
-            <option *ngFor="let entity of legalEntities" [value]="entity.id">
-              {{ entity.name }}
-            </option>
-          </select>
+          <app-searchable-select
+            [label]="'Юридическое лицо*'"
+            [options]="legalEntityOptions"
+            [placeholder]="'Поиск...'"
+            [(ngModel)]="restaurantForm.legalEntityId"
+            name="legalEntity">
+          </app-searchable-select>
         </div>
 
         <h3 class="section-title">Настройки</h3>

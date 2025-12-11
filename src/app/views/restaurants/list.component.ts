@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.service';
+import { SearchableSelectComponent, SelectOption } from '../../components/searchable-select/searchable-select.component';
 
 interface Restaurant {
   id: string;
@@ -42,7 +43,7 @@ interface LegalEntity {
 @Component({
   selector: 'app-restaurants-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SearchableSelectComponent],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
@@ -243,6 +244,20 @@ export class RestaurantsListComponent implements OnInit {
 
   get legalEntities() {
     return this.legalEntitiesData.map(le => ({ id: le.id, name: le.name }));
+  }
+
+  get legalEntityOptions(): SelectOption[] {
+    return this.legalEntitiesData.map(le => ({
+      value: le.id,
+      label: le.name
+    }));
+  }
+
+  get templateOptions(): SelectOption[] {
+    return [
+      { value: 'WEB-11353-без-дневных-интеров', label: 'WEB-11353-без-дневных-интеров' },
+      { value: 'Default', label: 'Default' }
+    ];
   }
 
   get hierarchyItems() {
