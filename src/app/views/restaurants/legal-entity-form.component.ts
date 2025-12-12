@@ -147,20 +147,41 @@ export class LegalEntityFormComponent implements OnInit {
     }
   }
 
+  get isFormValid(): boolean {
+    return !!(
+      this.form.name?.trim() &&
+      this.form.legal_address_street?.trim() &&
+      this.form.legal_address_city?.trim() &&
+      this.form.legal_address_region?.trim() &&
+      this.form.legal_address_country?.trim() &&
+      this.form.legal_address_latitude !== undefined &&
+      this.form.legal_address_latitude !== null &&
+      this.form.legal_address_longitude !== undefined &&
+      this.form.legal_address_longitude !== null &&
+      this.form.actual_address_street?.trim() &&
+      this.form.actual_address_city?.trim() &&
+      this.form.actual_address_region?.trim() &&
+      this.form.actual_address_country?.trim() &&
+      this.form.actual_address_latitude !== undefined &&
+      this.form.actual_address_latitude !== null &&
+      this.form.actual_address_longitude !== undefined &&
+      this.form.actual_address_longitude !== null
+    );
+  }
+
   async saveDraft() {
     await this.save(true);
   }
 
   async saveEntity() {
+    if (!this.isFormValid) {
+      alert('Пожалуйста, заполните все обязательные поля');
+      return;
+    }
     await this.save(false);
   }
 
   async save(isDraft: boolean) {
-    if (!this.form.name?.trim()) {
-      alert('Пожалуйста, введите название');
-      return;
-    }
-
     this.isSaving = true;
     this.form.is_draft = isDraft;
 

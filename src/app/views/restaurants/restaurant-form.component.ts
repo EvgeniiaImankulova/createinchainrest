@@ -179,20 +179,33 @@ export class RestaurantFormComponent implements OnInit {
     }
   }
 
+  get isFormValid(): boolean {
+    return !!(
+      this.form.name?.trim() &&
+      this.form.address_street?.trim() &&
+      this.form.address_city?.trim() &&
+      this.form.address_region?.trim() &&
+      this.form.address_country?.trim() &&
+      this.form.address_latitude !== undefined &&
+      this.form.address_latitude !== null &&
+      this.form.address_longitude !== undefined &&
+      this.form.address_longitude !== null
+    );
+  }
+
   async saveDraft() {
     await this.save(true);
   }
 
   async saveRestaurant() {
+    if (!this.isFormValid) {
+      alert('Пожалуйста, заполните все обязательные поля');
+      return;
+    }
     await this.save(false);
   }
 
   async save(isDraft: boolean) {
-    if (!this.form.name?.trim()) {
-      alert('Пожалуйста, введите название');
-      return;
-    }
-
     this.isSaving = true;
     this.form.is_draft = isDraft;
 

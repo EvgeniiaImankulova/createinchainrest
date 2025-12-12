@@ -14,7 +14,7 @@
       <button class="btn-secondary" (click)="saveDraft()" [disabled]="isSaving">
         Сохранить как черновик
       </button>
-      <button class="btn-primary" (click)="saveEntity()" [disabled]="isSaving">
+      <button class="btn-primary" (click)="saveEntity()" [disabled]="isSaving || !isFormValid">
         {{ isEditMode ? 'Сохранить' : 'Создать' }}
       </button>
     </div>
