@@ -23,6 +23,8 @@ export class RestaurantFormComponent implements OnInit {
   isEmployeeSidebarOpen = false;
   activeTab = 'general';
 
+  defaultRoyaltyPercent = 5;
+
   form: Restaurant = {
     name: '',
     description: '',
@@ -46,6 +48,13 @@ export class RestaurantFormComponent implements OnInit {
     is_draft: false,
     connection_status: 'disconnected',
     legal_entity_id: '',
+    owner_id: '',
+    owner_phone: '',
+    owner_email: '',
+    accountant_id: '',
+    accountant_phone: '',
+    accountant_email: '',
+    royalty_percent: 0,
     opening_hours: null,
     warehouse_settings: null,
     terminal_settings: null,
@@ -80,6 +89,51 @@ export class RestaurantFormComponent implements OnInit {
   async loadEmployees() {
     try {
       this.employees = await this.supabaseService.getEmployees();
+
+      if (this.employees.length === 0) {
+        this.employees = [
+          {
+            id: 'mock-1',
+            first_name: 'Иван',
+            last_name: 'Петров',
+            system_name: 'i.petrov',
+            phone: '+7 (999) 123-45-67',
+            email: 'i.petrov@example.com'
+          },
+          {
+            id: 'mock-2',
+            first_name: 'Мария',
+            last_name: 'Иванова',
+            system_name: 'm.ivanova',
+            phone: '+7 (999) 234-56-78',
+            email: 'm.ivanova@example.com'
+          },
+          {
+            id: 'mock-3',
+            first_name: 'Алексей',
+            last_name: 'Смирнов',
+            system_name: 'a.smirnov',
+            phone: '+7 (999) 345-67-89',
+            email: 'a.smirnov@example.com'
+          },
+          {
+            id: 'mock-4',
+            first_name: 'Ольга',
+            last_name: 'Кузнецова',
+            system_name: 'o.kuznetsova',
+            phone: '+7 (999) 456-78-90',
+            email: 'o.kuznetsova@example.com'
+          },
+          {
+            id: 'mock-5',
+            first_name: 'Дмитрий',
+            last_name: 'Соколов',
+            system_name: 'd.sokolov',
+            phone: '+7 (999) 567-89-01',
+            email: 'd.sokolov@example.com'
+          }
+        ];
+      }
     } catch (error) {
       console.error('Error loading employees:', error);
     }
@@ -150,6 +204,15 @@ export class RestaurantFormComponent implements OnInit {
     }));
   }
 
+  get templateOptions(): SelectOption[] {
+    return [
+      { value: 'WEB-11353-без-дневных-интеров', label: 'WEB-11353-без-дневных-интеров' },
+      { value: 'Default', label: 'Default' },
+      { value: 'Restaurant-Full', label: 'Restaurant-Full' },
+      { value: 'Cafe-Standard', label: 'Cafe-Standard' }
+    ];
+  }
+
   get ownerOptions(): SelectOption[] {
     const options: SelectOption[] = this.employees.map(emp => ({
       value: emp.id!,
@@ -159,6 +222,21 @@ export class RestaurantFormComponent implements OnInit {
     return options;
   }
 
+  get accountantOptions(): SelectOption[] {
+    const options: SelectOption[] = this.employees.map(emp => ({
+      value: emp.id!,
+      label: getEmployeeFullName(emp)
+    }));
+    options.unshift({ value: 'add_new', label: '+ Добавить нового сотрудника' });
+    return options;
+  }
+
+  onFranchiseChange() {
+    if (this.form.is_franchise && !this.form.royalty_percent) {
+      this.form.royalty_percent = this.defaultRoyaltyPercent;
+    }
+  }
+
   onOwnerSelect(value: string) {
     if (value === 'add_new') {
       this.isEmployeeSidebarOpen = true;
@@ -166,8 +244,21 @@ export class RestaurantFormComponent implements OnInit {
       const employee = this.employees.find(e => e.id === value);
       if (employee) {
         this.form.owner_id = employee.id;
-        this.form.phone = employee.phone || '';
-        this.form.email = employee.email || '';
+        this.form.owner_phone = employee.phone || '';
+        this.form.owner_email = employee.email || '';
+      }
+    }
+  }
+
+  onAccountantSelect(value: string) {
+    if (value === 'add_new') {
+      this.isEmployeeSidebarOpen = true;
+    } else if (value) {
+      const employee = this.employees.find(e => e.id === value);
+      if (employee) {
+        this.form.accountant_id = employee.id;
+        this.form.accountant_phone = employee.phone || '';
+        this.form.accountant_email = employee.email || '';
       }
     }
   }
@@ -175,7 +266,7 @@ export class RestaurantFormComponent implements OnInit {
   async onEmployeeCreated(employee: Employee) {
     await this.loadEmployees();
     this.form.owner_id = employee.id;
-    this.form.phone = employee.phone || '';
-    this.form.email = employee.email || '';
+    this.form.owner_phone = employee.phone || '';
+    this.form.owner_email = employee.email || '';
   }
 }

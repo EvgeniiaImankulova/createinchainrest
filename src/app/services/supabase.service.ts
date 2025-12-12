@@ -68,6 +68,12 @@ export interface Restaurant {
   is_draft?: boolean;
   connection_status?: string;
   owner_id?: string;
+  owner_phone?: string;
+  owner_email?: string;
+  accountant_id?: string;
+  accountant_phone?: string;
+  accountant_email?: string;
+  royalty_percent?: number;
   opening_hours?: any;
   warehouse_settings?: any;
   terminal_settings?: any;
