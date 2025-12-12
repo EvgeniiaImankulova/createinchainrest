@@ -205,7 +205,7 @@ export class RestaurantsListComponent implements OnInit {
       address: 'переулок Джамбула, 21, Санкт-Петербург, Санкт-Петербург, Russia',
       template: 'Default',
       timezone: '(UTC+3:00) Европа/Москва',
-      isFranchise: false
+      isFranchise: true
     },
     {
       id: 'r3',
@@ -311,6 +311,12 @@ export class RestaurantsListComponent implements OnInit {
     ];
   }
 
+  isLegalEntityFranchise(legalEntityId: string): boolean {
+    const childRestaurants = this.restaurants.filter(r => r.legalEntityId === legalEntityId);
+    if (childRestaurants.length === 0) return false;
+    return childRestaurants.some(r => r.isFranchise);
+  }
+
   get hierarchyItems() {
     const items: any[] = [];
 
@@ -320,6 +326,7 @@ export class RestaurantsListComponent implements OnInit {
         type: 'legalEntity',
         name: legalEntity.name,
         isExpanded: this.expandedLegalEntities.has(legalEntity.id),
+        isFranchise: this.isLegalEntityFranchise(legalEntity.id),
         level: 0,
         data: legalEntity
       });

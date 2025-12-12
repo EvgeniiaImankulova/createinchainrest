@@ -77,8 +77,8 @@
                   (click)="item.type === 'legalEntity' ? onEditLegalEntity(item.data) : onEditRestaurant(item.data); $event.preventDefault()">
                   {{ item.name }}
                 </a>
-                <span *ngIf="item.type === 'restaurant' && item.isFranchise" class="franchise-tag">
-                  ФРАНЧАЙЗЫ
+                <span *ngIf="item.isFranchise" class="franchise-tag">
+                  ФРАНЧАЙЗИ
                 </span>
                 <button
                   *ngIf="item.type === 'legalEntity'"
