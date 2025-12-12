@@ -131,38 +131,6 @@
             placeholder="Дополнительная информация об адресе"></textarea>
         </div>
 
-        <div class="map-link-wrapper">
-          <svg class="map-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M10 10C10.5304 10 11.0391 9.78929 11.4142 9.41421C11.7893 9.03914 12 8.53043 12 8C12 7.46957 11.7893 6.96086 11.4142 6.58579C11.0391 6.21071 10.5304 6 10 6C9.46957 6 8.96086 6.21071 8.58579 6.58579C8.21071 6.96086 8 7.46957 8 8C8 8.53043 8.21071 9.03914 8.58579 9.41421C8.96086 9.78929 9.46957 10 10 10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M16 8C16 13 10 17 10 17C10 17 4 13 4 8C4 6.4087 4.63214 4.88258 5.75736 3.75736C6.88258 2.63214 8.4087 2 10 2C11.5913 2 13.1174 2.63214 14.2426 3.75736C15.3679 4.88258 16 6.4087 16 8Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <a href="#" class="map-link" (click)="$event.preventDefault()">Показать на карте</a>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Широта*</label>
-            <input
-              type="number"
-              class="form-input"
-              [(ngModel)]="corporationSettings.addressLatitude"
-              name="addressLatitude"
-              placeholder="55.751244"
-              step="0.000001">
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Долгота*</label>
-            <input
-              type="number"
-              class="form-input"
-              [(ngModel)]="corporationSettings.addressLongitude"
-              name="addressLongitude"
-              placeholder="37.618423"
-              step="0.000001">
-          </div>
-        </div>
-
         <h3 class="subsection-title">Реквизиты</h3>
 
         <div class="form-row">
