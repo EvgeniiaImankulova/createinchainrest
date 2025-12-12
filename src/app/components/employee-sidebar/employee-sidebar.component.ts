@@ -28,8 +28,8 @@ export class EmployeeSidebarComponent {
   }
 
   async save() {
-    if (!this.form.first_name?.trim() || !this.form.last_name?.trim()) {
-      alert('Пожалуйста, заполните имя и фамилию');
+    if (!this.form.first_name?.trim() || !this.form.system_name?.trim()) {
+      alert('Пожалуйста, заполните имя и имя в системе');
       return;
     }
 

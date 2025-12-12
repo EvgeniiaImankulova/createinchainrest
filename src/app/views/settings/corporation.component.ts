@@ -129,6 +129,8 @@ export class CorporationComponent implements OnInit {
       if (employee) {
         this.corporationSettings.director_id = employee.id!;
         this.corporationSettings.directorName = getEmployeeFullName(employee);
+        this.corporationSettings.phone = employee.phone || '';
+        this.corporationSettings.email = employee.email || '';
       }
     }
   }
@@ -137,6 +139,8 @@ export class CorporationComponent implements OnInit {
     await this.loadEmployees();
     this.corporationSettings.director_id = employee.id!;
     this.corporationSettings.directorName = getEmployeeFullName(employee);
+    this.corporationSettings.phone = employee.phone || '';
+    this.corporationSettings.email = employee.email || '';
   }
 
   switchTab(tab: 'basic' | 'network'): void {
