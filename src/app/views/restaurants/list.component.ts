@@ -102,17 +102,22 @@ export class RestaurantsListComponent implements OnInit {
       }
 
       if (restaurants && restaurants.length > 0) {
-        this.restaurants = restaurants.map((r: any) => ({
-          id: r.id,
-          name: r.name,
-          legalEntityId: r.legal_entity_id || '',
-          legalEntity: '',
-          address: r.address || '',
-          template: r.template || '',
-          timezone: r.timezone || '',
-          isFranchise: r.is_franchise || false,
-          isDraft: r.is_draft || false
-        }));
+        this.restaurants = restaurants.map((r: any) => {
+          const legalEntity = this.legalEntitiesData.find(le => le.id === r.legal_entity_id);
+          const isGastronomRestaurant = legalEntity?.name.toLowerCase().includes('гастроном');
+
+          return {
+            id: r.id,
+            name: r.name,
+            legalEntityId: r.legal_entity_id || '',
+            legalEntity: '',
+            address: r.address || '',
+            template: r.template || '',
+            timezone: r.timezone || '',
+            isFranchise: isGastronomRestaurant || r.is_franchise || false,
+            isDraft: r.is_draft || false
+          };
+        });
       }
     } catch (error) {
       console.error('Error loading data:', error);
@@ -316,6 +321,11 @@ export class RestaurantsListComponent implements OnInit {
   }
 
   isLegalEntityFranchise(legalEntityId: string): boolean {
+    const legalEntity = this.legalEntitiesData.find(le => le.id === legalEntityId);
+    if (legalEntity?.name.toLowerCase().includes('гастроном')) {
+      return true;
+    }
+
     const childRestaurants = this.restaurants.filter(r => r.legalEntityId === legalEntityId);
     if (childRestaurants.length === 0) return false;
     return childRestaurants.some(r => r.isFranchise);
