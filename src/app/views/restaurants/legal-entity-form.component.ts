@@ -49,7 +49,9 @@ export class LegalEntityFormComponent implements OnInit {
     phone: '',
     email: '',
     director: '',
+    director_id: undefined,
     accountant: '',
+    accountant_id: undefined,
     bank_name: '',
     bik: '',
     correspondent_account: '',
@@ -236,15 +238,30 @@ export class LegalEntityFormComponent implements OnInit {
     await this.save(false);
   }
 
+  private sanitizeFormData(data: LegalEntity): LegalEntity {
+    const sanitized = { ...data };
+
+    if (!sanitized.director_id || sanitized.director_id === '') {
+      sanitized.director_id = undefined;
+    }
+    if (!sanitized.accountant_id || sanitized.accountant_id === '') {
+      sanitized.accountant_id = undefined;
+    }
+
+    return sanitized;
+  }
+
   async save(isDraft: boolean) {
     this.isSaving = true;
     this.form.is_draft = isDraft;
 
     try {
+      const sanitizedData = this.sanitizeFormData(this.form);
+
       if (this.isEditMode && this.entityId) {
-        await this.supabaseService.updateLegalEntity(this.entityId, this.form);
+        await this.supabaseService.updateLegalEntity(this.entityId, sanitizedData);
       } else {
-        await this.supabaseService.createLegalEntity(this.form);
+        await this.supabaseService.createLegalEntity(sanitizedData);
       }
 
       alert(isDraft ? 'Черновик сохранен' : 'Юридическое лицо сохранено');

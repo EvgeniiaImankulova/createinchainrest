@@ -47,11 +47,11 @@ export class RestaurantFormComponent implements OnInit {
     is_franchise: false,
     is_draft: false,
     connection_status: 'disconnected',
-    legal_entity_id: '',
-    owner_id: '',
+    legal_entity_id: undefined,
+    owner_id: undefined,
     owner_phone: '',
     owner_email: '',
-    accountant_id: '',
+    accountant_id: undefined,
     accountant_phone: '',
     accountant_email: '',
     royalty_percent: 0,
@@ -242,15 +242,33 @@ export class RestaurantFormComponent implements OnInit {
     await this.save(false);
   }
 
+  private sanitizeFormData(data: Restaurant): Restaurant {
+    const sanitized = { ...data };
+
+    if (!sanitized.legal_entity_id || sanitized.legal_entity_id === '') {
+      sanitized.legal_entity_id = undefined;
+    }
+    if (!sanitized.owner_id || sanitized.owner_id === '') {
+      sanitized.owner_id = undefined;
+    }
+    if (!sanitized.accountant_id || sanitized.accountant_id === '') {
+      sanitized.accountant_id = undefined;
+    }
+
+    return sanitized;
+  }
+
   async save(isDraft: boolean) {
     this.isSaving = true;
     this.form.is_draft = isDraft;
 
     try {
+      const sanitizedData = this.sanitizeFormData(this.form);
+
       if (this.isEditMode && this.restaurantId) {
-        await this.supabaseService.updateRestaurant(this.restaurantId, this.form);
+        await this.supabaseService.updateRestaurant(this.restaurantId, sanitizedData);
       } else {
-        await this.supabaseService.createRestaurant(this.form);
+        await this.supabaseService.createRestaurant(sanitizedData);
       }
 
       alert(isDraft ? 'Черновик сохранен' : 'Ресторан сохранен');
