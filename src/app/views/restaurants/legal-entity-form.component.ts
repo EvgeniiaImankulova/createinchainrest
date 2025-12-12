@@ -169,13 +169,68 @@ export class LegalEntityFormComponent implements OnInit {
     );
   }
 
+  get missingRequiredFields(): string[] {
+    const missing: string[] = [];
+
+    if (!this.form.name?.trim()) {
+      missing.push('Название');
+    }
+    if (!this.form.legal_address_street?.trim()) {
+      missing.push('Юридический адрес: Улица и дом');
+    }
+    if (!this.form.legal_address_city?.trim()) {
+      missing.push('Юридический адрес: Город');
+    }
+    if (!this.form.legal_address_region?.trim()) {
+      missing.push('Юридический адрес: Регион');
+    }
+    if (!this.form.legal_address_country?.trim()) {
+      missing.push('Юридический адрес: Страна');
+    }
+    if (this.form.legal_address_latitude === undefined || this.form.legal_address_latitude === null) {
+      missing.push('Юридический адрес: Широта');
+    }
+    if (this.form.legal_address_longitude === undefined || this.form.legal_address_longitude === null) {
+      missing.push('Юридический адрес: Долгота');
+    }
+    if (!this.form.actual_address_street?.trim()) {
+      missing.push('Фактический адрес: Улица и дом');
+    }
+    if (!this.form.actual_address_city?.trim()) {
+      missing.push('Фактический адрес: Город');
+    }
+    if (!this.form.actual_address_region?.trim()) {
+      missing.push('Фактический адрес: Регион');
+    }
+    if (!this.form.actual_address_country?.trim()) {
+      missing.push('Фактический адрес: Страна');
+    }
+    if (this.form.actual_address_latitude === undefined || this.form.actual_address_latitude === null) {
+      missing.push('Фактический адрес: Широта');
+    }
+    if (this.form.actual_address_longitude === undefined || this.form.actual_address_longitude === null) {
+      missing.push('Фактический адрес: Долгота');
+    }
+
+    return missing;
+  }
+
+  get validationTooltip(): string {
+    const missing = this.missingRequiredFields;
+    if (missing.length === 0) {
+      return '';
+    }
+    return `Необходимо заполнить:\n${missing.map(f => `• ${f}`).join('\n')}`;
+  }
+
   async saveDraft() {
     await this.save(true);
   }
 
   async saveEntity() {
     if (!this.isFormValid) {
-      alert('Пожалуйста, заполните все обязательные поля');
+      const missing = this.missingRequiredFields;
+      alert(`Пожалуйста, заполните все обязательные поля:\n\n${missing.map(f => `• ${f}`).join('\n')}`);
       return;
     }
     await this.save(false);
@@ -194,9 +249,10 @@ export class LegalEntityFormComponent implements OnInit {
 
       alert(isDraft ? 'Черновик сохранен' : 'Юридическое лицо сохранено');
       this.router.navigate(['/network-settings/restaurants']);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving legal entity:', error);
-      alert('Ошибка сохранения');
+      const errorMessage = error?.message || 'Неизвестная ошибка';
+      alert(`Ошибка сохранения:\n${errorMessage}\n\nПроверьте правильность заполнения полей`);
     } finally {
       this.isSaving = false;
     }

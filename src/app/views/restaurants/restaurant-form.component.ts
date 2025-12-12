@@ -193,13 +193,50 @@ export class RestaurantFormComponent implements OnInit {
     );
   }
 
+  get missingRequiredFields(): string[] {
+    const missing: string[] = [];
+
+    if (!this.form.name?.trim()) {
+      missing.push('Название');
+    }
+    if (!this.form.address_street?.trim()) {
+      missing.push('Улица и дом');
+    }
+    if (!this.form.address_city?.trim()) {
+      missing.push('Город');
+    }
+    if (!this.form.address_region?.trim()) {
+      missing.push('Регион');
+    }
+    if (!this.form.address_country?.trim()) {
+      missing.push('Страна');
+    }
+    if (this.form.address_latitude === undefined || this.form.address_latitude === null) {
+      missing.push('Широта');
+    }
+    if (this.form.address_longitude === undefined || this.form.address_longitude === null) {
+      missing.push('Долгота');
+    }
+
+    return missing;
+  }
+
+  get validationTooltip(): string {
+    const missing = this.missingRequiredFields;
+    if (missing.length === 0) {
+      return '';
+    }
+    return `Необходимо заполнить:\n${missing.map(f => `• ${f}`).join('\n')}`;
+  }
+
   async saveDraft() {
     await this.save(true);
   }
 
   async saveRestaurant() {
     if (!this.isFormValid) {
-      alert('Пожалуйста, заполните все обязательные поля');
+      const missing = this.missingRequiredFields;
+      alert(`Пожалуйста, заполните все обязательные поля:\n\n${missing.map(f => `• ${f}`).join('\n')}`);
       return;
     }
     await this.save(false);
@@ -218,9 +255,10 @@ export class RestaurantFormComponent implements OnInit {
 
       alert(isDraft ? 'Черновик сохранен' : 'Ресторан сохранен');
       this.router.navigate(['/network-settings/restaurants']);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving restaurant:', error);
-      alert('Ошибка сохранения');
+      const errorMessage = error?.message || 'Неизвестная ошибка';
+      alert(`Ошибка сохранения:\n${errorMessage}\n\nПроверьте правильность заполнения полей`);
     } finally {
       this.isSaving = false;
     }

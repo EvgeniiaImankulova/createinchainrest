@@ -14,7 +14,11 @@
       <button class="btn-secondary" (click)="saveDraft()" [disabled]="isSaving">
         Сохранить как черновик
       </button>
-      <button class="btn-primary" (click)="saveRestaurant()" [disabled]="isSaving || !isFormValid">
+      <button
+        class="btn-primary"
+        (click)="saveRestaurant()"
+        [disabled]="isSaving || !isFormValid"
+        [title]="validationTooltip">
         {{ isEditMode ? 'Сохранить' : 'Создать' }}
       </button>
     </div>
