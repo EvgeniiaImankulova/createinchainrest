@@ -6,10 +6,13 @@ import { Employee } from '../models/employee.model';
 export interface LegalEntity {
   id?: string;
   name: string;
+  description?: string;
   legal_name?: string;
   inn?: string;
   kpp?: string;
+  okpo?: string;
   ogrn?: string;
+  registration_number?: string;
   legal_address?: string;
   legal_address_street?: string;
   legal_address_city?: string;
@@ -35,6 +38,7 @@ export interface LegalEntity {
   accountant?: string;
   accountant_id?: string;
   bank_name?: string;
+  bank_city?: string;
   bik?: string;
   correspondent_account?: string;
   payment_account?: string;

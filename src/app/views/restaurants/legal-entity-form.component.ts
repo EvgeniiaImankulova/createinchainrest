@@ -24,10 +24,13 @@ export class LegalEntityFormComponent implements OnInit {
 
   form: LegalEntity = {
     name: '',
+    description: '',
     legal_name: '',
     inn: '',
     kpp: '',
+    okpo: '',
     ogrn: '',
+    registration_number: '',
     legal_address: '',
     legal_address_street: '',
     legal_address_city: '',
@@ -53,6 +56,7 @@ export class LegalEntityFormComponent implements OnInit {
     accountant: '',
     accountant_id: undefined,
     bank_name: '',
+    bank_city: '',
     bik: '',
     correspondent_account: '',
     payment_account: '',

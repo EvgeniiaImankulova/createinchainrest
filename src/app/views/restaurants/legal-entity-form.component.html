@@ -41,6 +41,15 @@
       </div>
 
       <div class="form-group">
+        <label class="form-label">Описание</label>
+        <textarea
+          class="form-textarea"
+          [(ngModel)]="form.description"
+          rows="2"
+          placeholder="Введите описание организации"></textarea>
+      </div>
+
+      <div class="form-group">
         <label class="form-label">Юридическое название</label>
         <input
           type="text"
@@ -71,6 +80,18 @@
             placeholder="Введите КПП"
             maxlength="9">
         </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">ОКПО</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.okpo"
+            placeholder="Введите ОКПО"
+            maxlength="10">
+        </div>
 
         <div class="form-group">
           <label class="form-label">ОГРН</label>
@@ -81,6 +102,15 @@
             placeholder="Введите ОГРН"
             maxlength="13">
         </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Регистрационный номер</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.registration_number"
+          placeholder="Введите регистрационный номер">
       </div>
 
       <h3 class="subsection-title">Юридический адрес</h3>
@@ -275,55 +305,34 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Телефон организации</label>
+          <label class="form-label">Телефон</label>
           <input
             type="tel"
             class="form-input"
+            [(ngModel)]="form.phone"
             placeholder="+7 (___) ___-__-__">
         </div>
 
         <div class="form-group">
-          <label class="form-label">Email организации</label>
+          <label class="form-label">Email</label>
           <input
             type="email"
             class="form-input"
+            [(ngModel)]="form.email"
             placeholder="example@company.ru">
         </div>
-      </div>
-
-      <h3 class="subsection-title">Должностные лица</h3>
-
-      <div class="form-group">
-        <app-searchable-select
-          [label]="'Директор'"
-          [options]="employeeOptions"
-          [placeholder]="'Поиск...'"
-          [(ngModel)]="form.director_id"
-          (ngModelChange)="onDirectorSelect($event)"
-          name="director">
-        </app-searchable-select>
-      </div>
-
-      <div class="form-group">
-        <app-searchable-select
-          [label]="'Главный бухгалтер'"
-          [options]="employeeOptions"
-          [placeholder]="'Поиск...'"
-          [(ngModel)]="form.accountant_id"
-          (ngModelChange)="onAccountantSelect($event)"
-          name="accountant">
-        </app-searchable-select>
       </div>
 
       <h3 class="subsection-title">Банковские реквизиты</h3>
 
       <div class="form-group">
-        <label class="form-label">Название банка</label>
+        <label class="form-label">Расчетный счет</label>
         <input
           type="text"
           class="form-input"
-          [(ngModel)]="form.bank_name"
-          placeholder="Введите название банка">
+          [(ngModel)]="form.payment_account"
+          placeholder="Введите расчетный счет"
+          maxlength="20">
       </div>
 
       <div class="form-row">
@@ -348,14 +357,48 @@
         </div>
       </div>
 
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Название банка</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.bank_name"
+            placeholder="Введите название банка">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Город банка</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="form.bank_city"
+            placeholder="Введите город банка">
+        </div>
+      </div>
+
+      <h3 class="subsection-title">Должностные лица</h3>
+
       <div class="form-group">
-        <label class="form-label">Расчетный счет</label>
-        <input
-          type="text"
-          class="form-input"
-          [(ngModel)]="form.payment_account"
-          placeholder="Введите расчетный счет"
-          maxlength="20">
+        <app-searchable-select
+          [label]="'Владелец'"
+          [options]="employeeOptions"
+          [placeholder]="'Поиск...'"
+          [(ngModel)]="form.director_id"
+          (ngModelChange)="onDirectorSelect($event)"
+          name="director">
+        </app-searchable-select>
+      </div>
+
+      <div class="form-group">
+        <app-searchable-select
+          [label]="'Главный бухгалтер'"
+          [options]="employeeOptions"
+          [placeholder]="'Поиск...'"
+          [(ngModel)]="form.accountant_id"
+          (ngModelChange)="onAccountantSelect($event)"
+          name="accountant">
+        </app-searchable-select>
       </div>
     </div>
   </div>
