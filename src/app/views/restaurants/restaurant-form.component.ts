@@ -87,7 +87,6 @@ export class RestaurantFormComponent implements OnInit {
           {
             id: 'mock-le-1',
             name: 'ООО "Вкусная еда"',
-            legal_name: 'Общество с ограниченной ответственностью "Вкусная еда"',
             inn: '7707123456',
             kpp: '770701001',
             ogrn: '1234567890123'
@@ -95,7 +94,6 @@ export class RestaurantFormComponent implements OnInit {
           {
             id: 'mock-le-2',
             name: 'ООО "Ресторанный холдинг"',
-            legal_name: 'Общество с ограниченной ответственностью "Ресторанный холдинг"',
             inn: '7707654321',
             kpp: '770701002',
             ogrn: '3210987654321'
@@ -103,7 +101,6 @@ export class RestaurantFormComponent implements OnInit {
           {
             id: 'mock-le-3',
             name: 'ИП Иванов И.И.',
-            legal_name: 'Индивидуальный предприниматель Иванов Иван Иванович',
             inn: '770712345678',
             ogrn: '312770712345678'
           }

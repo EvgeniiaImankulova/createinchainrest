@@ -2,15 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SupabaseService, LegalEntity } from '../../services/supabase.service';
+import { SupabaseService, LegalEntity, BankAccount } from '../../services/supabase.service';
 import { Employee, getEmployeeFullName } from '../../models/employee.model';
 import { EmployeeSidebarComponent } from '../../components/employee-sidebar/employee-sidebar.component';
 import { SearchableSelectComponent, SelectOption } from '../../components/searchable-select/searchable-select.component';
+import { BankAccountsListComponent } from '../../components/bank-accounts-list/bank-accounts-list.component';
 
 @Component({
   selector: 'app-legal-entity-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, EmployeeSidebarComponent, SearchableSelectComponent],
+  imports: [CommonModule, FormsModule, EmployeeSidebarComponent, SearchableSelectComponent, BankAccountsListComponent],
   templateUrl: './legal-entity-form.component.html',
   styleUrls: ['./legal-entity-form.component.css']
 })
@@ -21,45 +22,29 @@ export class LegalEntityFormComponent implements OnInit {
   employees: Employee[] = [];
   isEmployeeSidebarOpen = false;
   currentEmployeeField: 'director' | 'accountant' | null = null;
+  bankAccounts: BankAccount[] = [];
 
   form: LegalEntity = {
     name: '',
     description: '',
-    legal_name: '',
     inn: '',
     kpp: '',
     okpo: '',
     ogrn: '',
     registration_number: '',
-    legal_address: '',
     legal_address_street: '',
     legal_address_city: '',
     legal_address_region: '',
     legal_address_country: '',
     legal_address_postal_code: '',
-    legal_address_comment: '',
-    legal_address_latitude: undefined,
-    legal_address_longitude: undefined,
-    actual_address: '',
-    actual_address_street: '',
-    actual_address_city: '',
-    actual_address_region: '',
-    actual_address_country: '',
-    actual_address_postal_code: '',
-    actual_address_comment: '',
-    actual_address_latitude: undefined,
-    actual_address_longitude: undefined,
     phone: '',
     email: '',
-    director: '',
     director_id: undefined,
-    accountant: '',
+    director_phone: '',
+    director_email: '',
     accountant_id: undefined,
-    bank_name: '',
-    bank_city: '',
-    bik: '',
-    correspondent_account: '',
-    payment_account: '',
+    accountant_phone: '',
+    accountant_email: '',
     is_draft: false
   };
 
@@ -146,6 +131,7 @@ export class LegalEntityFormComponent implements OnInit {
       const entity = await this.supabaseService.getLegalEntity(this.entityId!);
       if (entity) {
         this.form = entity;
+        this.bankAccounts = await this.supabaseService.getBankAccounts(this.entityId!);
       }
     } catch (error) {
       console.error('Error loading legal entity:', error);
@@ -159,19 +145,7 @@ export class LegalEntityFormComponent implements OnInit {
       this.form.legal_address_street?.trim() &&
       this.form.legal_address_city?.trim() &&
       this.form.legal_address_region?.trim() &&
-      this.form.legal_address_country?.trim() &&
-      this.form.legal_address_latitude !== undefined &&
-      this.form.legal_address_latitude !== null &&
-      this.form.legal_address_longitude !== undefined &&
-      this.form.legal_address_longitude !== null &&
-      this.form.actual_address_street?.trim() &&
-      this.form.actual_address_city?.trim() &&
-      this.form.actual_address_region?.trim() &&
-      this.form.actual_address_country?.trim() &&
-      this.form.actual_address_latitude !== undefined &&
-      this.form.actual_address_latitude !== null &&
-      this.form.actual_address_longitude !== undefined &&
-      this.form.actual_address_longitude !== null
+      this.form.legal_address_country?.trim()
     );
   }
 
@@ -192,30 +166,6 @@ export class LegalEntityFormComponent implements OnInit {
     }
     if (!this.form.legal_address_country?.trim()) {
       missing.push('Юридический адрес: Страна');
-    }
-    if (this.form.legal_address_latitude === undefined || this.form.legal_address_latitude === null) {
-      missing.push('Юридический адрес: Широта');
-    }
-    if (this.form.legal_address_longitude === undefined || this.form.legal_address_longitude === null) {
-      missing.push('Юридический адрес: Долгота');
-    }
-    if (!this.form.actual_address_street?.trim()) {
-      missing.push('Фактический адрес: Улица и дом');
-    }
-    if (!this.form.actual_address_city?.trim()) {
-      missing.push('Фактический адрес: Город');
-    }
-    if (!this.form.actual_address_region?.trim()) {
-      missing.push('Фактический адрес: Регион');
-    }
-    if (!this.form.actual_address_country?.trim()) {
-      missing.push('Фактический адрес: Страна');
-    }
-    if (this.form.actual_address_latitude === undefined || this.form.actual_address_latitude === null) {
-      missing.push('Фактический адрес: Широта');
-    }
-    if (this.form.actual_address_longitude === undefined || this.form.actual_address_longitude === null) {
-      missing.push('Фактический адрес: Долгота');
     }
 
     return missing;
@@ -262,11 +212,16 @@ export class LegalEntityFormComponent implements OnInit {
     try {
       const sanitizedData = this.sanitizeFormData(this.form);
 
+      let entityId: string;
       if (this.isEditMode && this.entityId) {
         await this.supabaseService.updateLegalEntity(this.entityId, sanitizedData);
+        entityId = this.entityId;
       } else {
-        await this.supabaseService.createLegalEntity(sanitizedData);
+        const newEntity = await this.supabaseService.createLegalEntity(sanitizedData);
+        entityId = newEntity.id!;
       }
+
+      await this.saveBankAccounts(entityId);
 
       alert(isDraft ? 'Черновик сохранен' : 'Юридическое лицо сохранено');
       this.router.navigate(['/network-settings/restaurants']);
@@ -277,6 +232,33 @@ export class LegalEntityFormComponent implements OnInit {
     } finally {
       this.isSaving = false;
     }
+  }
+
+  async saveBankAccounts(legalEntityId: string) {
+    const existingAccounts = this.isEditMode ? await this.supabaseService.getBankAccounts(legalEntityId) : [];
+    const existingIds = existingAccounts.map(a => a.id);
+
+    for (const account of this.bankAccounts) {
+      account.legal_entity_id = legalEntityId;
+
+      if (account.id && existingIds.includes(account.id)) {
+        await this.supabaseService.updateBankAccount(account.id, account);
+      } else {
+        await this.supabaseService.createBankAccount(account);
+      }
+    }
+
+    const currentIds = this.bankAccounts.filter(a => a.id).map(a => a.id);
+    const accountsToDelete = existingAccounts.filter(a => !currentIds.includes(a.id));
+    for (const account of accountsToDelete) {
+      if (account.id) {
+        await this.supabaseService.deleteBankAccount(account.id);
+      }
+    }
+  }
+
+  onBankAccountsChange(accounts: BankAccount[]) {
+    this.bankAccounts = accounts;
   }
 
   cancel() {
@@ -304,13 +286,13 @@ export class LegalEntityFormComponent implements OnInit {
       if (employee) {
         if (field === 'director') {
           this.form.director_id = employee.id;
-          this.form.director = `${employee.first_name} ${employee.last_name}`;
+          this.form.director_phone = employee.phone || '';
+          this.form.director_email = employee.email || '';
         } else {
           this.form.accountant_id = employee.id;
-          this.form.accountant = `${employee.first_name} ${employee.last_name}`;
+          this.form.accountant_phone = employee.phone || '';
+          this.form.accountant_email = employee.email || '';
         }
-        this.form.phone = employee.phone || '';
-        this.form.email = employee.email || '';
       }
     }
   }
@@ -320,14 +302,14 @@ export class LegalEntityFormComponent implements OnInit {
 
     if (this.currentEmployeeField === 'director') {
       this.form.director_id = employee.id;
-      this.form.director = `${employee.first_name} ${employee.last_name}`;
+      this.form.director_phone = employee.phone || '';
+      this.form.director_email = employee.email || '';
     } else if (this.currentEmployeeField === 'accountant') {
       this.form.accountant_id = employee.id;
-      this.form.accountant = `${employee.first_name} ${employee.last_name}`;
+      this.form.accountant_phone = employee.phone || '';
+      this.form.accountant_email = employee.email || '';
     }
 
-    this.form.phone = employee.phone || '';
-    this.form.email = employee.email || '';
     this.currentEmployeeField = null;
   }
 }

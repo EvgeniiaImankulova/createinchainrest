@@ -7,42 +7,37 @@ export interface LegalEntity {
   id?: string;
   name: string;
   description?: string;
-  legal_name?: string;
   inn?: string;
   kpp?: string;
   okpo?: string;
   ogrn?: string;
   registration_number?: string;
-  legal_address?: string;
   legal_address_street?: string;
   legal_address_city?: string;
   legal_address_region?: string;
   legal_address_country?: string;
   legal_address_postal_code?: string;
-  legal_address_comment?: string;
-  legal_address_latitude?: number;
-  legal_address_longitude?: number;
-  actual_address?: string;
-  actual_address_street?: string;
-  actual_address_city?: string;
-  actual_address_region?: string;
-  actual_address_country?: string;
-  actual_address_postal_code?: string;
-  actual_address_comment?: string;
-  actual_address_latitude?: number;
-  actual_address_longitude?: number;
   phone?: string;
   email?: string;
-  director?: string;
   director_id?: string;
-  accountant?: string;
+  director_phone?: string;
+  director_email?: string;
   accountant_id?: string;
-  bank_name?: string;
-  bank_city?: string;
+  accountant_phone?: string;
+  accountant_email?: string;
+  is_draft?: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface BankAccount {
+  id?: string;
+  legal_entity_id?: string;
+  account_number: string;
   bik?: string;
   correspondent_account?: string;
-  payment_account?: string;
-  is_draft?: boolean;
+  bank_name?: string;
+  bank_city?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -252,6 +247,49 @@ export class SupabaseService {
   async deleteEmployee(id: string) {
     const { error } = await this.supabase
       .from('employees')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  }
+
+  async getBankAccounts(legalEntityId: string) {
+    const { data, error } = await this.supabase
+      .from('bank_accounts')
+      .select('*')
+      .eq('legal_entity_id', legalEntityId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data as BankAccount[];
+  }
+
+  async createBankAccount(bankAccount: BankAccount) {
+    const { data, error } = await this.supabase
+      .from('bank_accounts')
+      .insert([bankAccount])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as BankAccount;
+  }
+
+  async updateBankAccount(id: string, bankAccount: Partial<BankAccount>) {
+    const { data, error } = await this.supabase
+      .from('bank_accounts')
+      .update(bankAccount)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as BankAccount;
+  }
+
+  async deleteBankAccount(id: string) {
+    const { error } = await this.supabase
+      .from('bank_accounts')
       .delete()
       .eq('id', id);
 

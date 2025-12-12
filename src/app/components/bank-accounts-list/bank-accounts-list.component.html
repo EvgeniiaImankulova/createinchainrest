@@ -1,0 +1,173 @@
+<div class="bank-accounts-container">
+  <div class="accounts-list">
+    <div *ngFor="let account of accounts; let i = index" class="account-card">
+      <div *ngIf="editingIndex !== i" class="account-view">
+        <div class="account-info">
+          <div class="info-row">
+            <span class="label">Расчетный счет:</span>
+            <span class="value">{{ account.account_number }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">БИК:</span>
+            <span class="value">{{ account.bik || '—' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Корр. счет:</span>
+            <span class="value">{{ account.correspondent_account || '—' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Банк:</span>
+            <span class="value">{{ account.bank_name || '—' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Город банка:</span>
+            <span class="value">{{ account.bank_city || '—' }}</span>
+          </div>
+        </div>
+        <div class="account-actions">
+          <button type="button" class="btn-icon" (click)="editAccount(i)" title="Редактировать">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M14.166 2.5C14.3849 2.28113 14.6447 2.10752 14.9307 1.98906C15.2167 1.87061 15.5232 1.80969 15.8327 1.80969C16.1422 1.80969 16.4487 1.87061 16.7347 1.98906C17.0206 2.10752 17.2805 2.28113 17.4993 2.5C17.7182 2.71887 17.8918 2.97871 18.0103 3.26468C18.1287 3.55064 18.1897 3.85714 18.1897 4.16667C18.1897 4.47619 18.1287 4.78269 18.0103 5.06866C17.8918 5.35462 17.7182 5.61446 17.4993 5.83333L6.24935 17.0833L1.66602 18.3333L2.91602 13.75L14.166 2.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button type="button" class="btn-icon btn-danger" (click)="deleteAccount(i)" title="Удалить">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M2.5 5H4.16667H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6.66602 5.00033V3.33366C6.66602 2.89163 6.84161 2.46771 7.15417 2.15515C7.46673 1.84259 7.89065 1.66699 8.33268 1.66699H11.666C12.108 1.66699 12.532 1.84259 12.8445 2.15515C13.1571 2.46771 13.3327 2.89163 13.3327 3.33366V5.00033M15.8327 5.00033V16.667C15.8327 17.109 15.6571 17.5329 15.3445 17.8455C15.032 18.1581 14.608 18.3337 14.166 18.3337H5.83268C5.39065 18.3337 4.96673 18.1581 4.65417 17.8455C4.34161 17.5329 4.16602 17.109 4.16602 16.667V5.00033H15.8327Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="editingIndex === i" class="account-edit">
+        <div class="form-group">
+          <label class="form-label">Расчетный счет*</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="account.account_number"
+            placeholder="Введите расчетный счет"
+            maxlength="20">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">БИК</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="account.bik"
+              placeholder="Введите БИК"
+              maxlength="9">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Корреспондентский счет</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="account.correspondent_account"
+              placeholder="Введите корр. счет"
+              maxlength="20">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Название банка</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="account.bank_name"
+              placeholder="Введите название банка">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Город банка</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="account.bank_city"
+              placeholder="Введите город банка">
+          </div>
+        </div>
+
+        <div class="edit-actions">
+          <button type="button" class="btn-secondary" (click)="cancelEdit()">Отмена</button>
+          <button type="button" class="btn-primary" (click)="saveAccount(i)">Сохранить</button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isAddingNew" class="account-card account-edit">
+      <div class="form-group">
+        <label class="form-label">Расчетный счет*</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="newAccount.account_number"
+          placeholder="Введите расчетный счет"
+          maxlength="20">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">БИК</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="newAccount.bik"
+            placeholder="Введите БИК"
+            maxlength="9">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Корреспондентский счет</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="newAccount.correspondent_account"
+            placeholder="Введите корр. счет"
+            maxlength="20">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Название банка</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="newAccount.bank_name"
+            placeholder="Введите название банка">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Город банка</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="newAccount.bank_city"
+            placeholder="Введите город банка">
+        </div>
+      </div>
+
+      <div class="edit-actions">
+        <button type="button" class="btn-secondary" (click)="cancelNewAccount()">Отмена</button>
+        <button type="button" class="btn-primary" (click)="saveNewAccount()" [disabled]="!newAccount.account_number">Добавить</button>
+      </div>
+    </div>
+  </div>
+
+  <button
+    *ngIf="!isAddingNew"
+    type="button"
+    class="btn-add"
+    (click)="addNewAccount()">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M10 4.16667V15.8333" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M4.16602 10H15.8327" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Добавить расчетный счет
+  </button>
+</div>
