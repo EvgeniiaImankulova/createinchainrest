@@ -117,7 +117,7 @@ export class CorporationComponent implements OnInit {
       value: emp.id!,
       label: getEmployeeFullName(emp)
     }));
-    options.push({ value: 'add_new', label: '+ Добавить нового сотрудника' });
+    options.unshift({ value: 'add_new', label: '+ Добавить нового сотрудника' });
     return options;
   }
 
