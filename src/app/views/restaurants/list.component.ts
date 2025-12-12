@@ -15,6 +15,7 @@ interface Restaurant {
   template: string;
   timezone: string;
   isFranchise?: boolean;
+  isDraft?: boolean;
 }
 
 interface LegalEntity {
@@ -39,6 +40,7 @@ interface LegalEntity {
   accountantName: string;
   chiefTechnologistName: string;
   productionManagerName: string;
+  isDraft?: boolean;
 }
 
 @Component({
@@ -94,7 +96,8 @@ export class RestaurantsListComponent implements OnInit {
           email: le.email || '',
           accountantName: le.accountant || '',
           chiefTechnologistName: '',
-          productionManagerName: ''
+          productionManagerName: '',
+          isDraft: le.is_draft || false
         }));
       }
 
@@ -107,7 +110,8 @@ export class RestaurantsListComponent implements OnInit {
           address: r.address || '',
           template: r.template || '',
           timezone: r.timezone || '',
-          isFranchise: r.is_franchise || false
+          isFranchise: r.is_franchise || false,
+          isDraft: r.is_draft || false
         }));
       }
     } catch (error) {
@@ -327,6 +331,7 @@ export class RestaurantsListComponent implements OnInit {
         name: legalEntity.name,
         isExpanded: this.expandedLegalEntities.has(legalEntity.id),
         isFranchise: this.isLegalEntityFranchise(legalEntity.id),
+        isDraft: legalEntity.isDraft,
         level: 0,
         data: legalEntity
       });
@@ -342,6 +347,7 @@ export class RestaurantsListComponent implements OnInit {
             template: restaurant.template,
             timezone: restaurant.timezone,
             isFranchise: restaurant.isFranchise,
+            isDraft: restaurant.isDraft,
             level: 1,
             data: restaurant
           });

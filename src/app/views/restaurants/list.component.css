@@ -238,6 +238,19 @@
   text-decoration: underline;
 }
 
+.draft-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  margin-left: 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: #FFF3E0;
+  color: #E65100;
+}
+
 .franchise-tag {
   display: inline-block;
   padding: 2px 8px;

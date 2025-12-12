@@ -77,6 +77,9 @@
                   (click)="item.type === 'legalEntity' ? onEditLegalEntity(item.data) : onEditRestaurant(item.data); $event.preventDefault()">
                   {{ item.name }}
                 </a>
+                <span *ngIf="item.isDraft" class="draft-tag">
+                  ЧЕРНОВИК
+                </span>
                 <span *ngIf="item.isFranchise" class="franchise-tag">
                   ФРАНЧАЙЗИ
                 </span>
