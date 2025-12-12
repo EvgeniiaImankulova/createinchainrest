@@ -37,8 +37,6 @@ export class LegalEntityFormComponent implements OnInit {
     legal_address_region: '',
     legal_address_country: '',
     legal_address_postal_code: '',
-    phone: '',
-    email: '',
     director_id: undefined,
     director_phone: '',
     director_email: '',

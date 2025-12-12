@@ -17,8 +17,6 @@ export interface LegalEntity {
   legal_address_region?: string;
   legal_address_country?: string;
   legal_address_postal_code?: string;
-  phone?: string;
-  email?: string;
   director_id?: string;
   director_phone?: string;
   director_email?: string;
