@@ -266,69 +266,6 @@
         </div>
       </div>
 
-      <h3 class="subsection-title">Контактная информация</h3>
-
-      <div class="form-group">
-        <app-searchable-select
-          [label]="'Владелец ресторана'"
-          [options]="ownerOptions"
-          [placeholder]="'Поиск...'"
-          [(ngModel)]="form.owner_id"
-          (ngModelChange)="onOwnerSelect($event)"
-          name="owner">
-        </app-searchable-select>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Телефон владельца</label>
-          <input
-            type="tel"
-            class="form-input"
-            [(ngModel)]="form.owner_phone"
-            placeholder="+7 (___) ___-__-__">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Email владельца</label>
-          <input
-            type="email"
-            class="form-input"
-            [(ngModel)]="form.owner_email"
-            placeholder="example@restaurant.ru">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <app-searchable-select
-          [label]="'Главный бухгалтер'"
-          [options]="accountantOptions"
-          [placeholder]="'Поиск...'"
-          [(ngModel)]="form.accountant_id"
-          (ngModelChange)="onAccountantSelect($event)"
-          name="accountant">
-        </app-searchable-select>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Телефон бухгалтера</label>
-          <input
-            type="tel"
-            class="form-input"
-            [(ngModel)]="form.accountant_phone"
-            placeholder="+7 (___) ___-__-__">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Email бухгалтера</label>
-          <input
-            type="email"
-            class="form-input"
-            [(ngModel)]="form.accountant_email"
-            placeholder="example@restaurant.ru">
-        </div>
-      </div>
     </div>
   </div>
 
