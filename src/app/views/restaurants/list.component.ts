@@ -121,6 +121,10 @@ export class RestaurantsListComponent implements OnInit {
           };
         });
       }
+
+      this.legalEntitiesData.forEach(le => {
+        this.expandedLegalEntities.add(le.id);
+      });
     } catch (error) {
       console.error('Error loading data:', error);
     }
@@ -147,7 +151,8 @@ export class RestaurantsListComponent implements OnInit {
       email: 'info@vkusnaya-eda.ru',
       accountantName: 'Петрова Мария Сергеевна',
       chiefTechnologistName: 'Сидоров Петр Алексеевич',
-      productionManagerName: 'Кузнецова Анна Владимировна'
+      productionManagerName: 'Кузнецова Анна Владимировна',
+      is_franchise: true
     },
     {
       id: '2',
@@ -170,7 +175,8 @@ export class RestaurantsListComponent implements OnInit {
       email: 'contact@gastronomgroup.ru',
       accountantName: 'Волкова Елена Ивановна',
       chiefTechnologistName: 'Морозов Дмитрий Николаевич',
-      productionManagerName: 'Соколова Ольга Андреевна'
+      productionManagerName: 'Соколова Ольга Андреевна',
+      is_franchise: false
     },
     {
       id: '3',
@@ -193,7 +199,32 @@ export class RestaurantsListComponent implements OnInit {
       email: 'fedorov@restaurant.spb.ru',
       accountantName: 'Новикова Татьяна Викторовна',
       chiefTechnologistName: 'Павлов Игорь Юрьевич',
-      productionManagerName: 'Михайлова Светлана Павловна'
+      productionManagerName: 'Михайлова Светлана Павловна',
+      is_franchise: false
+    },
+    {
+      id: '4',
+      name: 'ООО "Ресторанные технологии"',
+      description: 'Управляющая компания',
+      inn: '7745098765',
+      kpp: '774501001',
+      okpo: '11223344',
+      ogrn: '1027745098765',
+      legalAddress: 'г. Москва, ул. Ленинградская, д. 35',
+      phone: '+7 (495) 777-88-99',
+      bankAccount: '40702810300000033333',
+      bik: '044525225',
+      bankName: 'ПАО Сбербанк',
+      bankCity: 'Москва',
+      correspondentAccount: '30101810400000000225',
+      registrationNumber: '5555666677778',
+      directorName: 'Николаев Сергей Владимирович',
+      directorPosition: 'Генеральный директор',
+      email: 'info@restech.ru',
+      accountantName: 'Алексеева Ирина Павловна',
+      chiefTechnologistName: 'Григорьев Максим Дмитриевич',
+      productionManagerName: 'Романова Екатерина Сергеевна',
+      is_franchise: false
     }
   ];
 
@@ -237,6 +268,16 @@ export class RestaurantsListComponent implements OnInit {
       template: 'WEB-11353-без-дневных-интеров',
       timezone: '(UTC+3:00) Европа/Москва',
       isFranchise: true
+    },
+    {
+      id: 'r5',
+      name: 'Бистро "Центральное"',
+      legalEntityId: '4',
+      legalEntity: 'ООО "Ресторанные технологии"',
+      address: 'г. Москва, ул. Тверская, д. 25',
+      template: 'Default',
+      timezone: '(UTC+3:00) Европа/Москва',
+      isFranchise: false
     }
   ];
 
@@ -250,9 +291,7 @@ export class RestaurantsListComponent implements OnInit {
   sidebarMode: 'restaurant' | 'legalEntity' = 'restaurant';
   emailError: string = '';
 
-  expandedLegalEntities: Set<string> = new Set(
-    ['1', '2', '3']
-  );
+  expandedLegalEntities: Set<string> = new Set();
 
   employees: Employee[] = [
     {
