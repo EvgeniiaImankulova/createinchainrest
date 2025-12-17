@@ -19,7 +19,7 @@ import { EmployeeSidebarComponent } from '../../components/employee-sidebar/empl
   styleUrl: './corporation.component.css'
 })
 export class CorporationComponent implements OnInit {
-  activeTab: 'basic' | 'network' = 'basic';
+  activeTab: 'basic' | 'network' | 'franchise' = 'basic';
   employees: Employee[] = [];
   isEmployeeSidebarOpen = false;
 
@@ -29,8 +29,10 @@ export class CorporationComponent implements OnInit {
     uid: '123-123-123',
     director_id: '',
     directorName: '',
-    phone: '',
-    email: '',
+    trustedPhone: '',
+    additionalPhone: '',
+    trustedEmail: '',
+    additionalEmail: '',
     addressStreet: '',
     addressCity: '',
     addressRegion: '',
@@ -129,8 +131,8 @@ export class CorporationComponent implements OnInit {
       if (employee) {
         this.corporationSettings.director_id = employee.id!;
         this.corporationSettings.directorName = getEmployeeFullName(employee);
-        this.corporationSettings.phone = employee.phone || '';
-        this.corporationSettings.email = employee.email || '';
+        this.corporationSettings.trustedPhone = employee.phone || '';
+        this.corporationSettings.trustedEmail = employee.email || '';
       }
     }
   }
@@ -139,11 +141,11 @@ export class CorporationComponent implements OnInit {
     await this.loadEmployees();
     this.corporationSettings.director_id = employee.id!;
     this.corporationSettings.directorName = getEmployeeFullName(employee);
-    this.corporationSettings.phone = employee.phone || '';
-    this.corporationSettings.email = employee.email || '';
+    this.corporationSettings.trustedPhone = employee.phone || '';
+    this.corporationSettings.trustedEmail = employee.email || '';
   }
 
-  switchTab(tab: 'basic' | 'network'): void {
+  switchTab(tab: 'basic' | 'network' | 'franchise'): void {
     this.activeTab = tab;
   }
 
