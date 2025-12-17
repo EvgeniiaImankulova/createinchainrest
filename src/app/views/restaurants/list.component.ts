@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { SupabaseService, LegalEntity as SupabaseLegalEntity } from '../../services/supabase.service';
 import { SearchableSelectComponent, SelectOption } from '../../components/searchable-select/searchable-select.component';
 import { Employee, getEmployeeFullName } from '../../models/employee.model';
+import { LegalEntityGroup } from '../../models/legal-entity-group.model';
 
 interface Restaurant {
   id: string;
@@ -42,6 +43,8 @@ interface LegalEntity {
   productionManagerName: string;
   isDraft?: boolean;
   is_franchise?: boolean;
+  group_id?: string;
+  groupName?: string;
 }
 
 @Component({
@@ -70,10 +73,17 @@ export class RestaurantsListComponent implements OnInit {
 
   async loadData() {
     try {
-      const [legalEntities, restaurants] = await Promise.all([
+      const [legalEntities, restaurants, groups] = await Promise.all([
         this.supabaseService.getLegalEntities(),
-        this.supabaseService.getRestaurants()
+        this.supabaseService.getRestaurants(),
+        this.supabaseService.getLegalEntityGroups()
       ]);
+
+      if (groups && groups.length > 0) {
+        this.groups = groups;
+      } else {
+        this.groups = this.mockGroups;
+      }
 
       if (legalEntities && legalEntities.length > 0) {
         this.legalEntitiesData = legalEntities.map((le: any) => ({
@@ -99,7 +109,8 @@ export class RestaurantsListComponent implements OnInit {
           chiefTechnologistName: '',
           productionManagerName: '',
           isDraft: le.is_draft || false,
-          is_franchise: le.is_franchise || false
+          is_franchise: le.is_franchise || false,
+          group_id: le.group_id || undefined
         }));
       }
 
@@ -125,10 +136,28 @@ export class RestaurantsListComponent implements OnInit {
       this.legalEntitiesData.forEach(le => {
         this.expandedLegalEntities.add(le.id);
       });
+
+      this.groups.forEach(g => {
+        this.expandedGroups.add(g.id);
+      });
     } catch (error) {
       console.error('Error loading data:', error);
     }
   }
+
+  mockGroups: LegalEntityGroup[] = [
+    {
+      id: 'group-1',
+      name: 'Центральный регион',
+      description: 'Рестораны центрального региона'
+    },
+    {
+      id: 'group-2',
+      name: 'Северо-Западный регион',
+      description: 'Рестораны Санкт-Петербурга и области'
+    }
+  ];
+
   legalEntitiesData: LegalEntity[] = [
     {
       id: '1',
@@ -152,7 +181,8 @@ export class RestaurantsListComponent implements OnInit {
       accountantName: 'Петрова Мария Сергеевна',
       chiefTechnologistName: 'Сидоров Петр Алексеевич',
       productionManagerName: 'Кузнецова Анна Владимировна',
-      is_franchise: true
+      is_franchise: true,
+      group_id: 'group-1'
     },
     {
       id: '2',
@@ -176,7 +206,8 @@ export class RestaurantsListComponent implements OnInit {
       accountantName: 'Волкова Елена Ивановна',
       chiefTechnologistName: 'Морозов Дмитрий Николаевич',
       productionManagerName: 'Соколова Ольга Андреевна',
-      is_franchise: false
+      is_franchise: false,
+      group_id: 'group-1'
     },
     {
       id: '3',
@@ -200,7 +231,8 @@ export class RestaurantsListComponent implements OnInit {
       accountantName: 'Новикова Татьяна Викторовна',
       chiefTechnologistName: 'Павлов Игорь Юрьевич',
       productionManagerName: 'Михайлова Светлана Павловна',
-      is_franchise: false
+      is_franchise: false,
+      group_id: 'group-2'
     },
     {
       id: '4',
@@ -224,7 +256,8 @@ export class RestaurantsListComponent implements OnInit {
       accountantName: 'Алексеева Ирина Павловна',
       chiefTechnologistName: 'Григорьев Максим Дмитриевич',
       productionManagerName: 'Романова Екатерина Сергеевна',
-      is_franchise: false
+      is_franchise: false,
+      group_id: 'group-1'
     }
   ];
 
@@ -292,6 +325,8 @@ export class RestaurantsListComponent implements OnInit {
   emailError: string = '';
 
   expandedLegalEntities: Set<string> = new Set();
+  expandedGroups: Set<string> = new Set();
+  groups: LegalEntityGroup[] = [];
 
   employees: Employee[] = [
     {
@@ -375,7 +410,55 @@ export class RestaurantsListComponent implements OnInit {
   get hierarchyItems() {
     const items: any[] = [];
 
-    this.legalEntitiesData.forEach(legalEntity => {
+    this.groups.forEach(group => {
+      items.push({
+        id: group.id,
+        type: 'group',
+        name: group.name,
+        description: group.description,
+        isExpanded: this.expandedGroups.has(group.id),
+        level: 0,
+        data: group
+      });
+
+      if (this.expandedGroups.has(group.id)) {
+        const legalEntitiesInGroup = this.legalEntitiesData.filter(le => le.group_id === group.id);
+
+        legalEntitiesInGroup.forEach(legalEntity => {
+          items.push({
+            id: legalEntity.id,
+            type: 'legalEntity',
+            name: legalEntity.name,
+            isExpanded: this.expandedLegalEntities.has(legalEntity.id),
+            isFranchise: this.isLegalEntityFranchise(legalEntity.id),
+            isDraft: legalEntity.isDraft,
+            level: 1,
+            data: legalEntity
+          });
+
+          if (this.expandedLegalEntities.has(legalEntity.id)) {
+            const childRestaurants = this.restaurants.filter(r => r.legalEntityId === legalEntity.id);
+            childRestaurants.forEach(restaurant => {
+              items.push({
+                id: restaurant.id,
+                type: 'restaurant',
+                name: restaurant.name,
+                address: restaurant.address,
+                template: restaurant.template,
+                timezone: restaurant.timezone,
+                isFranchise: restaurant.isFranchise,
+                isDraft: restaurant.isDraft,
+                level: 2,
+                data: restaurant
+              });
+            });
+          }
+        });
+      }
+    });
+
+    const legalEntitiesWithoutGroup = this.legalEntitiesData.filter(le => !le.group_id);
+    legalEntitiesWithoutGroup.forEach(legalEntity => {
       items.push({
         id: legalEntity.id,
         type: 'legalEntity',
@@ -580,6 +663,14 @@ export class RestaurantsListComponent implements OnInit {
       this.expandedLegalEntities.delete(legalEntityId);
     } else {
       this.expandedLegalEntities.add(legalEntityId);
+    }
+  }
+
+  toggleGroup(groupId: string): void {
+    if (this.expandedGroups.has(groupId)) {
+      this.expandedGroups.delete(groupId);
+    } else {
+      this.expandedGroups.add(groupId);
     }
   }
 

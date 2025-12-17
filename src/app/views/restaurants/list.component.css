@@ -157,6 +157,21 @@
   flex-shrink: 0;
 }
 
+.group-row {
+  background-color: #F5F5F5;
+  font-weight: 600;
+}
+
+.group-row:hover {
+  background-color: #EEEEEE !important;
+}
+
+.group-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
 .legal-entity-row {
   background-color: #FAFAFA;
   font-weight: 500;
@@ -168,6 +183,10 @@
 
 .restaurant-row .item-icon {
   color: var(--primary-color);
+}
+
+.hierarchy-level-2 {
+  background-color: #FFFFFF;
 }
 
 .type-badge {
@@ -186,6 +205,11 @@
 .type-badge.type-restaurant {
   background-color: #F3E5F5;
   color: #7B1FA2;
+}
+
+.type-badge.type-group {
+  background-color: #E8F5E9;
+  color: #388E3C;
 }
 
 .data-table th.sortable {

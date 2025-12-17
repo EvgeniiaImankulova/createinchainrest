@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../environment';
 import { Employee } from '../models/employee.model';
+import { LegalEntityGroup } from '../models/legal-entity-group.model';
 
 export interface LegalEntity {
   id?: string;
@@ -25,6 +26,7 @@ export interface LegalEntity {
   is_franchise?: boolean;
   royalty_percent?: number;
   is_draft?: boolean;
+  group_id?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -288,6 +290,59 @@ export class SupabaseService {
   async deleteBankAccount(id: string) {
     const { error } = await this.supabase
       .from('bank_accounts')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  }
+
+  async getLegalEntityGroups() {
+    const { data, error } = await this.supabase
+      .from('legal_entity_groups')
+      .select('*')
+      .order('name', { ascending: true });
+
+    if (error) throw error;
+    return data as LegalEntityGroup[];
+  }
+
+  async getLegalEntityGroup(id: string) {
+    const { data, error } = await this.supabase
+      .from('legal_entity_groups')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data as LegalEntityGroup | null;
+  }
+
+  async createLegalEntityGroup(group: LegalEntityGroup) {
+    const { data, error } = await this.supabase
+      .from('legal_entity_groups')
+      .insert([group])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as LegalEntityGroup;
+  }
+
+  async updateLegalEntityGroup(id: string, group: Partial<LegalEntityGroup>) {
+    const { data, error } = await this.supabase
+      .from('legal_entity_groups')
+      .update(group)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as LegalEntityGroup;
+  }
+
+  async deleteLegalEntityGroup(id: string) {
+    const { error } = await this.supabase
+      .from('legal_entity_groups')
       .delete()
       .eq('id', id);
 
