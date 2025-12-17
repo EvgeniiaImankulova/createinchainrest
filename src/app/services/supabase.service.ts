@@ -22,6 +22,8 @@ export interface LegalEntity {
   accountant_name?: string;
   technologist_name?: string;
   production_manager_name?: string;
+  is_franchise?: boolean;
+  royalty_percent?: number;
   is_draft?: boolean;
   created_at?: string;
   updated_at?: string;

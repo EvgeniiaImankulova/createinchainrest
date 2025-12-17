@@ -124,6 +124,7 @@
           [options]="legalEntityOptions"
           [placeholder]="'Поиск...'"
           [(ngModel)]="form.legal_entity_id"
+          (ngModelChange)="onLegalEntitySelect($event)"
           name="legalEntity">
         </app-searchable-select>
       </div>

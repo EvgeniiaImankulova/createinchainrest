@@ -325,6 +325,16 @@ export class RestaurantFormComponent implements OnInit {
     return options;
   }
 
+  onLegalEntitySelect(legalEntityId: string) {
+    const legalEntity = this.legalEntities.find(le => le.id === legalEntityId);
+    if (legalEntity) {
+      if (legalEntity.is_franchise) {
+        this.form.is_franchise = true;
+        this.form.royalty_percent = legalEntity.royalty_percent || this.defaultRoyaltyPercent;
+      }
+    }
+  }
+
   onFranchiseChange() {
     if (this.form.is_franchise && !this.form.royalty_percent) {
       this.form.royalty_percent = this.defaultRoyaltyPercent;

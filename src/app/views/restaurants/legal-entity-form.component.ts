@@ -36,6 +36,8 @@ export class LegalEntityFormComponent implements OnInit {
     accountant_name: '',
     technologist_name: '',
     production_manager_name: '',
+    is_franchise: false,
+    royalty_percent: undefined,
     is_draft: false
   };
 
