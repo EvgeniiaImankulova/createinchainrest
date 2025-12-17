@@ -46,6 +46,29 @@
           placeholder="Введите описание организации"></textarea>
       </div>
 
+      <div class="form-group">
+        <label class="form-label">Группа</label>
+        <div class="group-selector-wrapper">
+          <select
+            class="form-input"
+            [(ngModel)]="form.group_id">
+            <option [value]="undefined">Без группы</option>
+            <option *ngFor="let group of groups" [value]="group.id">
+              {{ group.name }}
+            </option>
+          </select>
+          <button
+            type="button"
+            class="btn-add-group"
+            (click)="openCreateGroupModal()"
+            title="Создать новую группу">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
       <h3 class="subsection-title">Реквизиты</h3>
 
       <div class="form-row">
@@ -234,6 +257,46 @@
         [(accounts)]="bankAccounts"
         (accountsChange)="onBankAccountsChange($event)">
       </app-bank-accounts-list>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showGroupModal" (click)="closeGroupModal()"></div>
+  <div class="group-modal" *ngIf="showGroupModal">
+    <div class="modal-header">
+      <h3 class="modal-title">Создать группу</h3>
+      <button class="modal-close" (click)="closeGroupModal()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-content">
+      <div class="form-group">
+        <label class="form-label">Название группы*</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="newGroupForm.name"
+          placeholder="Например: Центральный регион"
+          autofocus>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Описание</label>
+        <textarea
+          class="form-textarea"
+          [(ngModel)]="newGroupForm.description"
+          placeholder="Краткое описание группы"
+          rows="3"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeGroupModal()">Отмена</button>
+      <button
+        class="btn-save"
+        (click)="saveNewGroup()"
+        [disabled]="!newGroupForm.name.trim() || isSavingGroup">
+        {{ isSavingGroup ? 'Сохранение...' : 'Создать' }}
+      </button>
     </div>
   </div>
 </div>

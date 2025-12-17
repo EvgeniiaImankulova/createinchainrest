@@ -14,6 +14,9 @@
           </svg>
         </button>
         <div class="create-menu" *ngIf="showCreateMenu">
+          <button class="create-menu-item" (click)="onCreateGroup()">
+            Создать группу
+          </button>
           <button class="create-menu-item" (click)="onCreateLegalEntity()">
             Создать юридическое лицо
           </button>
@@ -96,7 +99,7 @@
                   (click)="item.type === 'legalEntity' ? onEditLegalEntity(item.data) : onEditRestaurant(item.data); $event.preventDefault()">
                   {{ item.name }}
                 </a>
-                <span *ngIf="item.type === 'group'" class="group-name">
+                <span *ngIf="item.type === 'group'" class="group-name" (click)="onEditGroup(item.data)" style="cursor: pointer;">
                   {{ item.name }}
                 </span>
                 <span *ngIf="item.isDraft" class="draft-tag">
@@ -703,5 +706,52 @@
       <p class="modal-note">Письмо содержит логин и пароль для доступа к системе управления рестораном.</p>
     </div>
     <button class="btn-modal-close" (click)="closeSuccessModal()">Понятно</button>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showGroupModal" (click)="closeGroupModal()"></div>
+  <div class="group-modal" *ngIf="showGroupModal">
+    <div class="modal-header">
+      <h3 class="modal-title">{{ groupFormMode === 'create' ? 'Создать группу' : 'Редактировать группу' }}</h3>
+      <button class="modal-close" (click)="closeGroupModal()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-content">
+      <div class="form-group">
+        <label class="form-label">Название группы*</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="groupForm.name"
+          placeholder="Например: Центральный регион"
+          autofocus>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Описание</label>
+        <textarea
+          class="form-textarea"
+          [(ngModel)]="groupForm.description"
+          placeholder="Краткое описание группы"
+          rows="3"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeGroupModal()">Отмена</button>
+      <button
+        class="btn-delete"
+        *ngIf="groupFormMode === 'edit'"
+        (click)="deleteGroup()"
+        [disabled]="isSavingGroup">
+        Удалить
+      </button>
+      <button
+        class="btn-save"
+        (click)="saveGroup()"
+        [disabled]="!groupForm.name.trim() || isSavingGroup">
+        {{ isSavingGroup ? 'Сохранение...' : 'Сохранить' }}
+      </button>
+    </div>
   </div>
 </div>

@@ -138,7 +138,9 @@ export class RestaurantsListComponent implements OnInit {
       });
 
       this.groups.forEach(g => {
-        this.expandedGroups.add(g.id);
+        if (g.id) {
+          this.expandedGroups.add(g.id);
+        }
       });
     } catch (error) {
       console.error('Error loading data:', error);
@@ -320,9 +322,12 @@ export class RestaurantsListComponent implements OnInit {
   showSidebar: boolean = false;
   showLegalEntitySidebar: boolean = false;
   showSuccessModal: boolean = false;
+  showGroupModal: boolean = false;
   activeTab: string = 'general';
   sidebarMode: 'restaurant' | 'legalEntity' = 'restaurant';
   emailError: string = '';
+  groupFormMode: 'create' | 'edit' = 'create';
+  isSavingGroup: boolean = false;
 
   expandedLegalEntities: Set<string> = new Set();
   expandedGroups: Set<string> = new Set();
@@ -411,6 +416,8 @@ export class RestaurantsListComponent implements OnInit {
     const items: any[] = [];
 
     this.groups.forEach(group => {
+      if (!group.id) return;
+
       items.push({
         id: group.id,
         type: 'group',
@@ -543,6 +550,12 @@ export class RestaurantsListComponent implements OnInit {
     productionManagerName: ''
   };
 
+  groupForm: LegalEntityGroup = {
+    id: '',
+    name: '',
+    description: ''
+  };
+
   onSort(column: string): void {
     if (this.sortColumn === column) {
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
@@ -568,6 +581,83 @@ export class RestaurantsListComponent implements OnInit {
   onCreateRestaurant(): void {
     this.showCreateMenu = false;
     this.router.navigate(['/network-settings/restaurants/restaurant/new']);
+  }
+
+  onCreateGroup(): void {
+    this.showCreateMenu = false;
+    this.groupFormMode = 'create';
+    this.groupForm = {
+      id: '',
+      name: '',
+      description: ''
+    };
+    this.showGroupModal = true;
+  }
+
+  onEditGroup(group: LegalEntityGroup): void {
+    this.groupFormMode = 'edit';
+    this.groupForm = { ...group };
+    this.showGroupModal = true;
+  }
+
+  closeGroupModal(): void {
+    this.showGroupModal = false;
+  }
+
+  async saveGroup(): Promise<void> {
+    if (!this.groupForm.name.trim()) {
+      return;
+    }
+
+    this.isSavingGroup = true;
+    try {
+      if (this.groupFormMode === 'create') {
+        const newGroup = await this.supabaseService.createLegalEntityGroup({
+          name: this.groupForm.name,
+          description: this.groupForm.description || ''
+        });
+        this.groups.push(newGroup);
+        if (newGroup.id) {
+          this.expandedGroups.add(newGroup.id);
+        }
+      } else {
+        if (!this.groupForm.id) return;
+        await this.supabaseService.updateLegalEntityGroup(this.groupForm.id, {
+          name: this.groupForm.name,
+          description: this.groupForm.description
+        });
+        const groupIndex = this.groups.findIndex(g => g.id === this.groupForm.id);
+        if (groupIndex !== -1) {
+          this.groups[groupIndex] = { ...this.groupForm };
+        }
+      }
+      this.closeGroupModal();
+    } catch (error) {
+      console.error('Error saving group:', error);
+      alert('Ошибка сохранения группы');
+    } finally {
+      this.isSavingGroup = false;
+    }
+  }
+
+  async deleteGroup(): Promise<void> {
+    if (!this.groupForm.id) return;
+
+    if (!confirm('Вы уверены, что хотите удалить эту группу? Юридические лица в ней не будут удалены.')) {
+      return;
+    }
+
+    this.isSavingGroup = true;
+    try {
+      await this.supabaseService.deleteLegalEntityGroup(this.groupForm.id);
+      this.groups = this.groups.filter(g => g.id !== this.groupForm.id);
+      this.closeGroupModal();
+    } catch (error) {
+      console.error('Error deleting group:', error);
+      alert('Ошибка удаления группы');
+    } finally {
+      this.isSavingGroup = false;
+    }
   }
 
   closeSidebar(): void {

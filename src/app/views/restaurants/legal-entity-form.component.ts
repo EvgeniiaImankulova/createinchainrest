@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SupabaseService, LegalEntity, BankAccount } from '../../services/supabase.service';
 import { BankAccountsListComponent } from '../../components/bank-accounts-list/bank-accounts-list.component';
+import { LegalEntityGroup } from '../../models/legal-entity-group.model';
 
 @Component({
   selector: 'app-legal-entity-form',
@@ -17,6 +18,15 @@ export class LegalEntityFormComponent implements OnInit {
   entityId: string | null = null;
   isSaving = false;
   bankAccounts: BankAccount[] = [];
+  groups: LegalEntityGroup[] = [];
+  showGroupModal = false;
+  isSavingGroup = false;
+
+  newGroupForm: LegalEntityGroup = {
+    id: '',
+    name: '',
+    description: ''
+  };
 
   form: LegalEntity = {
     name: '',
@@ -49,10 +59,19 @@ export class LegalEntityFormComponent implements OnInit {
 
   async ngOnInit() {
     this.entityId = this.route.snapshot.paramMap.get('id');
+    await this.loadGroups();
 
     if (this.entityId) {
       this.isEditMode = true;
       await this.loadEntity();
+    }
+  }
+
+  async loadGroups() {
+    try {
+      this.groups = await this.supabaseService.getLegalEntityGroups();
+    } catch (error) {
+      console.error('Error loading groups:', error);
     }
   }
 
@@ -167,6 +186,41 @@ export class LegalEntityFormComponent implements OnInit {
 
   onBankAccountsChange(accounts: BankAccount[]) {
     this.bankAccounts = accounts;
+  }
+
+  openCreateGroupModal() {
+    this.newGroupForm = {
+      id: '',
+      name: '',
+      description: ''
+    };
+    this.showGroupModal = true;
+  }
+
+  closeGroupModal() {
+    this.showGroupModal = false;
+  }
+
+  async saveNewGroup() {
+    if (!this.newGroupForm.name.trim()) {
+      return;
+    }
+
+    this.isSavingGroup = true;
+    try {
+      const newGroup = await this.supabaseService.createLegalEntityGroup({
+        name: this.newGroupForm.name,
+        description: this.newGroupForm.description || ''
+      });
+      this.groups.push(newGroup);
+      this.form.group_id = newGroup.id;
+      this.closeGroupModal();
+    } catch (error) {
+      console.error('Error creating group:', error);
+      alert('Ошибка создания группы');
+    } finally {
+      this.isSavingGroup = false;
+    }
   }
 
   cancel() {
