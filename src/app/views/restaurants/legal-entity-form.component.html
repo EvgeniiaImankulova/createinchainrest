@@ -11,9 +11,6 @@
       </h1>
     </div>
     <div class="header-actions">
-      <button class="btn-secondary" (click)="saveDraft()" [disabled]="isSaving">
-        Сохранить как черновик
-      </button>
       <button
         class="btn-primary"
         (click)="saveEntity()"
@@ -85,23 +82,24 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">ОГРН</label>
+          <label class="form-label">ОКПД</label>
           <input
             type="text"
             class="form-input"
-            [(ngModel)]="form.ogrn"
-            placeholder="Введите ОГРН"
-            maxlength="13">
+            [(ngModel)]="form.okpd"
+            placeholder="Введите ОКПД"
+            maxlength="10">
         </div>
       </div>
 
       <div class="form-group">
-        <label class="form-label">Регистрационный номер</label>
+        <label class="form-label">ОГРН</label>
         <input
           type="text"
           class="form-input"
-          [(ngModel)]="form.registration_number"
-          placeholder="Введите регистрационный номер">
+          [(ngModel)]="form.ogrn"
+          placeholder="Введите ОГРН"
+          maxlength="13">
       </div>
 
       <h3 class="subsection-title">Юридический адрес</h3>
@@ -161,70 +159,49 @@
 
       <h3 class="subsection-title">Контактная информация</h3>
 
-      <h4 class="subsection-title">Владелец</h4>
+      <div class="form-group">
+        <label class="form-label">Телефон</label>
+        <input
+          type="tel"
+          class="form-input"
+          [(ngModel)]="form.phone"
+          placeholder="+7 (___) ___-__-__">
+      </div>
 
       <div class="form-group">
-        <app-searchable-select
-          [label]="'Владелец'"
-          [options]="employeeOptions"
-          [placeholder]="'Поиск...'"
-          [(ngModel)]="form.director_id"
-          (ngModelChange)="onDirectorSelect($event)"
-          name="director">
-        </app-searchable-select>
+        <label class="form-label">Руководитель (ФИО)</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.director_name"
+          placeholder="Введите ФИО руководителя">
       </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Телефон владельца</label>
-          <input
-            type="tel"
-            class="form-input"
-            [(ngModel)]="form.director_phone"
-            placeholder="+7 (___) ___-__-__">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Email владельца</label>
-          <input
-            type="email"
-            class="form-input"
-            [(ngModel)]="form.director_email"
-            placeholder="example@company.ru">
-        </div>
-      </div>
-
-      <h4 class="subsection-title">Главный бухгалтер</h4>
 
       <div class="form-group">
-        <app-searchable-select
-          [label]="'Главный бухгалтер'"
-          [options]="employeeOptions"
-          [placeholder]="'Поиск...'"
-          [(ngModel)]="form.accountant_id"
-          (ngModelChange)="onAccountantSelect($event)"
-          name="accountant">
-        </app-searchable-select>
+        <label class="form-label">Бухгалтер (ФИО)</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.accountant_name"
+          placeholder="Введите ФИО бухгалтера">
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Телефон главного бухгалтера</label>
-          <input
-            type="tel"
-            class="form-input"
-            [(ngModel)]="form.accountant_phone"
-            placeholder="+7 (___) ___-__-__">
-        </div>
+      <div class="form-group">
+        <label class="form-label">Технолог (ФИО)</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.technologist_name"
+          placeholder="Введите ФИО технолога">
+      </div>
 
-        <div class="form-group">
-          <label class="form-label">Email главного бухгалтера</label>
-          <input
-            type="email"
-            class="form-input"
-            [(ngModel)]="form.accountant_email"
-            placeholder="example@company.ru">
-        </div>
+      <div class="form-group">
+        <label class="form-label">Зав. производством (ФИО)</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="form.production_manager_name"
+          placeholder="Введите ФИО зав. производством">
       </div>
 
       <h3 class="subsection-title">Банковские реквизиты</h3>
@@ -236,8 +213,3 @@
     </div>
   </div>
 </div>
-
-<app-employee-sidebar
-  [(isOpen)]="isEmployeeSidebarOpen"
-  (employeeCreated)="onEmployeeCreated($event)">
-</app-employee-sidebar>
