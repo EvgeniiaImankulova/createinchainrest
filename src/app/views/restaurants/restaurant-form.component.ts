@@ -44,7 +44,6 @@ export class RestaurantFormComponent implements OnInit {
     website: '',
     timezone: '(UTC+3:00) Европа/Москва',
     template: '',
-    is_franchise: false,
     is_draft: false,
     connection_status: 'disconnected',
     legal_entity_id: undefined,
@@ -325,19 +324,16 @@ export class RestaurantFormComponent implements OnInit {
     return options;
   }
 
-  onLegalEntitySelect(legalEntityId: string) {
-    const legalEntity = this.legalEntities.find(le => le.id === legalEntityId);
-    if (legalEntity) {
-      if (legalEntity.is_franchise) {
-        this.form.is_franchise = true;
-        this.form.royalty_percent = legalEntity.royalty_percent || this.defaultRoyaltyPercent;
-      }
-    }
+  get selectedLegalEntity(): LegalEntity | undefined {
+    return this.legalEntities.find(le => le.id === this.form.legal_entity_id);
   }
 
-  onFranchiseChange() {
-    if (this.form.is_franchise && !this.form.royalty_percent) {
-      this.form.royalty_percent = this.defaultRoyaltyPercent;
+  onLegalEntitySelect(legalEntityId: string) {
+    const legalEntity = this.legalEntities.find(le => le.id === legalEntityId);
+    if (legalEntity && legalEntity.is_franchise) {
+      this.form.royalty_percent = legalEntity.royalty_percent || this.defaultRoyaltyPercent;
+    } else {
+      this.form.royalty_percent = undefined;
     }
   }
 

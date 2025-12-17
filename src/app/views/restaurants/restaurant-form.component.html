@@ -150,18 +150,8 @@
           placeholder="Часовой пояс">
       </div>
 
-      <div class="form-group checkbox-group">
-        <label class="checkbox-label">
-          <input
-            type="checkbox"
-            [(ngModel)]="form.is_franchise"
-            (ngModelChange)="onFranchiseChange()">
-          <span>Франчайзи</span>
-        </label>
-      </div>
-
-      <div class="form-group" *ngIf="form.is_franchise">
-        <label class="form-label">Процент роялти, %</label>
+      <div class="form-group" *ngIf="selectedLegalEntity?.is_franchise">
+        <label class="form-label">Роялти, %</label>
         <input
           type="number"
           class="form-input"

@@ -62,7 +62,6 @@ export interface Restaurant {
   website?: string;
   timezone?: string;
   template?: string;
-  is_franchise?: boolean;
   is_draft?: boolean;
   connection_status?: string;
   owner_id?: string;

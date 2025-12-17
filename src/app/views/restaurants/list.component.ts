@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SupabaseService } from '../../services/supabase.service';
+import { SupabaseService, LegalEntity as SupabaseLegalEntity } from '../../services/supabase.service';
 import { SearchableSelectComponent, SelectOption } from '../../components/searchable-select/searchable-select.component';
 import { Employee, getEmployeeFullName } from '../../models/employee.model';
 
@@ -41,6 +41,7 @@ interface LegalEntity {
   chiefTechnologistName: string;
   productionManagerName: string;
   isDraft?: boolean;
+  is_franchise?: boolean;
 }
 
 @Component({
@@ -97,7 +98,8 @@ export class RestaurantsListComponent implements OnInit {
           accountantName: le.accountant || '',
           chiefTechnologistName: '',
           productionManagerName: '',
-          isDraft: le.is_draft || false
+          isDraft: le.is_draft || false,
+          is_franchise: le.is_franchise || false
         }));
       }
 
@@ -114,7 +116,7 @@ export class RestaurantsListComponent implements OnInit {
             address: r.address || '',
             template: r.template || '',
             timezone: r.timezone || '',
-            isFranchise: isGastronomRestaurant || r.is_franchise || false,
+            isFranchise: isGastronomRestaurant || legalEntity?.is_franchise || false,
             isDraft: r.is_draft || false
           };
         });
