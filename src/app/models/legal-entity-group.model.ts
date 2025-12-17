@@ -1,5 +1,5 @@
 export interface LegalEntityGroup {
-  id: string;
+  id?: string;
   name: string;
   description?: string;
   created_at?: string;

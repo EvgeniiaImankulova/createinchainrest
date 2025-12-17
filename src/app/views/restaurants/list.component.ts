@@ -138,7 +138,9 @@ export class RestaurantsListComponent implements OnInit {
       });
 
       this.groups.forEach(g => {
-        this.expandedGroups.add(g.id);
+        if (g.id) {
+          this.expandedGroups.add(g.id);
+        }
       });
     } catch (error) {
       console.error('Error loading data:', error);
@@ -411,6 +413,8 @@ export class RestaurantsListComponent implements OnInit {
     const items: any[] = [];
 
     this.groups.forEach(group => {
+      if (!group.id) return;
+
       items.push({
         id: group.id,
         type: 'group',

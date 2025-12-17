@@ -46,6 +46,27 @@
           placeholder="Введите описание организации"></textarea>
       </div>
 
+      <div class="form-group">
+        <label class="form-label">Группа</label>
+        <div class="group-select-container">
+          <select
+            class="form-select"
+            [(ngModel)]="form.group_id">
+            <option [value]="null">Без группы</option>
+            <option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</option>
+          </select>
+          <button
+            type="button"
+            class="btn-add-group"
+            (click)="openGroupDialog()"
+            title="Создать новую группу">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
       <h3 class="subsection-title">Реквизиты</h3>
 
       <div class="form-row">
@@ -234,6 +255,49 @@
         [(accounts)]="bankAccounts"
         (accountsChange)="onBankAccountsChange($event)">
       </app-bank-accounts-list>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showGroupDialog" (click)="closeGroupDialog()">
+  <div class="modal-dialog" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">Создать группу</h2>
+      <button class="modal-close-btn" (click)="closeGroupDialog()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Название группы*</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="groupForm.name"
+          placeholder="Введите название группы"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Описание</label>
+        <textarea
+          class="form-textarea"
+          [(ngModel)]="groupForm.description"
+          rows="2"
+          placeholder="Введите описание группы"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeGroupDialog()">
+        Отмена
+      </button>
+      <button class="btn-primary" (click)="saveGroup()">
+        Создать
+      </button>
     </div>
   </div>
 </div>
