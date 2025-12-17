@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { SupabaseService, LegalEntity as SupabaseLegalEntity } from '../../services/supabase.service';
 import { SearchableSelectComponent, SelectOption } from '../../components/searchable-select/searchable-select.component';
 import { Employee, getEmployeeFullName } from '../../models/employee.model';
@@ -50,7 +51,7 @@ interface LegalEntity {
 @Component({
   selector: 'app-restaurants-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchableSelectComponent],
+  imports: [CommonModule, FormsModule, SearchableSelectComponent, DragDropModule],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
@@ -766,5 +767,72 @@ export class RestaurantsListComponent implements OnInit {
 
   onEditLegalEntity(legalEntity: LegalEntity): void {
     this.router.navigate(['/network-settings/restaurants/legal-entity', legalEntity.id]);
+  }
+
+  async onDragLegalEntity(event: CdkDragDrop<any>, targetGroupId?: string): Promise<void> {
+    const draggedItem = event.item.data;
+
+    if (draggedItem.type !== 'legalEntity') {
+      return;
+    }
+
+    const legalEntity = this.legalEntitiesData.find(le => le.id === draggedItem.id);
+    if (!legalEntity) {
+      return;
+    }
+
+    const newGroupId = targetGroupId === 'no-group' ? null : targetGroupId;
+
+    if (legalEntity.group_id === newGroupId) {
+      return;
+    }
+
+    try {
+      await this.supabaseService.updateLegalEntity(legalEntity.id, {
+        group_id: newGroupId as string | undefined
+      });
+
+      legalEntity.group_id = newGroupId || undefined;
+    } catch (error) {
+      console.error('Error moving legal entity:', error);
+      alert('Ошибка перемещения юридического лица');
+    }
+  }
+
+  async onDragRestaurant(event: CdkDragDrop<any>, targetLegalEntityId: string): Promise<void> {
+    const draggedItem = event.item.data;
+
+    if (draggedItem.type !== 'restaurant') {
+      return;
+    }
+
+    const restaurant = this.restaurants.find(r => r.id === draggedItem.id);
+    if (!restaurant) {
+      return;
+    }
+
+    if (restaurant.legalEntityId === targetLegalEntityId) {
+      return;
+    }
+
+    try {
+      await this.supabaseService.updateRestaurant(restaurant.id, {
+        legal_entity_id: targetLegalEntityId
+      });
+
+      restaurant.legalEntityId = targetLegalEntityId;
+    } catch (error) {
+      console.error('Error moving restaurant:', error);
+      alert('Ошибка перемещения ресторана');
+    }
+  }
+
+  getDropListIds(type: 'group' | 'legalEntity'): string[] {
+    if (type === 'group') {
+      const groupIds = this.groups.map(g => `group-${g.id}`).filter(id => id !== 'group-undefined');
+      return ['no-group', ...groupIds];
+    } else {
+      return this.legalEntitiesData.map(le => `legal-entity-${le.id}`);
+    }
   }
 }

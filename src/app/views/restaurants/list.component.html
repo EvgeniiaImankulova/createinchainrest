@@ -47,84 +47,198 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of hierarchyItems; let i = index"
-              class="data-row"
-              [class.hierarchy-level-0]="item.level === 0"
-              [class.hierarchy-level-1]="item.level === 1"
-              [class.hierarchy-level-2]="item.level === 2"
-              [class.group-row]="item.type === 'group'"
-              [class.legal-entity-row]="item.type === 'legalEntity'"
-              [class.restaurant-row]="item.type === 'restaurant'">
-            <td class="col-number">{{ i + 1 }}</td>
+          <ng-container *ngFor="let group of groups; let groupIndex = index">
+            <tr class="data-row hierarchy-level-0 group-row"
+                cdkDropList
+                [id]="'group-' + group.id"
+                [cdkDropListData]="group"
+                [cdkDropListConnectedTo]="getDropListIds('group')"
+                (cdkDropListDropped)="onDragLegalEntity($event, group.id)">
+              <td class="col-number">{{ groupIndex + 1 }}</td>
+              <td>
+                <div class="hierarchy-cell">
+                  <button class="expand-btn" (click)="toggleGroup(group.id!)">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" [class.expanded]="expandedGroups.has(group.id!)">
+                      <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                  <span class="item-icon">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M3 6C3 4.89543 3.89543 4 5 4H7C8.10457 4 9 4.89543 9 6V8C9 9.10457 8.10457 10 7 10H5C3.89543 10 3 9.10457 3 8V6Z" stroke="currentColor" stroke-width="1.5"/>
+                      <path d="M11 6C11 4.89543 11.8954 4 13 4H15C16.1046 4 17 4.89543 17 6V8C17 9.10457 16.1046 10 15 10H13C11.8954 10 11 9.10457 11 8V6Z" stroke="currentColor" stroke-width="1.5"/>
+                      <path d="M3 12C3 10.8954 3.89543 10 5 10H7C8.10457 10 9 10.8954 9 12V14C9 15.1046 8.10457 16 7 16H5C3.89543 16 3 15.1046 3 14V12Z" stroke="currentColor" stroke-width="1.5"/>
+                      <path d="M11 12C11 10.8954 11.8954 10 13 10H15C16.1046 10 17 10.8954 17 12V14C17 15.1046 16.1046 16 15 16H13C11.8954 16 11 15.1046 11 14V12Z" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                  </span>
+                  <span class="group-name" (click)="onEditGroup(group)" style="cursor: pointer;">
+                    {{ group.name }}
+                  </span>
+                  <span class="drag-handle-icon">⋮⋮</span>
+                </div>
+              </td>
+              <td>
+                <span class="type-badge type-group">Группа</span>
+              </td>
+            </tr>
+
+            <ng-container *ngIf="expandedGroups.has(group.id!)">
+              <ng-container *ngFor="let legalEntity of legalEntitiesData; let leIndex = index">
+                <tr *ngIf="legalEntity.group_id === group.id"
+                    class="data-row hierarchy-level-1 legal-entity-row"
+                    cdkDrag
+                    [cdkDragData]="{type: 'legalEntity', id: legalEntity.id, data: legalEntity}"
+                    cdkDropList
+                    [id]="'legal-entity-' + legalEntity.id"
+                    [cdkDropListData]="legalEntity"
+                    [cdkDropListConnectedTo]="getDropListIds('legalEntity')"
+                    (cdkDropListDropped)="onDragRestaurant($event, legalEntity.id)">
+                  <td class="col-number">{{ groupIndex + 1 }}.{{ leIndex + 1 }}</td>
+                  <td>
+                    <div class="hierarchy-cell" style="padding-left: 24px;">
+                      <button class="expand-btn" (click)="toggleLegalEntity(legalEntity.id)">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" [class.expanded]="expandedLegalEntities.has(legalEntity.id)">
+                          <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </button>
+                      <span class="item-icon">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <path d="M3 18V8L10 3L17 8V18H12V13H8V18H3Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </svg>
+                      </span>
+                      <a href="#" class="link" (click)="onEditLegalEntity(legalEntity); $event.preventDefault()">
+                        {{ legalEntity.name }}
+                      </a>
+                      <span *ngIf="legalEntity.isDraft" class="draft-tag">ЧЕРНОВИК</span>
+                      <span *ngIf="isLegalEntityFranchise(legalEntity.id)" class="franchise-tag">ФРАНЧАЙЗИ</span>
+                      <button class="add-restaurant-btn" (click)="onCreateRestaurant(); $event.stopPropagation()" title="Добавить ресторан">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                      </button>
+                      <span class="drag-handle-icon">⋮⋮</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="type-badge type-legal">Юридическое лицо</span>
+                  </td>
+                </tr>
+
+                <ng-container *ngIf="expandedLegalEntities.has(legalEntity.id)">
+                  <tr *ngFor="let restaurant of restaurants; let rIndex = index"
+                      [hidden]="restaurant.legalEntityId !== legalEntity.id"
+                      class="data-row hierarchy-level-2 restaurant-row"
+                      cdkDrag
+                      [cdkDragData]="{type: 'restaurant', id: restaurant.id, data: restaurant}">
+                    <td class="col-number">{{ groupIndex + 1 }}.{{ leIndex + 1 }}.{{ rIndex + 1 }}</td>
+                    <td>
+                      <div class="hierarchy-cell" style="padding-left: 48px;">
+                        <span class="item-icon">
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M3 8H17M6 4V8M10 4V8M14 4V8M4 8H16C16.5523 8 17 8.44772 17 9V17C17 17.5523 16.5523 18 16 18H4C3.44772 18 3 17.5523 3 17V9C3 8.44772 3.44772 8 4 8Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                          </svg>
+                        </span>
+                        <a href="#" class="link" (click)="onEditRestaurant(restaurant); $event.preventDefault()">
+                          {{ restaurant.name }}
+                        </a>
+                        <span *ngIf="restaurant.isDraft" class="draft-tag">ЧЕРНОВИК</span>
+                        <span *ngIf="restaurant.isFranchise" class="franchise-tag">ФРАНЧАЙЗИ</span>
+                        <span class="drag-handle-icon">⋮⋮</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="type-badge type-restaurant">Ресторан</span>
+                    </td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+
+          <tr class="data-row hierarchy-level-0 no-group-row"
+              cdkDropList
+              id="no-group"
+              [cdkDropListConnectedTo]="getDropListIds('group')"
+              (cdkDropListDropped)="onDragLegalEntity($event, 'no-group')">
+            <td class="col-number">—</td>
             <td>
-              <div class="hierarchy-cell" [style.padding-left.px]="item.level * 24">
-                <button
-                  *ngIf="item.type === 'group'"
-                  class="expand-btn"
-                  (click)="toggleGroup(item.id)">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" [class.expanded]="item.isExpanded">
-                    <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-                <button
-                  *ngIf="item.type === 'legalEntity'"
-                  class="expand-btn"
-                  (click)="toggleLegalEntity(item.id)">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" [class.expanded]="item.isExpanded">
-                    <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-                <span class="item-icon" *ngIf="item.type === 'group'">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M3 6C3 4.89543 3.89543 4 5 4H7C8.10457 4 9 4.89543 9 6V8C9 9.10457 8.10457 10 7 10H5C3.89543 10 3 9.10457 3 8V6Z" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M11 6C11 4.89543 11.8954 4 13 4H15C16.1046 4 17 4.89543 17 6V8C17 9.10457 16.1046 10 15 10H13C11.8954 10 11 9.10457 11 8V6Z" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M3 12C3 10.8954 3.89543 10 5 10H7C8.10457 10 9 10.8954 9 12V14C9 15.1046 8.10457 16 7 16H5C3.89543 16 3 15.1046 3 14V12Z" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M11 12C11 10.8954 11.8954 10 13 10H15C16.1046 10 17 10.8954 17 12V14C17 15.1046 16.1046 16 15 16H13C11.8954 16 11 15.1046 11 14V12Z" stroke="currentColor" stroke-width="1.5"/>
-                  </svg>
-                </span>
-                <span class="item-icon" *ngIf="item.type === 'legalEntity'">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M3 18V8L10 3L17 8V18H12V13H8V18H3Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                  </svg>
-                </span>
-                <span class="item-icon" *ngIf="item.type === 'restaurant'">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M3 8H17M6 4V8M10 4V8M14 4V8M4 8H16C16.5523 8 17 8.44772 17 9V17C17 17.5523 16.5523 18 16 18H4C3.44772 18 3 17.5523 3 17V9C3 8.44772 3.44772 8 4 8Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                  </svg>
-                </span>
-                <a
-                  *ngIf="item.type !== 'group'"
-                  href="#"
-                  class="link"
-                  (click)="item.type === 'legalEntity' ? onEditLegalEntity(item.data) : onEditRestaurant(item.data); $event.preventDefault()">
-                  {{ item.name }}
-                </a>
-                <span *ngIf="item.type === 'group'" class="group-name" (click)="onEditGroup(item.data)" style="cursor: pointer;">
-                  {{ item.name }}
-                </span>
-                <span *ngIf="item.isDraft" class="draft-tag">
-                  ЧЕРНОВИК
-                </span>
-                <span *ngIf="item.isFranchise" class="franchise-tag">
-                  ФРАНЧАЙЗИ
-                </span>
-                <button
-                  *ngIf="item.type === 'legalEntity'"
-                  class="add-restaurant-btn"
-                  (click)="onCreateRestaurant(); $event.stopPropagation()"
-                  title="Добавить ресторан">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  </svg>
-                </button>
+              <div class="hierarchy-cell">
+                <span class="group-name">Без группы</span>
               </div>
             </td>
             <td>
-              <span *ngIf="item.type === 'group'" class="type-badge type-group">Группа</span>
-              <span *ngIf="item.type === 'legalEntity'" class="type-badge type-legal">Юридическое лицо</span>
-              <span *ngIf="item.type === 'restaurant'" class="type-badge type-restaurant">Ресторан</span>
+              <span class="type-badge type-group">Зона</span>
             </td>
           </tr>
+
+          <ng-container *ngFor="let legalEntity of legalEntitiesData; let leIndex = index">
+            <tr *ngIf="!legalEntity.group_id"
+                class="data-row hierarchy-level-0 legal-entity-row"
+                cdkDrag
+                [cdkDragData]="{type: 'legalEntity', id: legalEntity.id, data: legalEntity}"
+                cdkDropList
+                [id]="'legal-entity-' + legalEntity.id"
+                [cdkDropListData]="legalEntity"
+                [cdkDropListConnectedTo]="getDropListIds('legalEntity')"
+                (cdkDropListDropped)="onDragRestaurant($event, legalEntity.id)">
+              <td class="col-number">{{ leIndex + 1 }}</td>
+              <td>
+                <div class="hierarchy-cell">
+                  <button class="expand-btn" (click)="toggleLegalEntity(legalEntity.id)">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" [class.expanded]="expandedLegalEntities.has(legalEntity.id)">
+                      <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                  <span class="item-icon">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M3 18V8L10 3L17 8V18H12V13H8V18H3Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
+                  </span>
+                  <a href="#" class="link" (click)="onEditLegalEntity(legalEntity); $event.preventDefault()">
+                    {{ legalEntity.name }}
+                  </a>
+                  <span *ngIf="legalEntity.isDraft" class="draft-tag">ЧЕРНОВИК</span>
+                  <span *ngIf="isLegalEntityFranchise(legalEntity.id)" class="franchise-tag">ФРАНЧАЙЗИ</span>
+                  <button class="add-restaurant-btn" (click)="onCreateRestaurant(); $event.stopPropagation()" title="Добавить ресторан">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </button>
+                  <span class="drag-handle-icon">⋮⋮</span>
+                </div>
+              </td>
+              <td>
+                <span class="type-badge type-legal">Юридическое лицо</span>
+              </td>
+            </tr>
+
+            <ng-container *ngIf="expandedLegalEntities.has(legalEntity.id)">
+              <tr *ngFor="let restaurant of restaurants; let rIndex = index"
+                  [hidden]="restaurant.legalEntityId !== legalEntity.id"
+                  class="data-row hierarchy-level-1 restaurant-row"
+                  cdkDrag
+                  [cdkDragData]="{type: 'restaurant', id: restaurant.id, data: restaurant}">
+                <td class="col-number">{{ leIndex + 1 }}.{{ rIndex + 1 }}</td>
+                <td>
+                  <div class="hierarchy-cell" style="padding-left: 24px;">
+                    <span class="item-icon">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M3 8H17M6 4V8M10 4V8M14 4V8M4 8H16C16.5523 8 17 8.44772 17 9V17C17 17.5523 16.5523 18 16 18H4C3.44772 18 3 17.5523 3 17V9C3 8.44772 3.44772 8 4 8Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </svg>
+                    </span>
+                    <a href="#" class="link" (click)="onEditRestaurant(restaurant); $event.preventDefault()">
+                      {{ restaurant.name }}
+                    </a>
+                    <span *ngIf="restaurant.isDraft" class="draft-tag">ЧЕРНОВИК</span>
+                    <span *ngIf="restaurant.isFranchise" class="franchise-tag">ФРАНЧАЙЗИ</span>
+                    <span class="drag-handle-icon">⋮⋮</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="type-badge type-restaurant">Ресторан</span>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
         </tbody>
       </table>
     </div>
