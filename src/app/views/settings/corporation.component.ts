@@ -20,7 +20,6 @@ export class CorporationComponent implements OnInit {
   corporationSettings = {
     name: '',
     description: '',
-    uid: '123-123-123',
     trustedPhone: '',
     additionalPhone: '',
     trustedEmail: '',
