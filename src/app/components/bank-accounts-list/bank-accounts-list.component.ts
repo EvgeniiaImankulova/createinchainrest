@@ -27,10 +27,15 @@ export class BankAccountsListComponent implements ControlValueAccessor {
 
   private onChange: any = () => {};
   private onTouched: any = () => {};
+  private initialized = false;
 
   writeValue(value: BankAccount[]): void {
     if (value) {
       this.accounts = value;
+      if (!this.initialized && this.accounts.length === 1 && !this.accounts[0].account_number) {
+        this.editingIndex = 0;
+        this.initialized = true;
+      }
     }
   }
 

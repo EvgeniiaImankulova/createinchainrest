@@ -46,6 +46,7 @@ export interface BankAccount {
 export interface Restaurant {
   id?: string;
   legal_entity_id?: string;
+  kpp?: string;
   name: string;
   description?: string;
   short_name?: string;

@@ -64,6 +64,14 @@ export class LegalEntityFormComponent implements OnInit {
     if (this.entityId) {
       this.isEditMode = true;
       await this.loadEntity();
+    } else {
+      this.bankAccounts = [{
+        account_number: '',
+        bik: '',
+        correspondent_account: '',
+        bank_name: '',
+        bank_city: ''
+      }];
     }
   }
 

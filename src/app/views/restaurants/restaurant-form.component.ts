@@ -47,6 +47,7 @@ export class RestaurantFormComponent implements OnInit {
     is_draft: false,
     connection_status: 'disconnected',
     legal_entity_id: undefined,
+    kpp: '',
     owner_id: undefined,
     owner_phone: '',
     owner_email: '',
