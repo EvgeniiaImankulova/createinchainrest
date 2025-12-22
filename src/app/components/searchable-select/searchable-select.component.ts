@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, forwardRef, HostListener, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, forwardRef, HostListener, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -25,7 +25,7 @@ export interface SelectOption {
     }
   ]
 })
-export class SearchableSelectComponent implements ControlValueAccessor {
+export class SearchableSelectComponent implements ControlValueAccessor, OnChanges {
   @Input() label: string = 'Single select with search';
   @Input() options: SelectOption[] = [];
   @Input() placeholder: string = 'Type...';
@@ -49,6 +49,12 @@ export class SearchableSelectComponent implements ControlValueAccessor {
 
   ngOnInit() {
     this.filteredOptions = [...this.options];
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['options']) {
+      this.filteredOptions = [...this.options];
+    }
   }
 
   toggleDropdown() {
