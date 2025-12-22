@@ -3,13 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SupabaseService, LegalEntity, BankAccount } from '../../services/supabase.service';
-import { BankAccountsListComponent } from '../../components/bank-accounts-list/bank-accounts-list.component';
 import { LegalEntityGroup } from '../../models/legal-entity-group.model';
 
 @Component({
   selector: 'app-legal-entity-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, BankAccountsListComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './legal-entity-form.component.html',
   styleUrls: ['./legal-entity-form.component.css']
 })
@@ -17,10 +16,17 @@ export class LegalEntityFormComponent implements OnInit {
   isEditMode = false;
   entityId: string | null = null;
   isSaving = false;
-  bankAccounts: BankAccount[] = [];
   groups: LegalEntityGroup[] = [];
   showGroupModal = false;
   isSavingGroup = false;
+
+  bankAccount: BankAccount = {
+    account_number: '',
+    bik: '',
+    correspondent_account: '',
+    bank_name: '',
+    bank_city: ''
+  };
 
   newGroupForm: LegalEntityGroup = {
     id: '',
@@ -64,14 +70,6 @@ export class LegalEntityFormComponent implements OnInit {
     if (this.entityId) {
       this.isEditMode = true;
       await this.loadEntity();
-    } else {
-      this.bankAccounts = [{
-        account_number: '',
-        bik: '',
-        correspondent_account: '',
-        bank_name: '',
-        bank_city: ''
-      }];
     }
   }
 
@@ -88,7 +86,10 @@ export class LegalEntityFormComponent implements OnInit {
       const entity = await this.supabaseService.getLegalEntity(this.entityId!);
       if (entity) {
         this.form = entity;
-        this.bankAccounts = await this.supabaseService.getBankAccounts(this.entityId!);
+        const bankAccounts = await this.supabaseService.getBankAccounts(this.entityId!);
+        if (bankAccounts.length > 0) {
+          this.bankAccount = bankAccounts[0];
+        }
       }
     } catch (error) {
       console.error('Error loading legal entity:', error);
@@ -102,7 +103,8 @@ export class LegalEntityFormComponent implements OnInit {
       this.form.legal_address_street?.trim() &&
       this.form.legal_address_city?.trim() &&
       this.form.legal_address_region?.trim() &&
-      this.form.legal_address_country?.trim()
+      this.form.legal_address_country?.trim() &&
+      this.bankAccount.account_number?.trim()
     );
   }
 
@@ -123,6 +125,9 @@ export class LegalEntityFormComponent implements OnInit {
     }
     if (!this.form.legal_address_country?.trim()) {
       missing.push('Юридический адрес: Страна');
+    }
+    if (!this.bankAccount.account_number?.trim()) {
+      missing.push('Расчетный счет');
     }
 
     return missing;
@@ -170,30 +175,13 @@ export class LegalEntityFormComponent implements OnInit {
   }
 
   async saveBankAccounts(legalEntityId: string) {
-    const existingAccounts = this.isEditMode ? await this.supabaseService.getBankAccounts(legalEntityId) : [];
-    const existingIds = existingAccounts.map(a => a.id);
+    this.bankAccount.legal_entity_id = legalEntityId;
 
-    for (const account of this.bankAccounts) {
-      account.legal_entity_id = legalEntityId;
-
-      if (account.id && existingIds.includes(account.id)) {
-        await this.supabaseService.updateBankAccount(account.id, account);
-      } else {
-        await this.supabaseService.createBankAccount(account);
-      }
+    if (this.bankAccount.id) {
+      await this.supabaseService.updateBankAccount(this.bankAccount.id, this.bankAccount);
+    } else {
+      await this.supabaseService.createBankAccount(this.bankAccount);
     }
-
-    const currentIds = this.bankAccounts.filter(a => a.id).map(a => a.id);
-    const accountsToDelete = existingAccounts.filter(a => !currentIds.includes(a.id));
-    for (const account of accountsToDelete) {
-      if (account.id) {
-        await this.supabaseService.deleteBankAccount(account.id);
-      }
-    }
-  }
-
-  onBankAccountsChange(accounts: BankAccount[]) {
-    this.bankAccounts = accounts;
   }
 
   openCreateGroupModal() {

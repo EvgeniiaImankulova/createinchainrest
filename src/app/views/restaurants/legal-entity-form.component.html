@@ -253,10 +253,58 @@
 
       <h3 class="subsection-title">Банковские реквизиты</h3>
 
-      <app-bank-accounts-list
-        [(accounts)]="bankAccounts"
-        (accountsChange)="onBankAccountsChange($event)">
-      </app-bank-accounts-list>
+      <div class="form-group">
+        <label class="form-label">Расчетный счет*</label>
+        <input
+          type="text"
+          class="form-input"
+          [(ngModel)]="bankAccount.account_number"
+          placeholder="Введите расчетный счет"
+          maxlength="20"
+          required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">БИК</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="bankAccount.bik"
+            placeholder="Введите БИК"
+            maxlength="9">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Корреспондентский счет</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="bankAccount.correspondent_account"
+            placeholder="Введите корр. счет"
+            maxlength="20">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Название банка</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="bankAccount.bank_name"
+            placeholder="Введите название банка">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Город банка</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="bankAccount.bank_city"
+            placeholder="Введите город банка">
+        </div>
+      </div>
     </div>
   </div>
 
