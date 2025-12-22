@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SupabaseService, LegalEntity, BankAccount } from '../../services/supabase.service';
 import { LegalEntityGroup } from '../../models/legal-entity-group.model';
+import { Employee, getEmployeeFullName } from '../../models/employee.model';
+import { SearchableSelectComponent, SelectOption } from '../../components/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-legal-entity-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SearchableSelectComponent],
   templateUrl: './legal-entity-form.component.html',
   styleUrls: ['./legal-entity-form.component.css']
 })
@@ -19,6 +21,8 @@ export class LegalEntityFormComponent implements OnInit {
   groups: LegalEntityGroup[] = [];
   showGroupModal = false;
   isSavingGroup = false;
+  employees: Employee[] = [];
+  employeeOptions: SelectOption[] = [];
 
   bankAccount: BankAccount = {
     account_number: '',
@@ -48,10 +52,10 @@ export class LegalEntityFormComponent implements OnInit {
     legal_address_country: '',
     legal_address_postal_code: '',
     phone: '',
-    director_name: '',
-    accountant_name: '',
-    technologist_name: '',
-    production_manager_name: '',
+    director_id: undefined,
+    accountant_id: undefined,
+    technologist_id: undefined,
+    production_manager_id: undefined,
     is_franchise: false,
     royalty_percent: undefined,
     is_draft: false
@@ -65,7 +69,10 @@ export class LegalEntityFormComponent implements OnInit {
 
   async ngOnInit() {
     this.entityId = this.route.snapshot.paramMap.get('id');
-    await this.loadGroups();
+    await Promise.all([
+      this.loadGroups(),
+      this.loadEmployees()
+    ]);
 
     if (this.entityId) {
       this.isEditMode = true;
@@ -78,6 +85,19 @@ export class LegalEntityFormComponent implements OnInit {
       this.groups = await this.supabaseService.getLegalEntityGroups();
     } catch (error) {
       console.error('Error loading groups:', error);
+    }
+  }
+
+  async loadEmployees() {
+    try {
+      this.employees = await this.supabaseService.getEmployees();
+      this.employeeOptions = this.employees.map(emp => ({
+        value: emp.id!,
+        label: getEmployeeFullName(emp),
+        subtitle: emp.position || undefined
+      }));
+    } catch (error) {
+      console.error('Error loading employees:', error);
     }
   }
 

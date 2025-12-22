@@ -215,41 +215,33 @@
           placeholder="+7 (___) ___-__-__">
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Руководитель (ФИО)</label>
-        <input
-          type="text"
-          class="form-input"
-          [(ngModel)]="form.director_name"
-          placeholder="Введите ФИО руководителя">
-      </div>
+      <app-searchable-select
+        [label]="'Руководитель'"
+        [options]="employeeOptions"
+        [placeholder]="'Начните вводить ФИО'"
+        [(ngModel)]="form.director_id">
+      </app-searchable-select>
 
-      <div class="form-group">
-        <label class="form-label">Бухгалтер (ФИО)</label>
-        <input
-          type="text"
-          class="form-input"
-          [(ngModel)]="form.accountant_name"
-          placeholder="Введите ФИО бухгалтера">
-      </div>
+      <app-searchable-select
+        [label]="'Бухгалтер'"
+        [options]="employeeOptions"
+        [placeholder]="'Начните вводить ФИО'"
+        [(ngModel)]="form.accountant_id">
+      </app-searchable-select>
 
-      <div class="form-group">
-        <label class="form-label">Технолог (ФИО)</label>
-        <input
-          type="text"
-          class="form-input"
-          [(ngModel)]="form.technologist_name"
-          placeholder="Введите ФИО технолога">
-      </div>
+      <app-searchable-select
+        [label]="'Технолог'"
+        [options]="employeeOptions"
+        [placeholder]="'Начните вводить ФИО'"
+        [(ngModel)]="form.technologist_id">
+      </app-searchable-select>
 
-      <div class="form-group">
-        <label class="form-label">Зав. производством (ФИО)</label>
-        <input
-          type="text"
-          class="form-input"
-          [(ngModel)]="form.production_manager_name"
-          placeholder="Введите ФИО зав. производством">
-      </div>
+      <app-searchable-select
+        [label]="'Зав. производством'"
+        [options]="employeeOptions"
+        [placeholder]="'Начните вводить ФИО'"
+        [(ngModel)]="form.production_manager_id">
+      </app-searchable-select>
 
       <h3 class="subsection-title">Банковские реквизиты</h3>
 

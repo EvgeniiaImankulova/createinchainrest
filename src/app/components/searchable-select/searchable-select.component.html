@@ -41,7 +41,8 @@
           class="option-item"
           [class.selected]="option.value === selectedValue"
           (click)="selectOption(option.value)">
-          {{ option.label }}
+          <div class="option-label">{{ option.label }}</div>
+          <div class="option-subtitle" *ngIf="option.subtitle">{{ option.subtitle }}</div>
         </div>
 
         <div *ngIf="filteredOptions.length === 0" class="option-item disabled">

@@ -5,6 +5,7 @@ import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/f
 export interface SelectOption {
   value: any;
   label: string;
+  subtitle?: string;
 }
 
 @Component({

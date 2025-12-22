@@ -152,6 +152,18 @@
   user-select: none;
 }
 
+.option-label {
+  line-height: 1.5;
+}
+
+.option-subtitle {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  font-style: italic;
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
 .option-item:hover:not(.disabled) {
   background-color: rgba(0, 0, 0, 0.04);
 }

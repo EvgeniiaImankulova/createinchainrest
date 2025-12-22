@@ -19,10 +19,10 @@ export interface LegalEntity {
   legal_address_country?: string;
   legal_address_postal_code?: string;
   phone?: string;
-  director_name?: string;
-  accountant_name?: string;
-  technologist_name?: string;
-  production_manager_name?: string;
+  director_id?: string;
+  accountant_id?: string;
+  technologist_id?: string;
+  production_manager_id?: string;
   is_franchise?: boolean;
   royalty_percent?: number;
   is_draft?: boolean;
